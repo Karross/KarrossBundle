@@ -1,0 +1,20 @@
+{
+  "name": "karross/framework",
+  "description": "Admin framework for PHP to avoid reinventing the wheel.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Vincent Laurier",
+      "email": "contact.karross@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Karross\\": "src/"
+    }
+  }
+}
