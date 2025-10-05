@@ -1,3 +1,15 @@
-{% set value = attribute(item, field) %}
+{#{% set value = attribute(item, field) %}#}
 
-{{ asString(value) }}
+{% macro get_attribute(object, attributes) %}
+    {% apply spaceless %}
+    {% set attributes = attributes|split('.') %}
+
+    {% set value = object %}
+    {% for attribute in attributes %}
+        {% set value = attribute(value, attribute|trim) is defined ? attribute(value, attribute|trim) : null %}
+    {% endfor %}
+    {{ asString(value) }}
+    {% endapply %}
+{% endmacro %}
+
+{{ _self.get_attribute(item, field) }}

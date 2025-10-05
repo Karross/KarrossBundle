@@ -1,0 +1,27 @@
+<table class="k-table" border="1">
+    <thead>
+        {% for row in entityMetadata.getHeaderMatrix() %}
+            <tr>
+                {% for cell in row %}
+                    <th colspan="{{ cell.colspan }}" rowspan="{{ cell.rowspan }}">
+                        {{ cell.label }}
+                    </th>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </thead>
+    <tbody>
+        {% for item in items %}
+            <tr>
+                {% for field in entityMetadata.getLeafFields() %}
+                    {% set parts = field|split('.') %}
+                    {% set value = item %}
+                    {% for part in parts %}
+                        {% set value = attribute(value, part) %}
+                    {% endfor %}
+                    <td>{{ asString(value) }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

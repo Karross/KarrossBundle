@@ -22,10 +22,10 @@ class TemplateResolver
         foreach ($this->entityMetadataRegistry->all() as $entityMetadata) {
             foreach ($entityMetadata->actions as $action) {
                 if ($action->hasTemplate()) {
-                    foreach ($action->getTemplatePatternsHierarchy() as $scope => $actionPatterns) {
+                    foreach ($action->getTemplatePatternsHierarchy($entityMetadata) as $scope => $actionPatterns) {
                         foreach ($actionPatterns as $baseName => $filePatterns) {
                             if ($scope === 'entity') {
-                                $templatesMap[$entityMetadata->slug][$baseName] = $this->twig->resolveTemplate(array_map(
+                                $templatesMap[$entityMetadata->slug][$action->value][$scope][$baseName] = $this->twig->resolveTemplate(array_map(
                                     function ($filePattern) use ($entityMetadata) {
                                         return strtr($filePattern, ['{slug}' => $entityMetadata->slug,]);
                                     }, $filePatterns)
@@ -34,7 +34,7 @@ class TemplateResolver
                             if ($scope === 'field') {
                                 $fieldNames = $entityMetadata->classMetadata->getFieldNames();
                                 foreach ($fieldNames as $fieldName) {
-                                    $templatesMap[$entityMetadata->slug][$baseName][$fieldName] = $this->twig->resolveTemplate(array_map(
+                                    $templatesMap[$entityMetadata->slug][$action->value][$scope][$baseName][$fieldName] = $this->twig->resolveTemplate(array_map(
                                         function ($filePattern) use ($entityMetadata, $fieldName) {
                                             return strtr($filePattern, ['{slug}' => $entityMetadata->slug, '{field}' => $fieldName, '{type}' => $entityMetadata->classMetadata->getTypeOfField($fieldName)]);
                                         }, $filePatterns)
@@ -46,6 +46,7 @@ class TemplateResolver
                 }
             }
         }
+
         return $templatesMap;
     }
 }

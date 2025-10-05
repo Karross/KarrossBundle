@@ -1,28 +1,21 @@
-<ul>
-    {% for item in items %}
-        <li>
-            {% include '@Karross/index/item.html.twig' %}
-        </li>
-    {% endfor %}
-</ul>
-{#<table border="1">#}
-{#    <thead>#}
-{#        <tr>#}
-{#            <th rowspan="2">id</th>#}
-{#            <th rowspan="2">title</th>#}
-{#            <th colspan="2">identity</th>#}
-{#        </tr>#}
-{#        <tr>#}
-{#            <th>firstname</th>#}
-{#            <th>lastname</th>#}
-{#        </tr>#}
-{#    </thead>#}
-{#    <tbody>#}
-{#        <tr>#}
-{#            <td>1</td>#}
-{#            <td>My Article</td>#}
-{#            <td>John</td>#}
-{#            <td>Doe</td>#}
-{#        </tr>#}
-{#    </tbody>#}
-{#</table>#}
+<table class="k-table">
+    <thead>
+        <tr>
+            {% for field in entityMetadata.getFields() %}
+                <th>{{ field|title }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+            <tr>
+                {% for field in entityMetadata.getFields() %}
+                    <td>
+                        {% include '@Karross/index/field.html.twig' with { field: field, item: item } %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+

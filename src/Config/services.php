@@ -13,6 +13,7 @@ use Karross\Routes\RouteGenerator;
 use Karross\Routes\RouteLoader;
 use Karross\Twig\StringableExtension;
 use Karross\Twig\TemplateRegistry;
+use Karross\Twig\TemplateRegistryExtension;
 use Karross\Twig\TemplateResolver;
 use Karross\Twig\TypeExtension;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -81,4 +82,8 @@ return static function (ContainerConfigurator $configurator) {
 
     $services
         ->set(StringableExtension::class);
+
+    $services
+        ->set(TemplateRegistryExtension::class)
+        ->arg('$templateRegistry', service(TemplateRegistry::class));
 };
