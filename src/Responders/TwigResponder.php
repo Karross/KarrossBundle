@@ -22,8 +22,8 @@ class TwigResponder implements ResponderInterface
 
     public function getResponse(ActionContext $actionContext, $data): Response
     {
-        $template = $this->templateRegistry->get($actionContext->slug, $actionContext->action);
+        $template = $this->templateRegistry->getEntityTemplate($actionContext->slug, $actionContext->action);
 
-        return new Response($this->twig->render($template, $data));
+        return new Response($this->twig->render($template, $data + ['actionContext' => $actionContext]));
     }
 }

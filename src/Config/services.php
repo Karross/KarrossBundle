@@ -11,12 +11,17 @@ use Karross\Responders\ResponderInterface;
 use Karross\Responders\ResponderManager;
 use Karross\Routes\RouteGenerator;
 use Karross\Routes\RouteLoader;
+use Karross\Twig\FieldLabelExtension;
+use Karross\Twig\PropertyAccessorExtension;
 use Karross\Twig\StringableExtension;
 use Karross\Twig\TemplateRegistry;
+use Karross\Twig\TemplateRegistryExtension;
 use Karross\Twig\TemplateResolver;
 use Karross\Twig\TypeExtension;
+use Karross\Twig\UrlBuilderExtension;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
@@ -81,4 +86,19 @@ return static function (ContainerConfigurator $configurator) {
 
     $services
         ->set(StringableExtension::class);
+
+    $services
+        ->set(PropertyAccessorExtension::class);
+
+    $services
+        ->set(FieldLabelExtension::class)
+        ->arg('$translator', service(TranslatorInterface::class));
+
+    $services
+        ->set(TemplateRegistryExtension::class)
+        ->arg('$templateRegistry', service(TemplateRegistry::class));
+
+    $services
+        ->set(UrlBuilderExtension::class)
+        ->arg('$registry', service(EntityMetadataRegistry::class));
 };

@@ -21,12 +21,15 @@ class RouteGenerator
 
         foreach ($metadata as $fqcn => $entityMetadata) {
             foreach (Action::cases() as $action) {
-                $routeName = strtolower(str_replace('\\', '_', $fqcn) . '_' . $action->name);
-
-                $routesCollection->add($routeName, new Route($action->routePattern($entityMetadata->slug, $entityMetadata->classMetadata->getIdentifier()), defaults: ['_controller' => $action->controller()], options: ['fqcn' => $fqcn, 'karross_action' => $action->value], methods: $action->httpMethods()));
+                $routesCollection->add(self::routeName($fqcn, $action), new Route($action->routePattern($entityMetadata->slug, $entityMetadata->classMetadata->getIdentifier()), defaults: ['_controller' => $action->controller()], options: ['fqcn' => $fqcn, 'karross_action' => $action->value], methods: $action->httpMethods()));
             }
         }
 
         return $routesCollection;
+    }
+
+    public static function routeName(string $fqcn, Action $action): string
+    {
+        return strtolower(str_replace('\\', '_', $fqcn) . '_' . $action->name);
     }
 }

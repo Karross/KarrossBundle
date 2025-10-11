@@ -1,0 +1,14 @@
+{% extends '@Karross/base.html.twig' %}
+
+{% set entitySlug = entityMetadata.slug %}
+{% set action = actionContext.action %}
+
+{% block body %}
+    {% block title %}<h1>Index {{ entitySlug }}</h1>{% endblock %}
+
+    {% if items is empty %}
+        {% include getEntityTemplate(entitySlug, action, 'no_items') %}
+    {% else %}
+        {% include getEntityTemplate(entitySlug, action, 'items') %}
+    {% endif %}
+{% endblock %}

@@ -17,13 +17,11 @@ class Index
         private EntityMetadataRegistry $entityMetadataRegistry,
         private ManagerRegistry $managerRegistry,
         private ResponderManager $responderManager,
-        private RequestStack $requestStack,
         private RouterInterface $router,
     ) {}
 
-    public function __invoke(): Response
+    public function __invoke(Request $request): Response
     {
-        $request = $this->requestStack->getCurrentRequest();
         $routeName = $request->attributes->get('_route');
         $route = $this->router->getRouteCollection()->get($routeName);
         $fqcn = $route->getOption('fqcn');

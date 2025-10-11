@@ -18,10 +18,14 @@ class TemplateRegistry
         return $this->cache->get('karross.templates', fn () => $this->templateResolver->resolveAll());
     }
 
-    public function get(string $slug, string $action): string
+    public function getEntityTemplate(string $slug, string $action, ?string $templateBaseName = null): string
     {
-        //dd($this->all(), $slug, $action);
-        return $this->all()[$slug][$action];
+        return $this->all()[$slug][$action]['entity'][$templateBaseName ?? $action];
+    }
+
+    public function getFieldTemplate(string $slug, string $action, string $templateBaseName, string $fieldName): string
+    {
+        return $this->all()[$slug][$action]['field'][$templateBaseName][$fieldName];
     }
 }
 

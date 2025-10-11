@@ -1,9 +1,0 @@
-{% block body %}
-    <h1>Index {{ entityMetadata.slug }}</h1>
-
-    {% if items is empty %}
-        {% include '@Karross/index/no_items.html.twig' %}
-    {% else %}
-        {% include ['@Karross/index/items_'~entityMetadata.getSlug()~'.html.twig', '@Karross/index/items.html.twig'] %}
-    {% endif %}
-{% endblock %}

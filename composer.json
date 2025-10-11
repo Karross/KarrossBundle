@@ -1,7 +1,12 @@
 {
-  "name": "karross/framework",
-  "description": "Admin framework for PHP to avoid reinventing the wheel.",
-  "type": "library",
+  "name": "karross/karross-bundle",
+  "description": "Karross Symfony bundle",
+  "type": "symfony-bundle",
+  "extra": {
+    "symfony": {
+      "allow-contrib": true
+    }
+  },
   "license": "MIT",
   "authors": [
     {
@@ -15,6 +20,7 @@
     "symfony/dependency-injection": "^7.3",
     "symfony/http-foundation": "^7.3",
     "symfony/http-kernel": "^7.3",
+    "symfony/property-access": "^7.3",
     "symfony/routing": "^7.3",
     "doctrine/persistence": "^4.0"
   },

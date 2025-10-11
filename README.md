@@ -14,7 +14,7 @@
 - Composer
 
 ```bash
-composer require karross/framework
+composer require karross/KarrossBundle
 ```
 ## 3. Documentation
 

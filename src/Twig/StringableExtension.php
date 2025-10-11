@@ -16,7 +16,7 @@ class StringableExtension
             $value instanceof \Stringable => $value->__toString(),
             $value instanceof \BackedEnum => $value->name,
             is_bool($value) => $value ? 'true' : 'false',
-            is_scalar($value) => $value,
+            is_scalar($value) => (string) $value,
             default => 'N/A',
         };
     }

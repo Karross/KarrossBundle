@@ -3,6 +3,7 @@
 namespace Karross\Actions;
 
 use Karross\Actions\{Create, CreateForm, EditForm, Update, Delete, Index, Show};
+use Karross\Metadata\EntityMetadata;
 
 enum Action: string
 {
@@ -61,8 +62,10 @@ enum Action: string
         return \in_array($this, [self::INDEX, self::SHOW, self::CREATE_FORM, self::EDIT_FORM]);
     }
 
-    public function getTemplatePatternsHierarchy(): array
+    public function getTemplatePatternsHierarchy(EntityMetadata $entityMetadata): array
     {
+        $embedded = $entityMetadata->hasEmbeddedField() ? '_embedded' : '';
+
         return match($this) {
             self::INDEX => [
                 'entity' => [
@@ -71,8 +74,8 @@ enum Action: string
                         '@Karross/index/index.html.twig',
                     ],
                     'items' => [
-                        '@Karross/index/items_entity_{slug}.html.twig',
-                        '@Karross/index/items.html.twig',
+                        sprintf('@Karross/index/items%s_entity_{slug}.html.twig', $embedded),
+                        sprintf('@Karross/index/items%s.html.twig', $embedded),
                     ],
                     'no_items' => [
                         '@Karross/index/no_items_entity_{slug}.html.twig',

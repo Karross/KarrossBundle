@@ -14,6 +14,7 @@ class EntityMetadata
          */
         public readonly array $actions,
         public readonly ClassMetadata $classMetadata,
+        public readonly array $associations,
     ) {}
 
     public function getFqcn(): string
@@ -36,10 +37,35 @@ class EntityMetadata
         return $this->classMetadata->getFieldNames();
     }
 
+    public function getAssociations(): array
+    {
+        return $this->associations;
+    }
+
+    public function getIdentifier(): array
+    {
+        return $this->classMetadata->getIdentifier();
+    }
+
+    public function getValue(object $entity, string $field): mixed
+    {
+        return $this->classMetadata->getFieldValue($entity, $field);
+    }
+
+    public function getType(string $fieldName): string
+    {
+        return $this->classMetadata->getTypeOfField($fieldName);
+    }
+
     public function isEmbedded(string $fieldName): bool
     {
         return str_contains($fieldName, '.') &&
         in_array(strtok($fieldName, '.'), array_keys($this->classMetadata->embeddedClasses));
+    }
+
+    public function hasEmbeddedField(): bool
+    {
+        return $this->getMaxEmbeddedDepth() > 0;
     }
 
     public function getMaxEmbeddedDepth(): int
@@ -52,8 +78,50 @@ class EntityMetadata
         );
     }
 
-    public function getType(string $fieldName): string
+    public function getExplodedFields(): array
     {
-        return $this->classMetadata->getTypeOfField($fieldName);
+        $explodedFields = [];
+        foreach ($this->getFields() as $field) {
+             $explodedFields[$field] = explode('.', $field);
+        }
+
+        return $explodedFields;
+    }
+
+    public function getFieldLabelsHierarchy(): array
+    {
+        $tree = [];
+        for ($depth = 0; $depth <= $this->getMaxEmbeddedDepth(); $depth++) {
+
+            $tree[$depth] = [];
+            foreach ($this->getExplodedFields() as $path => $explodedField) {
+                $fieldLabel = $explodedField[$depth] ?? null;
+                if ($fieldLabel && !array_key_exists($fieldLabel, $tree[$depth])) {
+                    $partialPath = implode('.', array_slice($explodedField, 0, $depth + 1));
+                    $tree[$depth][$fieldLabel] = new FieldLabel(
+                        label: $fieldLabel,
+                        path: $partialPath,
+                        depth: $depth,
+                        numberOfLeaves: $this->getNumberOfLeaves($partialPath),
+                        isLeaf: $depth + 1 === count($explodedField)
+                    );
+                }
+            }
+        }
+
+        return $tree;
+    }
+
+    private function getNumberOfLeaves(string $partialPath): int
+    {
+        $count = 0;
+        foreach ($this->getFields() as $fieldPath) {
+            if (str_starts_with($fieldPath, $partialPath . '.')
+                || $fieldPath === $partialPath) {
+                $count++;
+            }
+        }
+
+        return $count;
     }
 }

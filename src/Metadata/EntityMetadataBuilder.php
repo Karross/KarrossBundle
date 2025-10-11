@@ -3,6 +3,7 @@
 namespace Karross\Metadata;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use Karross\Actions\Action;
 use Karross\Config\KarrossConfig;
 use Karross\Exceptions\EntityShortnameException;
@@ -26,7 +27,7 @@ class EntityMetadataBuilder
                 $shortname = strtolower($meta->getReflectionClass()->getShortName());
                 $slug = $this->config->entitySlug($fqcn) ?? $shortname;
                 if (in_array($slug, $fqcnToSlugMap)) {
-                    if ($config->entitySlug($fqcn)) {
+                    if ($this->config->entitySlug($fqcn)) {
                         throw new EntityShortnameException(
                             resource: $fqcn,
                             message: sprintf(
@@ -47,16 +48,41 @@ class EntityMetadataBuilder
                     );
                 }
 
-                $entities[$fqcn] = new EntityMetadata(
-                    slug: $slug,
-                    actions: Action::cases(),
-                    classMetadata: $meta,
-                );
+                $entities[$fqcn] = $this->buildMetadata($slug, Action::cases(), $meta);
 
                 $fqcnToSlugMap[$fqcn] = $slug;
             }
         }
 
         return $entities;
+    }
+
+    public function buildMetadata(string $slug, array $actions, ClassMetadata $meta): EntityMetadata
+    {
+        return new EntityMetadata(
+                    slug: $slug,
+                    actions: $actions,
+                    classMetadata: $meta,
+                    associations: $this->computeAssociations($meta),
+                );
+    }
+    private function computeAssociations(ClassMetadata $classMetadata): array
+    {
+        $associations = [];
+
+        foreach($classMetadata->getAssociationNames() as $associationName) {
+            $associationClass = $classMetadata->getAssociationTargetClass($associationName);
+            if ($associationClass === null) {
+                throw new \LogicException('Association class not found for ' . $associationName);
+            }
+            $associationMetadata = $this->managerRegistry->getManagerForClass($associationClass)->getClassMetadata($associationClass);
+            $associations[$associationClass][$associationName] = [
+                'identifier' => $associationMetadata->getIdentifier(),
+                'fqcn' => $associationClass,
+                'name' => $associationName,
+            ];
+        }
+
+        return $associations;
     }
 }
