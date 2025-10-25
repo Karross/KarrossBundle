@@ -56,47 +56,4 @@ enum Action: string
             self::EDIT_FORM => EditForm::class,
         };
     }
-
-    public function hasTemplate(): bool
-    {
-        return \in_array($this, [self::INDEX, self::SHOW, self::CREATE_FORM, self::EDIT_FORM]);
-    }
-
-    public function getTemplatePatternsHierarchy(EntityMetadata $entityMetadata): array
-    {
-        $embedded = $entityMetadata->hasEmbeddedField() ? '_embedded' : '';
-
-        return match($this) {
-            self::INDEX => [
-                'entity' => [
-                    'index' => [
-                        '@Karross/index/index_entity_{slug}.html.twig',
-                        '@Karross/index/index.html.twig',
-                    ],
-                    'items' => [
-                        sprintf('@Karross/index/items%s_entity_{slug}.html.twig', $embedded),
-                        sprintf('@Karross/index/items%s.html.twig', $embedded),
-                    ],
-                    'no_items' => [
-                        '@Karross/index/no_items_entity_{slug}.html.twig',
-                        '@Karross/index/no_items.html.twig',
-                    ],
-                    'item' => [
-                        '@Karross/index/item_entity_{slug}.html.twig',
-                        '@Karross/index/item.html.twig',
-                    ],
-                ],
-                'field' => [
-                    'field' => [
-                        "@Karross/index/field_{field}_entity_{slug}.html.twig",
-                        "@Karross/index/field_type_{type}_entity_{slug}.html.twig",
-                        "@Karross/index/field_{field}.html.twig",
-                        "@Karross/index/field_type_{type}.html.twig",
-                        "@Karross/index/field.html.twig",
-                    ]
-                ]
-            ],
-            default => [],
-        };
-    }
 }

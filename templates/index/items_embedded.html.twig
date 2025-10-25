@@ -1,35 +1,19 @@
 <table class="k-table" border="1">
     <thead>
-        {% for row in entityMetadata.getFieldLabelsHierarchy() %}
+        {% for row in entityMetadata.getPropertyLabelsHierarchy() %}
             <tr>
                 {% for fieldLabel in row %}
                     <th colspan="{{ colspan(fieldLabel) }}" rowspan="{{ rowspan(fieldLabel, entityMetadata) }}">
                         {{ translate(fieldLabel, actionContext) }}
                     </th>
                 {% endfor %}
-                {% if loop.first %}
-                {% for associationClass, associations in entityMetadata.getAssociations() %}
-                    {% for associationName, association in associations %}
-                        <th rowspan="{{ entityMetadata.getMaxEmbeddedDepth() + 1 }}">{{ association.name }}</th>
-                    {% endfor %}
-                {% endfor %}
-                {% endif %}
             </tr>
         {% endfor %}
     </thead>
     <tbody>
         {% for item in items %}
             <tr>
-                {% for field in entityMetadata.getFields() %}
-                    <td>{{ getAttribute(item, field) }}</td>
-                {% endfor %}
-                {% for associationClass, associations in entityMetadata.getAssociations() %}
-                    {% for associationName, association in associations %}
-                        <td>
-                            {% include '@Karross/index/association.html.twig' with { association: association, item: item } %}
-                        </td>
-                    {% endfor %}
-                {% endfor %}
+                {% include '@Karross/index/item.html.twig' with { item: item } %}
             </tr>
         {% endfor %}
     </tbody>

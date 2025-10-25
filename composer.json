@@ -15,6 +15,8 @@
     }
   ],
   "require": {
+    "doctrine/persistence": "^4.0",
+    "ext-intl": "*",
     "php": "^8.3",
     "symfony/config": "^7.3",
     "symfony/dependency-injection": "^7.3",
@@ -22,7 +24,8 @@
     "symfony/http-kernel": "^7.3",
     "symfony/property-access": "^7.3",
     "symfony/routing": "^7.3",
-    "doctrine/persistence": "^4.0"
+    "symfony/translation-contracts": "^3.6",
+    "twig/twig": "^3.21"
   },
   "require-dev": {
     "doctrine/doctrine-bundle": "^2.0",

@@ -1,7 +1,9 @@
-{% for field in entityMetadata.getFields() %}
-    {% if entityMetadata.isEmbedded(field) %}
-        {{ "embedded field to handle" }}
-    {% else %}
-        {% include '@Karross/index/field.html.twig' %}
-    {% endif %}
+{% for property in entityMetadata.getProperties() %}
+    <td>
+        {% if property.isField() %}
+            {% include '@Karross/index/field.html.twig' with { field: property, item: item } %}
+        {% else %}
+            {% include '@Karross/index/association.html.twig' with { association: property, item: item } %}
+        {% endif %}
+    </td>
 {% endfor %}

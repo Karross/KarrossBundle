@@ -25,7 +25,7 @@ class TemplateRegistry
 
     public function getFieldTemplate(string $slug, string $action, string $templateBaseName, string $fieldName): string
     {
-        return $this->all()[$slug][$action]['field'][$templateBaseName][$fieldName];
+        return $this->all()[$slug][$action]['property'][$templateBaseName][$fieldName];
     }
 }
 
