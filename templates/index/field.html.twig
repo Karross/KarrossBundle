@@ -1,15 +1,1 @@
-{#{% set value = attribute(item, field) %}#}
-
-{% macro get_attribute(object, attributes) %}
-    {% apply spaceless %}
-    {% set attributes = attributes|split('.') %}
-
-    {% set value = object %}
-    {% for attribute in attributes %}
-        {% set value = attribute(value, attribute|trim) is defined ? attribute(value, attribute|trim) : null %}
-    {% endfor %}
-    {{ asString(value) }}
-    {% endapply %}
-{% endmacro %}
-
-{{ _self.get_attribute(item, field) }}
+{{ k_formatted_value(item, property) }}

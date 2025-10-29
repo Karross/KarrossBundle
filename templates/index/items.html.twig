@@ -1,31 +1,15 @@
 <table class="k-table" border="1">
     <thead>
         <tr>
-            {% for field in entityMetadata.getFields() %}
-                <th>{{ field|title }}</th>
-            {% endfor %}
-            {% for associationClass, associations in entityMetadata.getAssociations() %}
-                {% for associationName, association in associations %}
-                    <th>{{ association.name }}</th>
-                {% endfor %}
+            {% for property in entityMetadata.getProperties() %}
+                <th>{{ property.name|title }}</th>
             {% endfor %}
         </tr>
     </thead>
     <tbody>
         {% for item in items %}
             <tr>
-                {% for field in entityMetadata.getFields() %}
-                    <td>
-                        {% include '@Karross/index/field.html.twig' with { field: field, item: item } %}
-                    </td>
-                {% endfor %}
-                {% for associationClass, associations in entityMetadata.getAssociations() %}
-                    {% for associationName, association in associations %}
-                        <td>
-                            {% include '@Karross/index/association.html.twig' with { association: association, item: item } %}
-                        </td>
-                    {% endfor %}
-                {% endfor %}
+                {% include '@Karross/index/item.html.twig' with { item: item } %}
             </tr>
         {% endfor %}
     </tbody>

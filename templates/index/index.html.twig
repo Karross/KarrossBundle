@@ -7,8 +7,8 @@
     {% block title %}<h1>Index {{ entitySlug }}</h1>{% endblock %}
 
     {% if items is empty %}
-        {% include getEntityTemplate(entitySlug, action, 'no_items') %}
+        {% include k_template(entitySlug, action, 'no_items') %}
     {% else %}
-        {% include getEntityTemplate(entitySlug, action, 'items') %}
+        {% include k_template(entitySlug, action, 'items') %}
     {% endif %}
 {% endblock %}

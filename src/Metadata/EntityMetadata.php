@@ -5,16 +5,17 @@ namespace Karross\Metadata;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Karross\Actions\Action;
 
-class EntityMetadata
+readonly class EntityMetadata
 {
+    /**
+     * @param Action[] $actions
+     * @param PropertyInterface[] $properties
+     */
     public function __construct(
-        public readonly string $slug,
-        /**
-         * @var Action[]
-         */
-        public readonly array $actions,
-        public readonly ClassMetadata $classMetadata,
-        public readonly array $associations,
+        public string         $slug,
+        public array          $actions,
+        public array          $properties,
+        private ClassMetadata $classMetadata,
     ) {}
 
     public function getFqcn(): string
@@ -32,14 +33,9 @@ class EntityMetadata
         return $this->actions;
     }
 
-    public function getFields(): array
+    public function getProperties(): array
     {
-        return $this->classMetadata->getFieldNames();
-    }
-
-    public function getAssociations(): array
-    {
-        return $this->associations;
+        return $this->properties;
     }
 
     public function getIdentifier(): array
@@ -47,14 +43,26 @@ class EntityMetadata
         return $this->classMetadata->getIdentifier();
     }
 
-    public function getValue(object $entity, string $field): mixed
+    public function getValue(object $entity, string $property): mixed
     {
-        return $this->classMetadata->getFieldValue($entity, $field);
+        return $this->classMetadata->getFieldValue($entity, $property);
     }
 
-    public function getType(string $fieldName): string
+    public function getTypeOfField(string $fieldName): string
     {
         return $this->classMetadata->getTypeOfField($fieldName);
+    }
+
+    public function getTypeOfAssociation(string $fieldName): string
+    {
+        if ($this->classMetadata->isCollectionValuedAssociation($fieldName)) {
+            return 'collection';
+        };
+        if ($this->classMetadata->isSingleValuedAssociation($fieldName)) {
+            return 'single';
+        };
+
+        throw new \Exception('Unknown kind of association');
     }
 
     public function isEmbedded(string $fieldName): bool
@@ -72,38 +80,41 @@ class EntityMetadata
     {
         return max(
             array_map(
-                fn(string $fieldName) => substr_count($fieldName, '.'),
-                $this->getFields()
+                fn(PropertyInterface $property) => substr_count($property->name, '.'),
+                $this->getProperties()
             )
         );
     }
 
-    public function getExplodedFields(): array
+    public function getExplodedProperties(): array
     {
-        $explodedFields = [];
-        foreach ($this->getFields() as $field) {
-             $explodedFields[$field] = explode('.', $field);
+        $explodedProperties = [];
+        foreach ($this->getProperties() as $property) {
+             $explodedProperties[$property->name] = explode('.', $property->name);
         }
 
-        return $explodedFields;
+        return $explodedProperties;
     }
 
-    public function getFieldLabelsHierarchy(): array
+    /**
+     * This method is used for example in index/items_embedded.html.twig template to display the table head.
+     */
+    public function getPropertyLabelsHierarchy(): array
     {
         $tree = [];
         for ($depth = 0; $depth <= $this->getMaxEmbeddedDepth(); $depth++) {
 
             $tree[$depth] = [];
-            foreach ($this->getExplodedFields() as $path => $explodedField) {
-                $fieldLabel = $explodedField[$depth] ?? null;
+            foreach ($this->getExplodedProperties() as $explodedProperty) {
+                $fieldLabel = $explodedProperty[$depth] ?? null;
                 if ($fieldLabel && !array_key_exists($fieldLabel, $tree[$depth])) {
-                    $partialPath = implode('.', array_slice($explodedField, 0, $depth + 1));
+                    $partialPath = implode('.', array_slice($explodedProperty, 0, $depth + 1));
                     $tree[$depth][$fieldLabel] = new FieldLabel(
                         label: $fieldLabel,
                         path: $partialPath,
                         depth: $depth,
                         numberOfLeaves: $this->getNumberOfLeaves($partialPath),
-                        isLeaf: $depth + 1 === count($explodedField)
+                        isLeaf: $depth + 1 === count($explodedProperty)
                     );
                 }
             }
@@ -115,9 +126,9 @@ class EntityMetadata
     private function getNumberOfLeaves(string $partialPath): int
     {
         $count = 0;
-        foreach ($this->getFields() as $fieldPath) {
-            if (str_starts_with($fieldPath, $partialPath . '.')
-                || $fieldPath === $partialPath) {
+        foreach ($this->getProperties() as $property) {
+            if (str_starts_with($property->name, $partialPath . '.')
+                || $property->name === $partialPath) {
                 $count++;
             }
         }

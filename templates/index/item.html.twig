@@ -1,7 +1,5 @@
-{% for field in entityMetadata.getFields() %}
-    {% if entityMetadata.isEmbedded(field) %}
-        {{ "embedded field to handle" }}
-    {% else %}
-        {% include '@Karross/index/field.html.twig' %}
-    {% endif %}
+{% for property in entityMetadata.getProperties() %}
+    <td>
+        {% include k_template(entitySlug, action, 'property', property.name) with { property: property, item: item } %}
+    </td>
 {% endfor %}

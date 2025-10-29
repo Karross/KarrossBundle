@@ -15,17 +15,17 @@ class TemplateRegistry
 
     public function all(): array
     {
+        return $this->templateResolver->resolveAll();
         return $this->cache->get('karross.templates', fn () => $this->templateResolver->resolveAll());
     }
 
-    public function getEntityTemplate(string $slug, string $action, ?string $templateBaseName = null): string
+    public function getTemplate(string $slug, string $action, ?string $templateBaseName = null, ?string $propertyName = null): string
     {
-        return $this->all()[$slug][$action]['entity'][$templateBaseName ?? $action];
-    }
+        if ($propertyName === null) {
+            return $this->all()[$slug][$action][$templateBaseName ?? $action];
+        }
 
-    public function getFieldTemplate(string $slug, string $action, string $templateBaseName, string $fieldName): string
-    {
-        return $this->all()[$slug][$action]['field'][$templateBaseName][$fieldName];
+        return $this->all()[$slug][$action][$templateBaseName ?? $action][$propertyName];
     }
 }
 

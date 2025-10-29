@@ -11,15 +11,9 @@ class TemplateRegistryExtension
 {
     public function __construct(readonly private TemplateRegistry $templateRegistry) {}
 
-    #[AsTwigFunction('getEntityTemplate')]
-    public function getEntityTemplate(string $slug, string $action, string $templateBaseName): string
+    #[AsTwigFunction('k_template')]
+    public function getTemplate(string $slug, string $action, ?string $templateBaseName = null, ?string $propertyName = null): string
     {
-        return $this->templateRegistry->getEntityTemplate($slug, $action, $templateBaseName);
-    }
-
-    #[AsTwigFunction('getFieldTemplate')]
-    public function getFieldTemplate(string $slug, string $action, string $templateBaseName, string $fieldName): string
-    {
-        return $this->templateRegistry->getFieldTemplate($slug, $action, $templateBaseName, $fieldName);
+        return $this->templateRegistry->getTemplate($slug, $action, $templateBaseName, $propertyName);
     }
 }

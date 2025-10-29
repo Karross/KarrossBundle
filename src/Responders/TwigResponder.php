@@ -22,7 +22,7 @@ class TwigResponder implements ResponderInterface
 
     public function getResponse(ActionContext $actionContext, $data): Response
     {
-        $template = $this->templateRegistry->getEntityTemplate($actionContext->slug, $actionContext->action);
+        $template = $this->templateRegistry->getTemplate($actionContext->slug, $actionContext->action);
 
         return new Response($this->twig->render($template, $data + ['actionContext' => $actionContext]));
     }
