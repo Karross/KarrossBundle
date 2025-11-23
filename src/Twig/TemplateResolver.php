@@ -5,7 +5,7 @@ namespace Karross\Twig;
 use Karross\Actions\Action;
 use Karross\Metadata\EntityMetadata;
 use Karross\Metadata\EntityMetadataRegistry;
-use Karross\Metadata\Field;
+use Karross\Metadata\FieldMetadata;
 use Twig\Environment;
 use Twig\TemplateWrapper;
 
@@ -36,10 +36,10 @@ readonly class TemplateResolver
                                             return strtr(
                                                 $templatePattern,
                                                 [
-                                                    '{fieldOrAssociation}' => $property instanceof Field ? 'field' : 'association',
+                                                    '{fieldOrAssociation}' => $property instanceof FieldMetadata ? 'field' : 'association',
                                                     '{entitySlug}' => $entityMetadata->slug,
                                                     '{propertyName}' => str_replace('.', '_', $property->name),
-                                                    '{propertyType}' => $property instanceof Field ? $entityMetadata->getTypeOfField($property->name) : $entityMetadata->getTypeOfAssociation($property->name)
+                                                    '{propertyType}' => $property instanceof FieldMetadata ? $entityMetadata->getTypeOfField($property->name) : $entityMetadata->getTypeOfAssociation($property->name)
                                                 ]);
                                         }, $templatePatterns)
                                     )->getTemplateName();

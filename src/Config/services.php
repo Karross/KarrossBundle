@@ -87,9 +87,7 @@ return static function (ContainerConfigurator $configurator) {
 
     $services->set(StringableExtension::class);
 
-    $services
-        ->set(PropertyAccessorExtension::class)
-        ->arg('$valueFormatter', service(ValueFormatter::class));
+    $services->set(PropertyAccessorExtension::class);
 
     $services
         ->set(FieldLabelExtension::class)

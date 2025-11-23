@@ -80,7 +80,7 @@ readonly class EntityMetadata
     {
         return max(
             array_map(
-                fn(PropertyInterface $property) => substr_count($property->name, '.'),
+                fn(PropertyMetadata $property) => substr_count($property->name, '.'),
                 $this->getProperties()
             )
         );
