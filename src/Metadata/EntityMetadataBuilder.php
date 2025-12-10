@@ -7,14 +7,16 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Karross\Actions\Action;
 use Karross\Config\KarrossConfig;
 use Karross\Exceptions\EntityShortnameException;
+use Karross\Formatters\FormatterResolver;
+use Karross\Formatters\NotAvailableFormatter;
+use ReflectionClass;
 
 class EntityMetadataBuilder
 {
-    private static $fqcnToSlugMap = [];
-
     public function __construct(
         private readonly ManagerRegistry $managerRegistry,
-        private readonly KarrossConfig $config
+        private readonly KarrossConfig $config,
+        private readonly FormatterResolver $formatterResolver
     ) {}
 
     /**
@@ -23,16 +25,17 @@ class EntityMetadataBuilder
     public function buildAllMetadata(): array
     {
         $entities = [];
+        $fqcnToSlugMap = [];
         foreach ($this->managerRegistry->getManagers() as $em) {
             foreach ($em->getMetadataFactory()->getAllMetadata() as $classMetadata) {
-                $slug = $this->resolveSlug($classMetadata, $this->config);
+                $slug = $this->resolveSlug($classMetadata, $this->config, $fqcnToSlugMap);
                 $entities[$classMetadata->getName()] = new EntityMetadata(
                     slug: $slug,
                     actions: $this->resolveActions($this->config),
                     properties: $this->buildAssociations($classMetadata) + $this->buildFields($classMetadata),
                     classMetadata: $classMetadata,
                 );
-                self::$fqcnToSlugMap[$classMetadata->getName()] = $slug;
+                $fqcnToSlugMap[$classMetadata->getName()] = $slug;
             }
         }
 
@@ -50,10 +53,11 @@ class EntityMetadataBuilder
             }
             $associationMetadata = $this->managerRegistry->getManagerForClass($associationClass)->getClassMetadata($associationClass);
 
-            $associations[$associationName] = new Association(
+            $associations[$associationName] = new AssociationMetadata(
                 name: $associationName,
                 identifier: $associationMetadata->getIdentifier(),
                 fqcn: $associationClass,
+                formatter: NotAvailableFormatter::class
             );
         }
 
@@ -63,10 +67,25 @@ class EntityMetadataBuilder
     private function buildFields(ClassMetadata $classMetadata): array
     {
         $fields = [];
+        $reflectionClass = new ReflectionClass($classMetadata->getName());
+        
         foreach ($classMetadata->getFieldNames() as $fieldName) {
-            $fields[$fieldName] = new Field(
+            $type = $classMetadata->getTypeOfField($fieldName);
+            
+            // Get reflection property for the formatter resolver
+            $reflectionProperty = $reflectionClass->hasProperty($fieldName)
+                ? $reflectionClass->getProperty($fieldName)
+                : null;
+            
+            // Resolve formatter using all available type information
+            $formatter = $reflectionProperty !== null
+                ? $this->formatterResolver->resolve($reflectionProperty, $type)
+                : NotAvailableFormatter::class;
+            
+            $fields[$fieldName] = new FieldMetadata(
                 name: $fieldName,
                 fqcn: $classMetadata->getName(),
+                formatter: $formatter,
             );
         }
 
@@ -76,19 +95,20 @@ class EntityMetadataBuilder
     /**
      * @throws EntityShortnameException
      */
-    private function resolveSlug(ClassMetadata $classMetadata, KarrossConfig $config): string
+    private function resolveSlug(ClassMetadata $classMetadata, KarrossConfig $config, array $fqcnToSlugMap): string
     {
         $fqcn = $classMetadata->getName();
         $shortname = strtolower($classMetadata->getReflectionClass()->getShortName());
         $slug = $config->entitySlug($fqcn) ?? $shortname;
-        if (in_array($slug, self::$fqcnToSlugMap)) {
+
+        if (in_array($slug, $fqcnToSlugMap)) {
             if ($this->config->entitySlug($fqcn)) {
                 throw new EntityShortnameException(
                     resource: $fqcn,
                     message: sprintf(
                         "The slug you have provided for %s is already in use with %s",
                         $fqcn,
-                        array_search($this->config->entitySlug($fqcn), self::$fqcnToSlugMap),
+                        array_search($this->config->entitySlug($fqcn), $fqcnToSlugMap),
                     ),
                 );
             }
@@ -97,7 +117,7 @@ class EntityMetadataBuilder
                 message: sprintf(
                     "Those classes (%s, %s) have the same shortname '%s'. Please provide a slug to solve the conflicts",
                     $fqcn,
-                    array_search($slug, self::$fqcnToSlugMap),
+                    array_search($slug, $fqcnToSlugMap),
                     $slug
                 )
             );
@@ -113,4 +133,6 @@ class EntityMetadataBuilder
     {
         return Action::cases();
     }
+
+
 }

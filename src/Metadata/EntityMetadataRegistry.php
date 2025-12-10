@@ -16,8 +16,8 @@ class EntityMetadataRegistry
     public function all(): array
     {
         //dd($this->builder->buildAllMetadata());
-        //return $this->builder->buildAllMetadata();
-        return $this->cache->get('karross.metadata', fn () => $this->builder->buildAllMetadata());
+        return $this->builder->buildAllMetadata();
+        //return $this->cache->get('karross.metadata', fn () => $this->builder->buildAllMetadata());
     }
 
     public function get(string $fqcn): EntityMetadata

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Karross\Twig;
 
 use Karross\Actions\Action;
-use Karross\Metadata\Association;
+use Karross\Metadata\AssociationMetadata;
 use Karross\Metadata\EntityMetadataRegistry;
 use Karross\Routes\RouteGenerator;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -22,7 +22,7 @@ class UrlBuilderExtension
     }
 
     #[AsTwigFunction('getUrl')]
-    public function getUrl(string $action, Association $association, $entity): string
+    public function getUrl(string $action, AssociationMetadata $association, $entity): string
     {
         try {
             $associationEntity = $this->accessor->getValue($entity, $association->name);
