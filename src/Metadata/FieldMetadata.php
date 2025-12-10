@@ -2,7 +2,7 @@
 
 namespace Karross\Metadata;
 
-readonly class FieldMetadata extends PropertyMetadata
+class FieldMetadata extends PropertyMetadata
 {
     /**
      * @param class-string $fqcn
@@ -13,6 +13,6 @@ readonly class FieldMetadata extends PropertyMetadata
         public string $fqcn,
         public string $formatter,
     ) {
-        parent::__construct($name, true, false, $this->formatter);
+        parent::__construct($name, true, false, $formatter);
     }
 }

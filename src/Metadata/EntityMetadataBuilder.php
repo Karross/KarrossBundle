@@ -2,21 +2,21 @@
 
 namespace Karross\Metadata;
 
-use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Karross\Actions\Action;
 use Karross\Config\KarrossConfig;
 use Karross\Exceptions\EntityShortnameException;
-use Karross\Formatters\BooleanFormatter;
-use Karross\Formatters\NoFormatter;
+use Karross\Formatters\FormatterResolver;
 use Karross\Formatters\NotAvailableFormatter;
+use ReflectionClass;
 
 class EntityMetadataBuilder
 {
     public function __construct(
         private readonly ManagerRegistry $managerRegistry,
-        private readonly KarrossConfig $config
+        private readonly KarrossConfig $config,
+        private readonly FormatterResolver $formatterResolver
     ) {}
 
     /**
@@ -67,12 +67,25 @@ class EntityMetadataBuilder
     private function buildFields(ClassMetadata $classMetadata): array
     {
         $fields = [];
+        $reflectionClass = new ReflectionClass($classMetadata->getName());
+        
         foreach ($classMetadata->getFieldNames() as $fieldName) {
             $type = $classMetadata->getTypeOfField($fieldName);
+            
+            // Get reflection property for the formatter resolver
+            $reflectionProperty = $reflectionClass->hasProperty($fieldName)
+                ? $reflectionClass->getProperty($fieldName)
+                : null;
+            
+            // Resolve formatter using all available type information
+            $formatter = $reflectionProperty !== null
+                ? $this->formatterResolver->resolve($reflectionProperty, $type)
+                : NotAvailableFormatter::class;
+            
             $fields[$fieldName] = new FieldMetadata(
                 name: $fieldName,
                 fqcn: $classMetadata->getName(),
-                formatter: $this->getValueFormatter($type),
+                formatter: $formatter,
             );
         }
 
@@ -121,53 +134,5 @@ class EntityMetadataBuilder
         return Action::cases();
     }
 
-    private function getValueFormatter($doctrineType): string {
 
-        return match ($doctrineType) {
-
-            Types::SMALLINT,
-            Types::INTEGER,
-            Types::BIGINT,
-            Types::DECIMAL,
-            Types::NUMBER,
-            Types::FLOAT,
-            Types::STRING,
-            Types::ASCII_STRING,
-            Types::TEXT,
-            Types::GUID,
-            Types::SMALLFLOAT => NoFormatter::class,
-
-            Types::BOOLEAN => BooleanFormatter::class,
-
-        //
-        //    // dates
-        //    Types::DATE_MUTABLE,
-        //    Types::DATE_IMMUTABLE => [DateFormatter::class, 'format'],
-        //
-        //    Types::DATETIME_MUTABLE,
-        //    Types::DATETIME_IMMUTABLE,
-        //    Types::DATETIMETZ_MUTABLE,
-        //    Types::DATETIMETZ_IMMUTABLE => [DateTimeFormatter::class, 'format'],
-        //
-        //    Types::TIME_MUTABLE,
-        //    Types::TIME_IMMUTABLE => [TimeFormatter::class, 'format'],
-        //
-        //    Types::DATEINTERVAL => [DateIntervalFormatter::class, 'format'],
-        //
-        //    // structurés
-        //    Types::SIMPLE_ARRAY,
-        //    Types::JSON,
-        //    Types::JSONB => [JsonFormatter::class, 'format'],
-        //
-        //    // binaires
-        //    Types::BINARY,
-        //    Types::BLOB => [BinaryFormatter::class, 'format'],
-        //
-        //    // énumérations
-        //    Types::ENUM => [EnumFormatter::class, 'format'],
-        //
-
-            default => NotAvailableFormatter::class,
-        };
-    }
 }

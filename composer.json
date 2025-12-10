@@ -25,7 +25,8 @@
     "symfony/property-access": "^7.3",
     "symfony/routing": "^7.3",
     "symfony/translation-contracts": "^3.6",
-    "twig/twig": "^3.21"
+    "twig/twig": "^3.21",
+    "commerceguys/intl": "^2.0"
   },
   "require-dev": {
     "doctrine/doctrine-bundle": "^2.0",

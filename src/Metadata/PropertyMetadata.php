@@ -2,16 +2,16 @@
 
 namespace Karross\Metadata;
 
-abstract readonly class PropertyMetadata
+class PropertyMetadata
 {
     /**
      * @param class-string $formatter
      */
     public function __construct(
-        string $name,
+        public string $name,
         public bool $isField,
         public bool $isAssociation,
-        string $formatter
+        public string $formatter
     ) {
 
     }

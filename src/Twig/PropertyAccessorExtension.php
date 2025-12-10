@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Karross\Twig;
 
 use Karross\Metadata\PropertyMetadata;
-use Karross\Responders\Transformers\ValueFormatter;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Twig\Attribute\AsTwigFunction;
@@ -25,12 +24,12 @@ class PropertyAccessorExtension
     }
 
     #[AsTwigFunction('k_formatted_value')]
-    public function getFormattedValue($entity, PropertyMetadata $property)
+    public function getFormattedValue($entity, PropertyMetadata $property): string
     {
+        try {
             $value = $this->accessor->getValue($entity, $property->name);
 
             return $property->format($value);
-        try {
         } catch (\Throwable $e) {
             return 'N/A';
         }

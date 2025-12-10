@@ -3,11 +3,11 @@
 namespace Karross\Config;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Karross\Formatters\FormatterResolver;
 use Karross\Metadata\EntityMetadataBuilder;
 use Karross\Metadata\EntityMetadataRegistry;
 use Karross\Responders\ResponderInterface;
 use Karross\Responders\ResponderManager;
-use Karross\Responders\Transformers\ValueFormatter;
 use Karross\Routes\RouteGenerator;
 use Karross\Routes\RouteLoader;
 use Karross\Twig\FieldLabelExtension;
@@ -45,11 +45,15 @@ return static function (ContainerConfigurator $configurator) {
         ->set(KarrossConfig::class)
         ->arg('$config', param('karross.config'));
 
+    // Formatters
+    $services->set(FormatterResolver::class);
+
     // Metadata
     $services
         ->set(EntityMetadataBuilder::class)
         ->arg('$managerRegistry', service(ManagerRegistry::class))
-        ->arg('$config', service(KarrossConfig::class));
+        ->arg('$config', service(KarrossConfig::class))
+        ->arg('$formatterResolver', service(FormatterResolver::class));
 
     $services
         ->set(EntityMetadataRegistry::class)
@@ -64,9 +68,6 @@ return static function (ContainerConfigurator $configurator) {
     $services
         ->set(ResponderManager::class)
         ->arg('$responders', tagged_iterator('karross.responder', ResponderInterface::class));
-
-        // Transformers
-        $services->set(ValueFormatter::class);
 
     // Routes
     $services->set(RouteGenerator::class);
