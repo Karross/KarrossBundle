@@ -6,6 +6,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Karross\Formatters\FormatterResolver;
 use Karross\Metadata\EntityMetadataBuilder;
 use Karross\Metadata\EntityMetadataRegistry;
+use Karross\Metadata\PropertyTypeDetector;
 use Karross\Responders\ResponderInterface;
 use Karross\Responders\ResponderManager;
 use Karross\Routes\RouteGenerator;
@@ -59,6 +60,8 @@ return static function (ContainerConfigurator $configurator) {
         ->set(EntityMetadataRegistry::class)
         ->arg('$cache', service(CacheInterface::class))
         ->arg('$builder', service(EntityMetadataBuilder::class));
+
+    $services->set(PropertyTypeDetector::class);
 
     // Responders
     $services
