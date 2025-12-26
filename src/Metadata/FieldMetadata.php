@@ -11,8 +11,9 @@ class FieldMetadata extends PropertyMetadata
     public function __construct(
         public string $name,
         public string $fqcn,
+        public PropertyType $type,
         public string $formatter,
     ) {
-        parent::__construct($name, true, false, $formatter);
+        parent::__construct($name, true, false, $type, $formatter);
     }
 }

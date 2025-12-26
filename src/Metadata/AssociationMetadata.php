@@ -11,8 +11,9 @@ class AssociationMetadata extends PropertyMetadata
         public string $name,
         public array $identifier,
         public string $fqcn,
+        public PropertyType $type,
         public string $formatter,
     ) {
-        parent::__construct($name, false, true, $formatter);
+        parent::__construct($name, false, true, $type, $formatter);
     }
 }

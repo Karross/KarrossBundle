@@ -48,21 +48,29 @@ readonly class EntityMetadata
         return $this->classMetadata->getFieldValue($entity, $property);
     }
 
-    public function getTypeOfField(string $fieldName): string
+    /**
+     * Get the semantic type of a property.
+     */
+    public function getPropertyType(string $propertyName): PropertyType
     {
-        return $this->classMetadata->getTypeOfField($fieldName);
+        return $this->properties[$propertyName]->type
+            ?? throw new \InvalidArgumentException("Property $propertyName not found");
     }
 
+    /**
+     * @deprecated Use getPropertyType() instead. This method is kept for backward compatibility.
+     */
+    public function getTypeOfField(string $fieldName): string
+    {
+        return $this->getPropertyType($fieldName)->value;
+    }
+
+    /**
+     * @deprecated Use getPropertyType() instead. This method is kept for backward compatibility.
+     */
     public function getTypeOfAssociation(string $fieldName): string
     {
-        if ($this->classMetadata->isCollectionValuedAssociation($fieldName)) {
-            return 'collection';
-        };
-        if ($this->classMetadata->isSingleValuedAssociation($fieldName)) {
-            return 'single';
-        };
-
-        throw new \Exception('Unknown kind of association');
+        return $this->getPropertyType($fieldName)->value;
     }
 
     public function isEmbedded(string $fieldName): bool

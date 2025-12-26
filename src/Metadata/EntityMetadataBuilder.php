@@ -10,13 +10,15 @@ use Karross\Exceptions\EntityShortnameException;
 use Karross\Formatters\FormatterResolver;
 use Karross\Formatters\NotAvailableFormatter;
 use ReflectionClass;
+use ReflectionProperty;
 
-class EntityMetadataBuilder
+readonly class EntityMetadataBuilder
 {
     public function __construct(
-        private readonly ManagerRegistry $managerRegistry,
-        private readonly KarrossConfig $config,
-        private readonly FormatterResolver $formatterResolver
+        private ManagerRegistry      $managerRegistry,
+        private KarrossConfig        $config,
+        private PropertyTypeDetector $typeDetector,
+        private FormatterResolver    $formatterResolver
     ) {}
 
     /**
@@ -45,6 +47,7 @@ class EntityMetadataBuilder
     private function buildAssociations(ClassMetadata $classMetadata): array
     {
         $associations = [];
+        $reflectionClass = new ReflectionClass($classMetadata->getName());
 
         foreach($classMetadata->getAssociationNames() as $associationName) {
             $associationClass = $classMetadata->getAssociationTargetClass($associationName);
@@ -53,11 +56,24 @@ class EntityMetadataBuilder
             }
             $associationMetadata = $this->managerRegistry->getManagerForClass($associationClass)->getClassMetadata($associationClass);
 
+            $reflectionProperty = $reflectionClass->getProperty($associationName);
+
+            // Detect type
+            $type = $this->typeDetector->detect(
+                property: $reflectionProperty,
+                doctrineType: null,
+                isAssociation: true,
+            );
+
+            // Resolve formatter
+            $formatter = $this->formatterResolver->resolve($type);
+
             $associations[$associationName] = new AssociationMetadata(
                 name: $associationName,
                 identifier: $associationMetadata->getIdentifier(),
                 fqcn: $associationClass,
-                formatter: NotAvailableFormatter::class
+                type: $type,
+                formatter: $formatter,
             );
         }
 
@@ -70,26 +86,92 @@ class EntityMetadataBuilder
         $reflectionClass = new ReflectionClass($classMetadata->getName());
         
         foreach ($classMetadata->getFieldNames() as $fieldName) {
-            $type = $classMetadata->getTypeOfField($fieldName);
+            $doctrineType = $classMetadata->getTypeOfField($fieldName);
             
-            // Get reflection property for the formatter resolver
-            $reflectionProperty = $reflectionClass->hasProperty($fieldName)
-                ? $reflectionClass->getProperty($fieldName)
-                : null;
-            
-            // Resolve formatter using all available type information
-            $formatter = $reflectionProperty !== null
-                ? $this->formatterResolver->resolve($reflectionProperty, $type)
-                : NotAvailableFormatter::class;
-            
+            // Use recursive resolution for embedded fields (e.g., 'identity.firstname')
+            $reflectionProperty = $this->resolveReflectionProperty(
+                $reflectionClass,
+                $fieldName
+            );
+
+            // Detect type
+            $type = $this->typeDetector->detect(
+                property: $reflectionProperty,
+                doctrineType: $doctrineType,
+                isAssociation: false,
+            );
+
+            // Resolve formatter
+            $formatter = $this->formatterResolver->resolve($type);
+
             $fields[$fieldName] = new FieldMetadata(
                 name: $fieldName,
                 fqcn: $classMetadata->getName(),
+                type: $type,
                 formatter: $formatter,
             );
         }
 
         return $fields;
+    }
+
+    /**
+     * Resolve the ReflectionProperty for a field, handling embedded fields.
+     * 
+     * For simple fields (e.g., 'title'), returns the direct property.
+     * For embedded fields (e.g., 'identity.firstname'), navigates through the hierarchy:
+     *   - Gets the 'identity' property from the entity class
+     *   - Gets the type of 'identity' (e.g., Identity class)
+     *   - Gets the 'firstname' property from the Identity class
+     * 
+     * @param ReflectionClass $reflectionClass The entity's reflection class
+     * @param string $fieldName The field name (may contain dots for embedded fields)
+     * @return \ReflectionProperty|null The resolved property, or null if not found
+     */
+    private function resolveReflectionProperty(
+        ReflectionClass $reflectionClass,
+        string $fieldName
+    ): ?\ReflectionProperty {
+        // Simple case: direct property exists
+        if ($reflectionClass->hasProperty($fieldName)) {
+            return $reflectionClass->getProperty($fieldName);
+        }
+        
+        // Embedded case: fieldName contains '.' (e.g., 'identity.firstname')
+        if (!str_contains($fieldName, '.')) {
+            return null;
+        }
+        
+        $parts = explode('.', $fieldName);
+        $currentClass = $reflectionClass;
+        $currentProperty = null;
+        
+        // Navigate through each part of the path
+        foreach ($parts as $index => $part) {
+            if (!$currentClass->hasProperty($part)) {
+                return null;
+            }
+            
+            $currentProperty = $currentClass->getProperty($part);
+            
+            // If not the last part, navigate to the property's type
+            if ($index < count($parts) - 1) {
+                $type = $currentProperty->getType();
+                
+                if (!($type instanceof \ReflectionNamedType) || $type->isBuiltin()) {
+                    return null;
+                }
+                
+                $className = $type->getName();
+                if (!class_exists($className)) {
+                    return null;
+                }
+                
+                $currentClass = new ReflectionClass($className);
+            }
+        }
+        
+        return $currentProperty;
     }
 
     /**
