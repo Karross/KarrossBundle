@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Karross\Twig;
 
 use Karross\Metadata\PropertyMetadata;
@@ -12,6 +10,7 @@ use Twig\Attribute\AsTwigFunction;
 class PropertyAccessorExtension
 {
     private PropertyAccessor $accessor;
+
     public function __construct()
     {
         $this->accessor = PropertyAccess::createPropertyAccessor();

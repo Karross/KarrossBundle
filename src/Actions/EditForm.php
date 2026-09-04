@@ -4,7 +4,7 @@ namespace Karross\Actions;
 
 class EditForm
 {
-    public function __invoke()
+    public function __invoke(): void
     {
     }
 }

@@ -1,15 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Karross\Twig;
 
 use Twig\Attribute\AsTwigFunction;
-use Twig\Extension\AbstractExtension;
 
 class TemplateRegistryExtension
 {
-    public function __construct(readonly private TemplateRegistry $templateRegistry) {}
+    public function __construct(private readonly TemplateRegistry $templateRegistry)
+    {
+    }
 
     #[AsTwigFunction('k_template')]
     public function getTemplate(string $slug, string $action, ?string $templateBaseName = null, ?string $propertyName = null): string

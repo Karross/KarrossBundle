@@ -4,7 +4,7 @@ namespace Karross\Actions;
 
 class Delete
 {
-    public function __invoke()
+    public function __invoke(): void
     {
     }
 }

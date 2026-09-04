@@ -14,9 +14,8 @@ class PropertyMetadata
         public bool $isField,
         public bool $isAssociation,
         public PropertyType $type,
-        public string $formatter
+        public string $formatter,
     ) {
-
     }
 
     public function format(mixed $value, ?FormattingContext $context = null): string

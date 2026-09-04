@@ -30,12 +30,12 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('pattern')
                     ->arrayPrototype()
                         ->beforeNormalization()
-                            ->ifTrue(fn($v) => is_array($v) && array_keys($v) === range(0, count($v) - 1))
-                            ->then(fn($v) => ['actions' => $v])
+                            ->ifTrue(static fn ($v) => \is_array($v) && array_keys($v) === range(0, \count($v) - 1))
+                            ->then(static fn ($v) => ['actions' => $v])
                         ->end()
                         ->beforeNormalization()
                             ->ifNull()
-                            ->then(fn() => []) // transforms ~ into []
+                            ->then(static fn () => []) // transforms ~ into []
                         ->end()
                         ->children()
                             ->arrayNode('actions')

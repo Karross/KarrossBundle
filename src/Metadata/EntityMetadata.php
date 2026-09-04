@@ -8,15 +8,16 @@ use Karross\Actions\Action;
 readonly class EntityMetadata
 {
     /**
-     * @param Action[] $actions
+     * @param Action[]            $actions
      * @param PropertyInterface[] $properties
      */
     public function __construct(
-        public string         $slug,
-        public array          $actions,
-        public array          $properties,
+        public string $slug,
+        public array $actions,
+        public array $properties,
         private ClassMetadata $classMetadata,
-    ) {}
+    ) {
+    }
 
     public function getFqcn(): string
     {
@@ -75,8 +76,8 @@ readonly class EntityMetadata
 
     public function isEmbedded(string $fieldName): bool
     {
-        return str_contains($fieldName, '.') &&
-        in_array(strtok($fieldName, '.'), array_keys($this->classMetadata->embeddedClasses));
+        return str_contains($fieldName, '.')
+        && \in_array(strtok($fieldName, '.'), array_keys($this->classMetadata->embeddedClasses));
     }
 
     public function hasEmbeddedField(): bool
@@ -88,7 +89,7 @@ readonly class EntityMetadata
     {
         return max(
             array_map(
-                fn(PropertyMetadata $property) => substr_count($property->name, '.'),
+                static fn (PropertyMetadata $property) => substr_count($property->name, '.'),
                 $this->getProperties()
             )
         );
@@ -98,7 +99,7 @@ readonly class EntityMetadata
     {
         $explodedProperties = [];
         foreach ($this->getProperties() as $property) {
-             $explodedProperties[$property->name] = explode('.', $property->name);
+            $explodedProperties[$property->name] = explode('.', $property->name);
         }
 
         return $explodedProperties;
@@ -110,19 +111,18 @@ readonly class EntityMetadata
     public function getPropertyLabelsHierarchy(): array
     {
         $tree = [];
-        for ($depth = 0; $depth <= $this->getMaxEmbeddedDepth(); $depth++) {
-
+        for ($depth = 0; $depth <= $this->getMaxEmbeddedDepth(); ++$depth) {
             $tree[$depth] = [];
             foreach ($this->getExplodedProperties() as $explodedProperty) {
                 $fieldLabel = $explodedProperty[$depth] ?? null;
-                if ($fieldLabel && !array_key_exists($fieldLabel, $tree[$depth])) {
-                    $partialPath = implode('.', array_slice($explodedProperty, 0, $depth + 1));
+                if ($fieldLabel && !\array_key_exists($fieldLabel, $tree[$depth])) {
+                    $partialPath = implode('.', \array_slice($explodedProperty, 0, $depth + 1));
                     $tree[$depth][$fieldLabel] = new FieldLabel(
                         label: $fieldLabel,
                         path: $partialPath,
                         depth: $depth,
                         numberOfLeaves: $this->getNumberOfLeaves($partialPath),
-                        isLeaf: $depth + 1 === count($explodedProperty)
+                        isLeaf: $depth + 1 === \count($explodedProperty)
                     );
                 }
             }
@@ -135,9 +135,9 @@ readonly class EntityMetadata
     {
         $count = 0;
         foreach ($this->getProperties() as $property) {
-            if (str_starts_with($property->name, $partialPath . '.')
+            if (str_starts_with($property->name, $partialPath.'.')
                 || $property->name === $partialPath) {
-                $count++;
+                ++$count;
             }
         }
 

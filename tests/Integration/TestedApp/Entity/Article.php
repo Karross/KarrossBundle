@@ -65,6 +65,7 @@ class Article
     public function setTitle(?string $title): self
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -76,6 +77,7 @@ class Article
     public function setContent(?string $content): self
     {
         $this->content = $content;
+
         return $this;
     }
 
@@ -87,6 +89,7 @@ class Article
     public function setPublished(bool $published): self
     {
         $this->published = $published;
+
         return $this;
     }
 
@@ -98,6 +101,7 @@ class Article
     public function setViewCount(int $viewCount): self
     {
         $this->viewCount = $viewCount;
+
         return $this;
     }
 
@@ -109,6 +113,7 @@ class Article
     public function setPrice(?string $price): self
     {
         $this->price = $price;
+
         return $this;
     }
 
@@ -120,6 +125,7 @@ class Article
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -131,6 +137,7 @@ class Article
     public function setPublishedAt(?\DateTimeImmutable $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
+
         return $this;
     }
 
@@ -142,6 +149,7 @@ class Article
     public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
     {
         $this->scheduledDate = $scheduledDate;
+
         return $this;
     }
 
@@ -153,6 +161,7 @@ class Article
     public function setStatus(?Status $status): self
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -164,6 +173,7 @@ class Article
     public function setTags(array $tags): self
     {
         $this->tags = $tags;
+
         return $this;
     }
 }

@@ -11,13 +11,14 @@ class Show
 {
     public function __invoke(Request $request, ManagerRegistry $managerRegistry, RouterInterface $router): Response
     {
-        /**@var \Symfony\Component\Routing\Route $route */
         $routeName = $request->attributes->get('_route');
+        /** @var \Symfony\Component\Routing\Route $route */
         $route = $router->getRouteCollection()->get($routeName);
         $fqcn = $route->getOption('fqcn');
         $routeParams = $request->attributes->get('_route_params');
         $entity = $managerRegistry->getManagerForClass($fqcn)->find($fqcn, $routeParams);
         dd($entity);
+
         return new Response('show');
     }
 }

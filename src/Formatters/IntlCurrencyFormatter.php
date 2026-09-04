@@ -10,13 +10,13 @@ class IntlCurrencyFormatter implements ValueFormatterInterface
 {
     public static function format(mixed $value, ?FormattingContext $context = null): string
     {
-        if ($value === null) {
+        if (null === $value) {
             return '';
         }
 
         $locale = $context?->locale ?? FormattingContext::DEFAULT_LOCALE;
         $currencyCode = 'EUR'; // Default currency, could be passed via context
-        
+
         $numberFormatRepository = new NumberFormatRepository();
         $currencyRepository = new CurrencyRepository();
         $formatter = new IntlCurrencyFormatterLib($numberFormatRepository, $currencyRepository, ['locale' => $locale]);

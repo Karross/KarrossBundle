@@ -2,7 +2,6 @@
 
 namespace Karross\Formatters\DateTime;
 
-use DateTimeInterface;
 use IntlDateFormatter;
 use Karross\Formatters\FormattingContext;
 use Karross\Formatters\ValueFormatterInterface;
@@ -18,11 +17,11 @@ abstract class AbstractDateTimeFormatter implements ValueFormatterInterface
 {
     public static function format(mixed $value, ?FormattingContext $context = null): string
     {
-        if ($value === null) {
+        if (null === $value) {
             return '';
         }
 
-        if (!$value instanceof DateTimeInterface) {
+        if (!$value instanceof \DateTimeInterface) {
             return 'N/A';
         }
 
@@ -30,9 +29,9 @@ abstract class AbstractDateTimeFormatter implements ValueFormatterInterface
 
         [$dateType, $timeType, $pattern] = static::resolvePattern($context);
 
-        $formatter = $pattern !== null
-            ? new IntlDateFormatter($locale, IntlDateFormatter::NONE, IntlDateFormatter::NONE, null, null, $pattern)
-            : new IntlDateFormatter($locale, $dateType, $timeType);
+        $formatter = null !== $pattern
+            ? new \IntlDateFormatter($locale, \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, null, null, $pattern)
+            : new \IntlDateFormatter($locale, $dateType, $timeType);
 
         if (($timezone = $context?->timezone) !== null) {
             $formatter->setTimeZone($timezone);

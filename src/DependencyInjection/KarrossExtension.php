@@ -25,9 +25,8 @@ class KarrossExtension extends Extension implements PrependExtensionInterface
     {
         $container->prependExtensionConfig('twig', [
             'paths' => [
-                \dirname(__DIR__) . '/../templates' => 'Karross',
+                \dirname(__DIR__).'/../templates' => 'Karross',
             ],
         ]);
     }
 }
-

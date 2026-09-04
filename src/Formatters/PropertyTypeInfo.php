@@ -15,20 +15,21 @@ readonly class PropertyTypeInfo
         public bool $isNullable = false,
         public bool $isCollection = false,
         public ?string $collectionItemType = null,
-    ) {}
+    ) {
+    }
 
     public function hasPhpType(): bool
     {
-        return $this->phpType !== null;
+        return null !== $this->phpType;
     }
 
     public function hasPhpDocType(): bool
     {
-        return $this->phpDocType !== null;
+        return null !== $this->phpDocType;
     }
 
     public function hasDoctrineType(): bool
     {
-        return $this->doctrineType !== null;
+        return null !== $this->doctrineType;
     }
 }

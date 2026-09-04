@@ -1,0 +1,35 @@
+name: php-env
+description: Build the layer-cached Docker image and resolve Composer deps with a persisted cache
+
+# NOTE: this action must be used AFTER actions/checkout at the job level. GitHub
+# resolves the local action path at job start (before any step runs), so the
+# workspace must already contain this file — checkout cannot live inside here.
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v4
+
+    - name: Build Docker image (layer-cached)
+      uses: docker/build-push-action@v7
+      with:
+        context: .
+        load: true
+        tags: karross/karross-bundle:dev
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Cache Composer packages (var/composer)
+      uses: actions/cache@v5
+      with:
+        path: var/composer
+        key: composer-packages-${{ runner.os }}-${{ hashFiles('composer.json') }}
+        restore-keys: |
+          composer-packages-${{ runner.os }}-
+
+    - name: Install dependencies
+      # No committed composer.lock (gitignored: the host app resolves its own deps).
+      # Here we resolve from composer.json at install time.
+      run: make update
+      shell: bash

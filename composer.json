@@ -39,7 +39,10 @@
     "symfony/twig-bundle": "^7.3",
     "phpunit/phpunit": "^12.0",
     "symfony/translation": "^7.3",
-    "playwright-php/playwright-symfony": "^0.10.0"
+    "playwright-php/playwright-symfony": "^0.10.0",
+    "phpstan/phpstan": "^2.2",
+    "phpstan/phpstan-symfony": "^2.0",
+    "friendsofphp/php-cs-fixer": "^3.95"
   },
   "autoload": {
     "psr-4": {
@@ -51,5 +54,19 @@
       "TestedApp\\": "tests/Integration/TestedApp",
       "Tests\\": "tests/"
     }
+  },
+  "scripts": {
+    "phpstan": "phpstan analyse --no-progress",
+    "cs-fix": "php-cs-fixer fix",
+    "cs-fix-check": "php-cs-fixer fix --dry-run",
+    "all-fix": [
+      "@cs-fix"
+    ],
+    "all-check": [
+      "@cs-fix-check",
+      "@phpstan",
+      "@test"
+    ],
+    "test": "phpunit"
   }
 }

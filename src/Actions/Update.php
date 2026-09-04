@@ -4,7 +4,7 @@ namespace Karross\Actions;
 
 class Update
 {
-    public function __invoke()
+    public function __invoke(): void
     {
     }
 }

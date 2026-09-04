@@ -11,7 +11,9 @@ use Twig\TemplateWrapper;
 
 readonly class TemplateResolver
 {
-    public function __construct(private Environment $twig, private EntityMetadataRegistry $entityMetadataRegistry) {}
+    public function __construct(private Environment $twig, private EntityMetadataRegistry $entityMetadataRegistry)
+    {
+    }
 
     /**
      * @return array<string, array<TemplateWrapper>
@@ -23,29 +25,29 @@ readonly class TemplateResolver
             foreach ($entityMetadata->actions as $action) {
                 if ($this->hasTemplate($action)) {
                     foreach ($this->getTemplatePatternsHierarchy($action, $entityMetadata) as $templateBasename => $templatePatterns) {
-                            if ($templateBasename !== 'property') {
-                                $templatesMap[$entityMetadata->slug][$action->value][$templateBasename] = $this->twig->resolveTemplate(array_map(
-                                    function ($templatePattern) use ($entityMetadata) {
-                                        return strtr($templatePattern, ['{slug}' => $entityMetadata->slug,]);
+                        if ('property' !== $templateBasename) {
+                            $templatesMap[$entityMetadata->slug][$action->value][$templateBasename] = $this->twig->resolveTemplate(array_map(
+                                static function ($templatePattern) use ($entityMetadata) {
+                                    return strtr($templatePattern, ['{slug}' => $entityMetadata->slug]);
+                                }, $templatePatterns)
+                            )->getTemplateName();
+                        } else {
+                            foreach ($entityMetadata->getProperties() as $property) {
+                                $templatesMap[$entityMetadata->slug][$action->value][$templateBasename][$property->name] = $this->twig->resolveTemplate(array_map(
+                                    static function ($templatePattern) use ($entityMetadata, $property) {
+                                        return strtr(
+                                            $templatePattern,
+                                            [
+                                                '{fieldOrAssociation}' => $property instanceof FieldMetadata ? 'field' : 'association',
+                                                '{entitySlug}' => $entityMetadata->slug,
+                                                '{propertyName}' => str_replace('.', '_', $property->name),
+                                                '{propertyType}' => $property instanceof FieldMetadata ? $entityMetadata->getTypeOfField($property->name) : $entityMetadata->getTypeOfAssociation($property->name),
+                                            ]);
                                     }, $templatePatterns)
                                 )->getTemplateName();
-                            } else {
-                                foreach ($entityMetadata->getProperties() as $property) {
-                                    $templatesMap[$entityMetadata->slug][$action->value][$templateBasename][$property->name] = $this->twig->resolveTemplate(array_map(
-                                        function ($templatePattern) use ($entityMetadata, $property) {
-                                            return strtr(
-                                                $templatePattern,
-                                                [
-                                                    '{fieldOrAssociation}' => $property instanceof FieldMetadata ? 'field' : 'association',
-                                                    '{entitySlug}' => $entityMetadata->slug,
-                                                    '{propertyName}' => str_replace('.', '_', $property->name),
-                                                    '{propertyType}' => $property instanceof FieldMetadata ? $entityMetadata->getTypeOfField($property->name) : $entityMetadata->getTypeOfAssociation($property->name)
-                                                ]);
-                                        }, $templatePatterns)
-                                    )->getTemplateName();
-                                }
                             }
                         }
+                    }
                 }
             }
         }
@@ -57,15 +59,15 @@ readonly class TemplateResolver
     {
         $embedded = $entityMetadata->hasEmbeddedField() ? '_embedded' : '';
 
-        return match($action) {
+        return match ($action) {
             Action::INDEX => [
                 'index' => [
                     '@Karross/index/index_entity_{slug}.html.twig',
                     '@Karross/index/index.html.twig',
                 ],
                 'items' => [
-                    sprintf('@Karross/index/items%s_entity_{slug}.html.twig', $embedded),
-                    sprintf('@Karross/index/items%s.html.twig', $embedded),
+                    \sprintf('@Karross/index/items%s_entity_{slug}.html.twig', $embedded),
+                    \sprintf('@Karross/index/items%s.html.twig', $embedded),
                 ],
                 'no_items' => [
                     '@Karross/index/no_items_entity_{slug}.html.twig',
@@ -76,11 +78,11 @@ readonly class TemplateResolver
                     '@Karross/index/item.html.twig',
                 ],
                 'property' => [
-                    "@Karross/index/{fieldOrAssociation}_{propertyName}_entity_{entitySlug}.html.twig",
-                    "@Karross/index/{fieldOrAssociation}_type_{propertyType}_entity_{entitySlug}.html.twig",
-                    "@Karross/index/{fieldOrAssociation}_{propertyName}.html.twig",
-                    "@Karross/index/{fieldOrAssociation}_type_{propertyType}.html.twig",
-                    "@Karross/index/{fieldOrAssociation}.html.twig",
+                    '@Karross/index/{fieldOrAssociation}_{propertyName}_entity_{entitySlug}.html.twig',
+                    '@Karross/index/{fieldOrAssociation}_type_{propertyType}_entity_{entitySlug}.html.twig',
+                    '@Karross/index/{fieldOrAssociation}_{propertyName}.html.twig',
+                    '@Karross/index/{fieldOrAssociation}_type_{propertyType}.html.twig',
+                    '@Karross/index/{fieldOrAssociation}.html.twig',
                 ],
             ],
             default => [],

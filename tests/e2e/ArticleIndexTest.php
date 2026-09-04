@@ -3,7 +3,6 @@
 namespace E2e;
 
 use Doctrine\ORM\EntityManagerInterface;
-use IntlDateFormatter;
 use Playwright\Page\PageInterface;
 use Playwright\Symfony\Test\PlaywrightTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -16,7 +15,7 @@ final class ArticleIndexTest extends PlaywrightTestCase
     protected static function createKernel(array $options = []): KernelInterface
     {
         return new Kernel('e2e', true, [
-            __DIR__ . '/../../tests/Integration/TestedApp/config/doctrine_no_shortname_entity_conflicts.php',
+            __DIR__.'/../../tests/Integration/TestedApp/config/doctrine_no_shortname_entity_conflicts.php',
         ]);
     }
 
@@ -85,7 +84,7 @@ final class ArticleIndexTest extends PlaywrightTestCase
         $headers = $page->locator('table.k-table thead th');
 
         $index = null;
-        for ($i = 0, $count = $headers->count(); $i < $count; $i++) {
+        for ($i = 0, $count = $headers->count(); $i < $count; ++$i) {
             if (trim($headers->nth($i)->innerText()) === $columnName) {
                 $index = $i;
                 break;
@@ -100,9 +99,9 @@ final class ArticleIndexTest extends PlaywrightTestCase
 
     private function formatDate(\DateTimeImmutable $value, bool $dateOnly = false): string
     {
-        $dateType = $dateOnly ? IntlDateFormatter::MEDIUM : IntlDateFormatter::MEDIUM;
-        $timeType = $dateOnly ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
-        $formatter = new IntlDateFormatter('en_US', $dateType, $timeType);
+        $dateType = $dateOnly ? \IntlDateFormatter::MEDIUM : \IntlDateFormatter::MEDIUM;
+        $timeType = $dateOnly ? \IntlDateFormatter::NONE : \IntlDateFormatter::SHORT;
+        $formatter = new \IntlDateFormatter('en_US', $dateType, $timeType);
 
         return $formatter->format($value) ?: 'N/A';
     }

@@ -31,6 +31,7 @@ class Article
     public function setTitle(?string $title): self
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -42,6 +43,7 @@ class Article
     public function setContent(?string $content): self
     {
         $this->content = $content;
+
         return $this;
     }
 }

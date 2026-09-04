@@ -12,7 +12,8 @@ class JsonResponder implements ResponderInterface
         return false;
     }
 
-    public function getResponse(ActionContext $actionContext, $data): JsonResponse {
+    public function getResponse(ActionContext $actionContext, $data): JsonResponse
+    {
         return new JsonResponse($data);
     }
 }

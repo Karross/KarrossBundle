@@ -3,11 +3,9 @@
 namespace Karross\Actions;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Karross\Actions\ActionContext;
 use Karross\Metadata\EntityMetadataRegistry;
 use Karross\Responders\ResponderManager;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -18,7 +16,8 @@ class Index
         private ManagerRegistry $managerRegistry,
         private ResponderManager $responderManager,
         private RouterInterface $router,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request): Response
     {

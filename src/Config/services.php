@@ -23,6 +23,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
@@ -37,7 +38,7 @@ return static function (ContainerConfigurator $configurator) {
 
     // Actions
     $services
-        ->load('Karross\\Actions\\', __DIR__ . '/../Actions/*')
+        ->load('Karross\\Actions\\', __DIR__.'/../Actions/*')
         ->exclude([__DIR__.'/../Actions/ActionContext.php'])
         ->tag('controller.service_arguments');
 
@@ -65,7 +66,7 @@ return static function (ContainerConfigurator $configurator) {
 
     // Responders
     $services
-        ->load('Karross\\Responders\\', __DIR__ . '/../Responders/*')
+        ->load('Karross\\Responders\\', __DIR__.'/../Responders/*')
         ->tag('karross.responder');
 
     $services

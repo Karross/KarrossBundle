@@ -4,7 +4,7 @@ namespace Karross\Actions;
 
 class Create
 {
-    public function __invoke()
+    public function __invoke(): void
     {
     }
 }

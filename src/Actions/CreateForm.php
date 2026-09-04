@@ -4,7 +4,7 @@ namespace Karross\Actions;
 
 class CreateForm
 {
-    public function __invoke()
+    public function __invoke(): void
     {
     }
 }

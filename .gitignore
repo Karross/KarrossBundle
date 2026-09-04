@@ -4,6 +4,9 @@ opencode.json
 /vendor/
 /.opencode/
 
+# php-cs-fixer cache
+.php-cs-fixer.cache
+
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache

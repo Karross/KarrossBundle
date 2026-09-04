@@ -17,6 +17,7 @@ class Kernel extends SFKernel
     {
         parent::__construct($environment, $debug);
     }
+
     public function registerBundles(): iterable
     {
         $bundles = [
@@ -35,14 +36,14 @@ class Kernel extends SFKernel
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(function (ContainerBuilder $container) {
+        $loader->load(static function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', [
                 'secret' => 'test',
                 'test' => true,
                 'translator' => ['enabled' => true],
                 'router' => [
                     'utf8' => true,
-                    'resource' => __DIR__ . '/config/routes.php',  // fichier PHP
+                    'resource' => __DIR__.'/config/routes.php',  // fichier PHP
                     'type' => 'php',
                 ],
             ]);
@@ -53,4 +54,3 @@ class Kernel extends SFKernel
         }
     }
 }
-

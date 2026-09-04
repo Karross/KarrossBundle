@@ -2,13 +2,8 @@
 
 namespace Karross\Metadata;
 
-use DateTimeImmutable;
-use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
-use ReflectionNamedType;
 use ReflectionProperty;
-use ReflectionUnionType;
-use UnitEnum;
 
 /**
  * Detects the semantic type of a property by analyzing all available information:
@@ -23,48 +18,50 @@ final class PropertyTypeDetector
      * Detect the semantic type of a property.
      */
     public function detect(
-        ?ReflectionProperty $property = null,
+        ?\ReflectionProperty $property = null,
         ?string $doctrineType = null,
         bool $isAssociation = false,
     ): PropertyType {
         // Associations have priority
         if ($isAssociation) {
             // For associations, property should not be null
-            if ($property === null) {
+            if (null === $property) {
                 return PropertyType::Unknown;
             }
+
             return $this->detectAssociationType($property);
         }
 
         // If no ReflectionProperty available, fallback to Doctrine type only
         // This can happen for embedded fields where resolution fails
-        if ($property === null) {
-            if ($doctrineType !== null) {
+        if (null === $property) {
+            if (null !== $doctrineType) {
                 $detected = $this->detectFromDoctrineType($doctrineType);
-                if ($detected !== PropertyType::Unknown) {
+                if (PropertyType::Unknown !== $detected) {
                     return $detected;
                 }
             }
+
             return PropertyType::Unknown;
         }
 
         // Try to detect from PHP type (priority)
         $reflectionType = $property->getType();
 
-        if ($reflectionType instanceof ReflectionNamedType) {
+        if ($reflectionType instanceof \ReflectionNamedType) {
             $phpType = $reflectionType->getName();
             $detected = $this->detectFromPhpType($phpType, $doctrineType);
 
-            if ($detected !== PropertyType::Unknown) {
+            if (PropertyType::Unknown !== $detected) {
                 return $detected;
             }
-        } elseif ($reflectionType instanceof ReflectionUnionType) {
+        } elseif ($reflectionType instanceof \ReflectionUnionType) {
             // For union types, try the first non-null type
             foreach ($reflectionType->getTypes() as $type) {
-                if ($type instanceof ReflectionNamedType && $type->getName() !== 'null') {
+                if ($type instanceof \ReflectionNamedType && 'null' !== $type->getName()) {
                     $detected = $this->detectFromPhpType($type->getName(), $doctrineType);
 
-                    if ($detected !== PropertyType::Unknown) {
+                    if (PropertyType::Unknown !== $detected) {
                         return $detected;
                     }
                 }
@@ -72,17 +69,17 @@ final class PropertyTypeDetector
         }
 
         // Fallback to Doctrine type
-        if ($doctrineType !== null) {
+        if (null !== $doctrineType) {
             $detected = $this->detectFromDoctrineType($doctrineType);
 
-            if ($detected !== PropertyType::Unknown) {
+            if (PropertyType::Unknown !== $detected) {
                 return $detected;
             }
         }
 
         // Try PHPDoc as last resort
         $phpDocType = $this->extractPhpDocType($property);
-        if ($phpDocType !== null) {
+        if (null !== $phpDocType) {
             if (str_contains($phpDocType, 'array<') || str_ends_with($phpDocType, '[]')) {
                 return PropertyType::Array;
             }
@@ -99,7 +96,7 @@ final class PropertyTypeDetector
             'float' => PropertyType::Float,
             'string' => PropertyType::String,
             'array' => PropertyType::Array,
-            'DateTime', 'DateTimeImmutable', DateTimeInterface::class => $this->refineDateTimeType($doctrineType),
+            'DateTime', 'DateTimeImmutable', \DateTimeInterface::class => $this->refineDateTimeType($doctrineType),
             default => $this->detectFromClassName($phpType),
         };
     }
@@ -111,7 +108,7 @@ final class PropertyTypeDetector
         }
 
         // Enum
-        if (is_subclass_of($className, UnitEnum::class)) {
+        if (is_subclass_of($className, \UnitEnum::class)) {
             return PropertyType::Enum;
         }
 
@@ -161,7 +158,7 @@ final class PropertyTypeDetector
      */
     private function refineDateTimeType(?string $doctrineType): PropertyType
     {
-        if ($doctrineType === null) {
+        if (null === $doctrineType) {
             return PropertyType::DateTime;
         }
 
@@ -181,23 +178,23 @@ final class PropertyTypeDetector
         };
     }
 
-    private function detectAssociationType(ReflectionProperty $property): PropertyType
+    private function detectAssociationType(\ReflectionProperty $property): PropertyType
     {
         $reflectionType = $property->getType();
 
         // Collections are typically arrays or Collection types
-        if ($reflectionType instanceof ReflectionNamedType) {
+        if ($reflectionType instanceof \ReflectionNamedType) {
             $typeName = $reflectionType->getName();
 
             // Common collection types
-            if ($typeName === 'array' || str_contains($typeName, 'Collection')) {
+            if ('array' === $typeName || str_contains($typeName, 'Collection')) {
                 return PropertyType::Collection;
             }
         }
 
         // Check PHPDoc for collection hints
         $phpDocType = $this->extractPhpDocType($property);
-        if ($phpDocType !== null && (str_contains($phpDocType, 'Collection') || str_contains($phpDocType, '[]'))) {
+        if (null !== $phpDocType && (str_contains($phpDocType, 'Collection') || str_contains($phpDocType, '[]'))) {
             return PropertyType::Collection;
         }
 
@@ -205,10 +202,10 @@ final class PropertyTypeDetector
         return PropertyType::Single;
     }
 
-    private function extractPhpDocType(ReflectionProperty $property): ?string
+    private function extractPhpDocType(\ReflectionProperty $property): ?string
     {
         $docComment = $property->getDocComment();
-        if ($docComment === false) {
+        if (false === $docComment) {
             return null;
         }
 
@@ -220,4 +217,3 @@ final class PropertyTypeDetector
         return null;
     }
 }
-

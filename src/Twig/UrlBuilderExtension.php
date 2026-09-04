@@ -1,12 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Karross\Twig;
 
 use Karross\Actions\Action;
 use Karross\Metadata\AssociationMetadata;
-use Karross\Metadata\EntityMetadataRegistry;
 use Karross\Routes\RouteGenerator;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -16,6 +13,7 @@ use Twig\Attribute\AsTwigFunction;
 class UrlBuilderExtension
 {
     private PropertyAccessor $accessor;
+
     public function __construct(private readonly UrlGeneratorInterface $urlGenerator)
     {
         $this->accessor = PropertyAccess::createPropertyAccessor();

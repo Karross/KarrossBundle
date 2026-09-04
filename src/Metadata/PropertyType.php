@@ -22,4 +22,3 @@ enum PropertyType: string
     case Collection = 'collection'; // Collection-valued association
     case Unknown = 'unknown';
 }
-

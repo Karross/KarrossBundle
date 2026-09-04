@@ -4,7 +4,9 @@ namespace Karross\Config;
 
 final class KarrossConfig
 {
-    public function __construct(private array $config) {}
+    public function __construct(private array $config)
+    {
+    }
 
     public function apiEnabled(): bool
     {
@@ -41,4 +43,3 @@ final class KarrossConfig
         return $this->config;
     }
 }
-

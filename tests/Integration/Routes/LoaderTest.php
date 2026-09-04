@@ -15,11 +15,11 @@ class LoaderTest extends TestCase
     public function testRoutesCannotBeLoaded(string $expectedExceptionType, string $expectedExceptionMessage, array $configFilenames): void
     {
         $filePaths = array_map(
-            fn (string $configFilename) => self::pathForFile($configFilename),
+            static fn (string $configFilename) => self::pathForFile($configFilename),
             $configFilenames
         );
         $signature = implode('_PLUS_', $configFilenames);
-        $kernel = new Kernel('test_'. $signature, true, $filePaths);
+        $kernel = new Kernel('test_'.$signature, true, $filePaths);
         $kernel->boot();
 
         $this->expectException($expectedExceptionType);
@@ -28,14 +28,15 @@ class LoaderTest extends TestCase
         $router = $kernel->getContainer()->get('test.service_container')->get(RouterInterface::class);
         $router->getRouteCollection();
     }
+
     public static function exceptionsProvider(): \Generator
     {
         yield 'Conflicts with entity shortnames and no Karross configuration' => [
             EntityShortnameException::class,
             "Those classes (TestedApp\Domain\Entity\Article, TestedApp\Entity\Article) have the same shortname 'article'. Please provide a slug to solve the conflicts",
             [
-                'doctrine_with_shortname_entity_conflicts'
-            ]
+                'doctrine_with_shortname_entity_conflicts',
+            ],
         ];
     }
 
@@ -43,11 +44,11 @@ class LoaderTest extends TestCase
     public function testRoutesAreLoaded(array $expectedRouteNames, array $configFilenames): void
     {
         $filePaths = array_map(
-            fn (string $configFilename) => self::pathForFile($configFilename),
+            static fn (string $configFilename) => self::pathForFile($configFilename),
             $configFilenames
         );
         $signature = implode('_PLUS_', $configFilenames);
-        $kernel = new Kernel('test_'. $signature, true, $filePaths);
+        $kernel = new Kernel('test_'.$signature, true, $filePaths);
         $kernel->boot();
 
         /** @var RouterInterface $router */
@@ -79,8 +80,8 @@ class LoaderTest extends TestCase
                 'testedapp_entity_category_show',
             ],
             [
-                'doctrine_no_shortname_entity_conflicts'
-            ]
+                'doctrine_no_shortname_entity_conflicts',
+            ],
         ];
 
         yield 'Conflicts with entity shortnames resolved by Karross configuration' => [
@@ -94,8 +95,8 @@ class LoaderTest extends TestCase
             ],
             [
                 'doctrine_with_shortname_entity_conflicts',
-                'karross_to_resolve_entity_shortname_conflicts'
-            ]
+                'karross_to_resolve_entity_shortname_conflicts',
+            ],
         ];
     }
 
@@ -107,6 +108,6 @@ class LoaderTest extends TestCase
 
     private static function pathForFile(string $configFilename): string
     {
-        return sprintf(__DIR__.'/../TestedApp/config/%s.php', $configFilename);
+        return \sprintf(__DIR__.'/../TestedApp/config/%s.php', $configFilename);
     }
 }

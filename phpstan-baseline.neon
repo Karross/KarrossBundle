@@ -1,0 +1,787 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method Karross\\Actions\\Action\:\:httpMethods\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Actions/Action.php
+
+		-
+			message: '#^Method Karross\\Actions\\Action\:\:routePattern\(\) has parameter \$identifiers with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Actions/Action.php
+
+		-
+			message: '#^Part \$i \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/Actions/Action.php
+
+		-
+			message: '#^Cannot call method getOption\(\) on Symfony\\Component\\Routing\\Route\|null\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Actions/Index.php
+
+		-
+			message: '#^Cannot call method getRepository\(\) on Doctrine\\Persistence\\ObjectManager\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Actions/Index.php
+
+		-
+			message: '#^Parameter \#1 \$class of method Doctrine\\Persistence\\ManagerRegistry\:\:getManagerForClass\(\) expects class\-string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Actions/Index.php
+
+		-
+			message: '#^Parameter \#1 \$fqcn of method Karross\\Metadata\\EntityMetadataRegistry\:\:get\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Actions/Index.php
+
+		-
+			message: '#^Parameter \#1 \$name of method Symfony\\Component\\Routing\\RouteCollection\:\:get\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Actions/Index.php
+
+		-
+			message: '#^Parameter \#2 \$action of class Karross\\Actions\\ActionContext constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Actions/Index.php
+
+		-
+			message: '#^Cannot call method find\(\) on Doctrine\\Persistence\\ObjectManager\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Actions/Show.php
+
+		-
+			message: '#^Parameter \#1 \$class of method Doctrine\\Persistence\\ManagerRegistry\:\:getManagerForClass\(\) expects class\-string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Actions/Show.php
+
+		-
+			message: '#^Parameter \#1 \$name of method Symfony\\Component\\Routing\\RouteCollection\:\:get\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Actions/Show.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Actions/Show.php
+
+		-
+			message: '#^Cannot access offset ''api'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Cannot access offset ''html'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Cannot access offset string on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:__construct\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:apiEnabled\(\) should return bool but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:entities\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:entities\(\) should return array but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityActions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityActions\(\) should return array but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityConfig\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityConfig\(\) should return array but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:entitySlug\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:htmlRenderer\(\) should return string but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:raw\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
+			message: '#^Variable \$config on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: src/DependencyInjection/KarrossExtension.php
+
+		-
+			message: '#^Method Karross\\Formatters\\BooleanFormatter\:\:format\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Formatters/BooleanFormatter.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>locale" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Formatters/DateTime/AbstractDateTimeFormatter.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type Karross\\Formatters\\FormattingContext\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Formatters/DateTime/DateTimeFormatter.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/Formatters/IntlCurrencyFormatter.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>locale" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Formatters/IntlCurrencyFormatter.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/Formatters/IntlNumberFormatter.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>locale" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Formatters/IntlNumberFormatter.php
+
+		-
+			message: '#^Method Karross\\Formatters\\NoFormatter\:\:format\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Formatters/NoFormatter.php
+
+		-
+			message: '#^Method Karross\\Formatters\\NotAvailableFormatter\:\:format\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Formatters/NotAvailableFormatter.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/Formatters/StringFormatter.php
+
+		-
+			message: '#^Method Karross\\Formatters\\ValueFormatterInterface\:\:format\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Formatters/ValueFormatterInterface.php
+
+		-
+			message: '#^Method Karross\\Metadata\\AssociationMetadata\:\:__construct\(\) has parameter \$identifier with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metadata/AssociationMetadata.php
+
+		-
+			message: '#^Access to an undefined property Doctrine\\Persistence\\Mapping\\ClassMetadata\:\:\$embeddedClasses\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Access to property \$type on an unknown class Karross\\Metadata\\PropertyInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Cannot access offset int\<0, max\> on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Cannot access property \$name on mixed\.$#'
+			identifier: property.nonObject
+			count: 4
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:__construct\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getActions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getExplodedProperties\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getIdentifier\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getProperties\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getPropertyLabelsHierarchy\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getPropertyType\(\) should return Karross\\Metadata\\PropertyType but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_slice expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(Karross\\Metadata\\PropertyMetadata\)\: int\<0, max\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Parameter \#1 \$haystack of function str_starts_with expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Parameter \#1 \.\.\.\$arg1 of function max expects non\-empty\-array, array\<int\<0, max\>\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Parameter \$label of class Karross\\Metadata\\FieldLabel constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Parameter \$properties of method Karross\\Metadata\\EntityMetadata\:\:__construct\(\) has invalid type Karross\\Metadata\\PropertyInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Property Karross\\Metadata\\EntityMetadata\:\:\$properties has unknown class Karross\\Metadata\\PropertyInterface as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Metadata/EntityMetadata.php
+
+		-
+			message: '#^Cannot call method getClassMetadata\(\) on Doctrine\\Persistence\\ObjectManager\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Metadata/EntityMetadataBuilder.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:buildAssociations\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Metadata/EntityMetadataBuilder.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:buildAssociations\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metadata/EntityMetadataBuilder.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:buildFields\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Metadata/EntityMetadataBuilder.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:buildFields\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metadata/EntityMetadataBuilder.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:resolveReflectionProperty\(\) has parameter \$reflectionClass with generic class ReflectionClass but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Metadata/EntityMetadataBuilder.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:resolveSlug\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Metadata/EntityMetadataBuilder.php
+
+		-
+			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:resolveSlug\(\) has parameter \$fqcnToSlugMap with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metadata/EntityMetadataBuilder.php
+
+		-
+			message: '#^Parameter \$properties of class Karross\\Metadata\\EntityMetadata constructor expects array\<Karross\\Metadata\\PropertyInterface\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Metadata/EntityMetadataBuilder.php
+
+		-
+			message: '#^Property Karross\\Metadata\\EntityMetadataRegistry\:\:\$cache is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Metadata/EntityMetadataRegistry.php
+
+		-
+			message: '#^Method Karross\\Metadata\\PropertyMetadata\:\:format\(\) should return string but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Metadata/PropertyMetadata.php
+
+		-
+			message: '#^Method Karross\\Responders\\JsonResponder\:\:getResponse\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Responders/JsonResponder.php
+
+		-
+			message: '#^Method Karross\\Responders\\ResponderInterface\:\:getResponse\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Responders/ResponderInterface.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/Responders/ResponderManager.php
+
+		-
+			message: '#^Cannot call method getResponse\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Responders/ResponderManager.php
+
+		-
+			message: '#^Cannot call method supports\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Responders/ResponderManager.php
+
+		-
+			message: '#^Method Karross\\Responders\\ResponderManager\:\:__construct\(\) has parameter \$responders with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Responders/ResponderManager.php
+
+		-
+			message: '#^Method Karross\\Responders\\ResponderManager\:\:getResponse\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Responders/ResponderManager.php
+
+		-
+			message: '#^Method Karross\\Responders\\ResponderManager\:\:getResponse\(\) should return Symfony\\Component\\HttpFoundation\\Response but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Responders/ResponderManager.php
+
+		-
+			message: '#^Binary operation "\+" between mixed and array\{actionContext\: Karross\\Actions\\ActionContext\} results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Responders/TwigResponder.php
+
+		-
+			message: '#^Method Karross\\Responders\\TwigResponder\:\:getResponse\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Responders/TwigResponder.php
+
+		-
+			message: '#^Parameter \$methods of class Symfony\\Component\\Routing\\Route constructor expects array\<string\>\|string, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Routes/RouteGenerator.php
+
+		-
+			message: '#^Method Karross\\Twig\\PropertyAccessorExtension\:\:getFormattedValue\(\) has parameter \$entity with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Twig/PropertyAccessorExtension.php
+
+		-
+			message: '#^Method Karross\\Twig\\PropertyAccessorExtension\:\:getValue\(\) has parameter \$entity with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Twig/PropertyAccessorExtension.php
+
+		-
+			message: '#^Parameter \#1 \$objectOrArray of method Symfony\\Component\\PropertyAccess\\PropertyAccessor\:\:getValue\(\) expects array\|object, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Twig/PropertyAccessorExtension.php
+
+		-
+			message: '#^Method Karross\\Twig\\StringableExtension\:\:asString\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Twig/StringableExtension.php
+
+		-
+			message: '#^Cannot access offset string on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 5
+			path: src/Twig/TemplateRegistry.php
+
+		-
+			message: '#^Method Karross\\Twig\\TemplateRegistry\:\:all\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Twig/TemplateRegistry.php
+
+		-
+			message: '#^Method Karross\\Twig\\TemplateRegistry\:\:getTemplate\(\) should return string but returns mixed\.$#'
+			identifier: return.type
+			count: 2
+			path: src/Twig/TemplateRegistry.php
+
+		-
+			message: '#^Property Karross\\Twig\\TemplateRegistry\:\:\$cache is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Twig/TemplateRegistry.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Twig/TemplateRegistry.php
+
+		-
+			message: '#^Cannot access property \$name on mixed\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: src/Twig/TemplateResolver.php
+
+		-
+			message: '#^Cannot assign offset mixed to array\<string\>\|string\.$#'
+			identifier: offsetAssign.dimType
+			count: 1
+			path: src/Twig/TemplateResolver.php
+
+		-
+			message: '#^Method Karross\\Twig\\TemplateResolver\:\:getTemplatePatternsHierarchy\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Twig/TemplateResolver.php
+
+		-
+			message: '#^Method Karross\\Twig\\TemplateResolver\:\:resolveAll\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Twig/TemplateResolver.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\<string, array\<TemplateWrapper\>\)\: Unexpected token "\*/", expected ''\>'' at offset 61 on line 3$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Twig/TemplateResolver.php
+
+		-
+			message: '#^Parameter \#1 \$fieldName of method Karross\\Metadata\\EntityMetadata\:\:getTypeOfAssociation\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Twig/TemplateResolver.php
+
+		-
+			message: '#^Parameter \#1 \$str of function strtr expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Twig/TemplateResolver.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Twig/TemplateResolver.php
+
+		-
+			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Twig/TemplateResolver.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Twig/TemplateResolver.php
+
+		-
+			message: '#^Method Karross\\Twig\\UrlBuilderExtension\:\:getUrl\(\) has parameter \$entity with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Twig/UrlBuilderExtension.php
+
+		-
+			message: '#^Parameter \#1 \$objectOrArray of method Symfony\\Component\\PropertyAccess\\PropertyAccessor\:\:getValue\(\) expects array\|object, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Twig/UrlBuilderExtension.php
+
+		-
+			message: '#^Parameter \#2 \$propertyPath of method Symfony\\Component\\PropertyAccess\\PropertyAccessor\:\:getValue\(\) expects string\|Symfony\\Component\\PropertyAccess\\PropertyPathInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Twig/UrlBuilderExtension.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Twig/UrlBuilderExtension.php
+
+		-
+			message: '#^Call to an undefined method object\:\:get\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: tests/Integration/Routes/LoaderTest.php
+
+		-
+			message: '#^Cannot call method getRouteCollection\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Integration/Routes/LoaderTest.php
+
+		-
+			message: '#^Method Integration\\Routes\\LoaderTest\:\:testRoutesAreLoaded\(\) has parameter \$configFilenames with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Integration/Routes/LoaderTest.php
+
+		-
+			message: '#^Method Integration\\Routes\\LoaderTest\:\:testRoutesAreLoaded\(\) has parameter \$expectedRouteNames with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Integration/Routes/LoaderTest.php
+
+		-
+			message: '#^Method Integration\\Routes\\LoaderTest\:\:testRoutesCannotBeLoaded\(\) has parameter \$configFilenames with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Integration/Routes/LoaderTest.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(string\)\: string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Integration/Routes/LoaderTest.php
+
+		-
+			message: '#^Parameter \#1 \$exception of method PHPUnit\\Framework\\TestCase\:\:expectException\(\) expects class\-string\<Throwable\>, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Integration/Routes/LoaderTest.php
+
+		-
+			message: '#^Parameter \#1 \$name of method Symfony\\Component\\Routing\\RouteCollection\:\:get\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Integration/Routes/LoaderTest.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method Karross\\Actions\\Action\:\:from\(\) expects int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Integration/Routes/LoaderTest.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Integration/Routes/LoaderTest.php
+
+		-
+			message: '#^Part \$routeName \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: tests/Integration/Routes/LoaderTest.php
+
+		-
+			message: '#^Property TestedApp\\Domain\\Entity\\Article\:\:\$id \(int\|null\) is never assigned int so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: tests/Integration/TestedApp/Domain/Entity/Article.php
+
+		-
+			message: '#^Method TestedApp\\Entity\\Article\:\:getTags\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Integration/TestedApp/Entity/Article.php
+
+		-
+			message: '#^Method TestedApp\\Entity\\Article\:\:setTags\(\) has parameter \$tags with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Integration/TestedApp/Entity/Article.php
+
+		-
+			message: '#^Property TestedApp\\Entity\\Article\:\:\$id \(int\|null\) is never assigned int so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: tests/Integration/TestedApp/Entity/Article.php
+
+		-
+			message: '#^Property TestedApp\\Entity\\Article\:\:\$tags \(array\<string\>\) does not accept array\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/Integration/TestedApp/Entity/Article.php
+
+		-
+			message: '#^Property TestedApp\\Entity\\Category\:\:\$id \(int\|null\) is never assigned int so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: tests/Integration/TestedApp/Entity/Category.php
+
+		-
+			message: '#^Method TestedApp\\Kernel\:\:__construct\(\) has parameter \$configFiles with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Integration/TestedApp/Kernel.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getManager\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: tests/e2e/ArticleIndexTest.php
+
+		-
+			message: '#^Cannot call method flush\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/e2e/ArticleIndexTest.php
+
+		-
+			message: '#^Cannot call method persist\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/e2e/ArticleIndexTest.php
+
+		-
+			message: '#^Method E2e\\ArticleIndexTest\:\:createKernel\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/e2e/ArticleIndexTest.php

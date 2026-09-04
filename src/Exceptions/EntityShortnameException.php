@@ -20,4 +20,3 @@ class EntityShortnameException extends LoaderLoadException
         $this->message = $message;
     }
 }
-

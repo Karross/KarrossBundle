@@ -2,11 +2,10 @@
 
 namespace Karross\Formatters;
 
-use IntlDateFormatter;
-
 final readonly class FormattingContext
 {
     public const DEFAULT_LOCALE = 'en_US';
+
     private function __construct(
         public ?string $locale,
         public ?string $timezone,
@@ -14,7 +13,8 @@ final readonly class FormattingContext
         public ?string $dateFormat,
         public ?string $timeFormat,
         public ?string $dateTimeFormat,
-    ) {}
+    ) {
+    }
 
     public static function default(): self
     {
@@ -36,7 +36,7 @@ final readonly class FormattingContext
 
     public static function forNumber(
         ?string $locale = null,
-        ?int $precision = null
+        ?int $precision = null,
     ): self {
         return new self($locale, null, $precision, null, null, null);
     }
@@ -50,11 +50,11 @@ final readonly class FormattingContext
         ?string $dateTimeFormat = null,
     ): self {
         return new self(
-            $locale        ?? $this->locale,
-            $timezone      ?? $this->timezone,
-            $precision     ?? $this->precision,
-            $dateFormat    ?? $this->dateFormat,
-            $timeFormat    ?? $this->timeFormat,
+            $locale ?? $this->locale,
+            $timezone ?? $this->timezone,
+            $precision ?? $this->precision,
+            $dateFormat ?? $this->dateFormat,
+            $timeFormat ?? $this->timeFormat,
             $dateTimeFormat ?? $this->dateTimeFormat,
         );
     }

@@ -6,7 +6,7 @@ class StringFormatter implements ValueFormatterInterface
 {
     public static function format(mixed $value, ?FormattingContext $context = null): string
     {
-        if ($value === null) {
+        if (null === $value) {
             return '';
         }
 

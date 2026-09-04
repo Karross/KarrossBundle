@@ -1,7 +1,9 @@
 <?php
+
 /**
  * This class registers routes for the application depending on the entities' configuration.
  */
+
 namespace Karross\Routes;
 
 use Karross\Metadata\EntityMetadataRegistry;
@@ -16,9 +18,10 @@ class RouteLoader extends SFLoader
     ) {
         parent::__construct();
     }
+
     public function supports(mixed $resource, ?string $type = null): bool
     {
-        return $type === 'karross.routes';
+        return 'karross.routes' === $type;
     }
 
     public function load(mixed $resource, ?string $type = null): RouteCollection

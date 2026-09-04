@@ -2,10 +2,7 @@
 
 namespace Karross\Routes;
 
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Karross\Actions\Action;
-use Karross\Config\KarrossConfig;
-use Karross\Exceptions\EntityShortnameException;
 use Karross\Metadata\EntityMetadata;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -30,6 +27,6 @@ class RouteGenerator
 
     public static function routeName(string $fqcn, Action $action): string
     {
-        return strtolower(str_replace('\\', '_', $fqcn) . '_' . $action->name);
+        return strtolower(str_replace('\\', '_', $fqcn).'_'.$action->name);
     }
 }
