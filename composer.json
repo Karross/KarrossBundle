@@ -28,6 +28,9 @@
     "twig/twig": "^3.21",
     "commerceguys/intl": "^2.0"
   },
+  "suggest": {
+    "nesbot/carbon": "Required to enable the relative / humanized date formatters (e.g. DateTime\\Carbon\\*)"
+  },
   "require-dev": {
     "doctrine/doctrine-bundle": "^2.0",
     "doctrine/orm": "^3.0",
