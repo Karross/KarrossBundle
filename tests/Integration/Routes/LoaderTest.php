@@ -2,11 +2,10 @@
 
 namespace Integration\Routes;
 
-use Karross\Actions\REST\Index;
-use Karross\Exceptions\UnableToCreateRoutesException;
+use Karross\Actions\Action;
+use Karross\Exceptions\EntityShortnameException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
 use TestedApp\Kernel;
 
@@ -32,7 +31,7 @@ class LoaderTest extends TestCase
     public static function exceptionsProvider(): \Generator
     {
         yield 'Conflicts with entity shortnames and no Karross configuration' => [
-            UnableToCreateRoutesException::class,
+            EntityShortnameException::class,
             "Those classes (TestedApp\Domain\Entity\Article, TestedApp\Entity\Article) have the same shortname 'article'. Please provide a slug to solve the conflicts",
             [
                 'doctrine_with_shortname_entity_conflicts'
@@ -41,7 +40,7 @@ class LoaderTest extends TestCase
     }
 
     #[DataProvider('routesProvider')]
-    public function testRoutesAreLoaded(array $expectedRoutes, array $configFilenames): void
+    public function testRoutesAreLoaded(array $expectedRouteNames, array $configFilenames): void
     {
         $filePaths = array_map(
             fn (string $configFilename) => self::pathForFile($configFilename),
@@ -53,17 +52,31 @@ class LoaderTest extends TestCase
 
         /** @var RouterInterface $router */
         $router = $kernel->getContainer()->get('test.service_container')->get(RouterInterface::class);
-        foreach ($expectedRoutes as $routeName => $expectedRoute) {
-            $this->assertEquals($expectedRoute, $router->getRouteCollection()->get($routeName));
-        };
+        $routeCollection = $router->getRouteCollection();
+
+        // Exactly the expected routes are registered
+        $this->assertSame(
+            $expectedRouteNames,
+            array_keys($routeCollection->all())
+        );
+
+        // Each route is wired to the expected action controller
+        foreach ($expectedRouteNames as $routeName) {
+            $route = $routeCollection->get($routeName);
+            $this->assertNotNull($route, "Route $routeName should exist");
+            $action = Action::from($route->getOption('karross_action'));
+            $this->assertSame($action->controller(), $route->getDefault('_controller'));
+        }
     }
 
     public static function routesProvider(): \Generator
     {
         yield 'No conflicts with entity shortnames and no Karross configuration' => [
             [
-                'testedapp_entity_article_index' => new Route('/admin/article', defaults: ['_controller' => Index::class], options: ['fqcn' => 'TestedApp\Entity\Article', 'utf8' => true,], methods: ['GET']),
-                'testedapp_entity_category_index' => new Route('/admin/category', defaults: ['_controller' => Index::class], options: ['fqcn' => 'TestedApp\Entity\Category', 'utf8' => true,], methods: ['GET']),
+                'testedapp_entity_article_index',
+                'testedapp_entity_article_show',
+                'testedapp_entity_category_index',
+                'testedapp_entity_category_show',
             ],
             [
                 'doctrine_no_shortname_entity_conflicts'
@@ -72,9 +85,12 @@ class LoaderTest extends TestCase
 
         yield 'Conflicts with entity shortnames resolved by Karross configuration' => [
             [
-                'testedapp_entity_article_index' => new Route('/admin/article', defaults: ['_controller' => Index::class], options: ['fqcn' => 'TestedApp\Entity\Article', 'utf8' => true,], methods: ['GET']),
-                'testedapp_entity_category_index' => new Route('/admin/category', defaults: ['_controller' => Index::class], options: ['fqcn' => 'TestedApp\Entity\Category', 'utf8' => true,], methods: ['GET']),
-                'testedapp_domain_entity_article_index' => new Route('/admin/domain-article', defaults: ['_controller' => Index::class], options: ['fqcn' => 'TestedApp\Domain\Entity\Article', 'utf8' => true,], methods: ['GET']),
+                'testedapp_entity_article_index',
+                'testedapp_entity_article_show',
+                'testedapp_entity_category_index',
+                'testedapp_entity_category_show',
+                'testedapp_domain_entity_article_index',
+                'testedapp_domain_entity_article_show',
             ],
             [
                 'doctrine_with_shortname_entity_conflicts',

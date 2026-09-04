@@ -5,6 +5,7 @@ namespace TestedApp;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Karross\KarrossBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as SFKernel;
@@ -20,6 +21,7 @@ class Kernel extends SFKernel
         return [
             new DoctrineBundle(),
             new FrameworkBundle(),
+            new TwigBundle(),
             new KarrossBundle(),
         ];
     }
@@ -30,6 +32,7 @@ class Kernel extends SFKernel
             $container->loadFromExtension('framework', [
                 'secret' => 'test',
                 'test' => true,
+                'translator' => ['enabled' => true],
                 'router' => [
                     'utf8' => true,
                     'resource' => __DIR__ . '/config/routes.php',  // fichier PHP

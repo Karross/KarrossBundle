@@ -89,6 +89,6 @@ readonly class TemplateResolver
 
     public function hasTemplate(Action $action): bool
     {
-        return \in_array($action, [Action::INDEX, Action::SHOW, Action::CREATE_FORM, Action::EDIT_FORM]);
+        return \in_array($action, [Action::INDEX, Action::SHOW]);
     }
 }

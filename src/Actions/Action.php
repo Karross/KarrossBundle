@@ -2,21 +2,23 @@
 
 namespace Karross\Actions;
 
-use Karross\Actions\{Create, CreateForm, EditForm, Update, Delete, Index, Show};
+use Karross\Actions\{Index, Show};
 use Karross\Metadata\EntityMetadata;
 
 enum Action: string
 {
-    // REST
+    // REST - actions currently implemented
     case INDEX = 'index';
     case SHOW = 'show';
-    case CREATE = 'create';
-    case UPDATE = 'update';
-    case DELETE = 'delete';
 
-    // UI
-    case CREATE_FORM = 'create_form';
-    case EDIT_FORM = 'edit_form';
+    // TODO: not implemented yet
+    // case CREATE     = 'create';
+    // case UPDATE     = 'update';
+    // case DELETE     = 'delete';
+
+    // TODO: form rendering not implemented yet
+    // case CREATE_FORM = 'create_form';
+    // case EDIT_FORM   = 'edit_form';
 
     // Extra
     //case IMPORT   = 'import';
@@ -25,10 +27,7 @@ enum Action: string
     public function httpMethods(): array
     {
         return match($this) {
-            self::INDEX, self::SHOW, self::CREATE_FORM, self::EDIT_FORM => ['GET'],
-            self::CREATE => ['POST'],
-            self::UPDATE => ['PUT', 'PATCH'],
-            self::DELETE => ['DELETE'],
+            self::INDEX, self::SHOW => ['GET'],
         };
     }
 
@@ -37,10 +36,8 @@ enum Action: string
         $identifierPath = implode('/', array_map(fn($i) => "{{$i}}", $identifiers));
 
         return match($this) {
-            self::INDEX, self::CREATE => "/admin/$slug",
-            self::SHOW, self::DELETE, self::UPDATE => "/admin/$slug/{$identifierPath}",
-            self::CREATE_FORM => "/admin/$slug/create",
-            self::EDIT_FORM => "/admin/$slug/{$identifierPath}/edit",
+            self::INDEX => "/admin/$slug",
+            self::SHOW => "/admin/$slug/{$identifierPath}",
         };
     }
 
@@ -49,11 +46,6 @@ enum Action: string
         return match($this) {
             self::INDEX => Index::class,
             self::SHOW => Show::class,
-            self::CREATE => Create::class,
-            self::UPDATE => Update::class,
-            self::DELETE => Delete::class,
-            self::CREATE_FORM => CreateForm::class,
-            self::EDIT_FORM => EditForm::class,
         };
     }
 }

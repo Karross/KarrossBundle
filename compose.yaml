@@ -1,0 +1,9 @@
+services:
+  php:
+    build: .
+    image: karross/karross-bundle:dev
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      APP_ENV: test
