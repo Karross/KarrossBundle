@@ -13,6 +13,7 @@ RUN     apt-get update && apt-get install -y --no-install-recommends \
         pdo \
         pdo_sqlite \
         zip \
+        bcmath \
     && rm -rf /var/lib/apt/lists/*
 
 # Node.js 20 (requis par playwright-php) via NodeSource
