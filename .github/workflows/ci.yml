@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build Docker image
         run: make build
 
       - name: Cache Composer dependencies (vendor)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: vendor
           key: composer-${{ runner.os }}-${{ hashFiles('composer.json') }}
@@ -29,7 +29,7 @@ jobs:
         run: make update
 
       - name: Cache Playwright browsers (var/ms-playwright)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: var/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('composer.json') }}
