@@ -1,4 +1,4 @@
-.PHONY: build install update test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check all-fix all-check
+.PHONY: build install update test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check all-fix all-check seed serve run-test-app
 
 # (Re)build the Docker image (when Dockerfile or composer.json change)
 build:
@@ -49,3 +49,17 @@ all-check: cs-fix-check phpstan test
 # Open a shell inside the container
 bash:
 	docker compose run --rm php bash
+
+# (Re)create the TestedApp sqlite file (var/tested-app.sqlite) with sample data
+seed:
+	docker compose run --rm php php tests/Integration/TestedApp/bin/seed.php
+
+# Serve the TestedApp admin over real HTTP (browse locally in a real browser)
+serve:
+	docker compose run --rm -p 8000:8000 php php -S 0.0.0.0:8000 -t tests/Integration/TestedApp/public tests/Integration/TestedApp/public/index.php
+
+# Hydrate the test data, then serve the test app on http://localhost:8000 (Ctrl-C to stop)
+run-test-app:
+	docker rm -f karross-test-app 2>/dev/null || true
+	docker compose run --rm --name karross-test-app -p 8000:8000 php \
+		bash -c 'php tests/Integration/TestedApp/bin/seed.php && exec php -S 0.0.0.0:8000 -t tests/Integration/TestedApp/public tests/Integration/TestedApp/public/index.php'
