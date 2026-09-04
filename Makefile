@@ -1,4 +1,4 @@
-.PHONY: build install test test-integration e2e-browsers test-e2e bash
+.PHONY: build install update test test-integration e2e-browsers test-e2e bash
 
 # (Re)build the Docker image (when Dockerfile or composer.json change)
 build:
@@ -7,6 +7,10 @@ build:
 # Install / update vendor inside the container
 install:
 	docker compose run --rm php composer install
+
+# Update dependencies from composer.json (no committed lock) inside the container
+update:
+	docker compose run --rm php composer update --no-interaction --prefer-dist
 
 # Run the whole PHPUnit test suite
 test:

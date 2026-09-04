@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: make build
+
+      - name: Cache Composer dependencies (vendor)
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            composer-${{ runner.os }}-
+
+      - name: Install dependencies
+        # No committed composer.lock (gitignored: the host app resolves its own deps).
+        # Here we resolve from composer.json at install time.
+        run: make update
+
+      - name: Cache Playwright browsers (var/ms-playwright)
+        uses: actions/cache@v4
+        with:
+          path: var/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install Playwright browsers
+        run: make e2e-browsers
+
+      - name: Run test suite (integration + e2e)
+        run: make test
