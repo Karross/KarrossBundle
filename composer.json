@@ -37,7 +37,8 @@
     "symfony/framework-bundle": "^7.3",
     "symfony/twig-bundle": "^7.3",
     "phpunit/phpunit": "^12.0",
-    "symfony/translation": "^7.3"
+    "symfony/translation": "^7.3",
+    "playwright-php/playwright-symfony": "^0.10.0"
   },
   "autoload": {
     "psr-4": {

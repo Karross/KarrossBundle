@@ -1,4 +1,4 @@
-.PHONY: build install test test-integration bash
+.PHONY: build install test test-integration e2e-browsers test-e2e bash
 
 # (Re)build the Docker image (when Dockerfile or composer.json change)
 build:
@@ -15,6 +15,14 @@ test:
 # Run only the integration test suite
 test-integration:
 	docker compose run --rm php vendor/bin/phpunit --testsuite integration
+
+# Install Playwright browsers (Chromium) into var/ms-playwright
+e2e-browsers:
+	docker compose run --rm php vendor/bin/playwright-install --browsers
+
+# Run only the E2E test suite
+test-e2e:
+	docker compose run --rm php vendor/bin/phpunit --testsuite e2e
 
 # Open a shell inside the container
 bash:

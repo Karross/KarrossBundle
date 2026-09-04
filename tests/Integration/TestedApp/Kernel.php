@@ -4,6 +4,7 @@ namespace TestedApp;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Karross\KarrossBundle;
+use Playwright\Symfony\PlaywrightSymfonyBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -18,12 +19,18 @@ class Kernel extends SFKernel
     }
     public function registerBundles(): iterable
     {
-        return [
+        $bundles = [
             new DoctrineBundle(),
             new FrameworkBundle(),
             new TwigBundle(),
             new KarrossBundle(),
         ];
+
+        if (str_starts_with($this->getEnvironment(), 'e2e')) {
+            $bundles[] = new PlaywrightSymfonyBundle();
+        }
+
+        return $bundles;
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void

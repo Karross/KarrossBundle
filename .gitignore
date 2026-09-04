@@ -1,6 +1,8 @@
 composer.lock
+opencode.json
 /var/
 /vendor/
+/.opencode/
 
 ###> phpunit/phpunit ###
 /phpunit.xml
