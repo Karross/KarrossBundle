@@ -2,8 +2,19 @@
 
 namespace Karross\Config;
 
+use CommerceGuys\Intl\Currency\CurrencyRepository;
+use CommerceGuys\Intl\NumberFormat\NumberFormatRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Karross\Formatters\BooleanFormatter;
+use Karross\Formatters\DateTime\DateFormatter;
+use Karross\Formatters\DateTime\DateTimeFormatter;
+use Karross\Formatters\DateTime\TimeFormatter;
+use Karross\Formatters\EnumFormatter;
 use Karross\Formatters\FormatterResolver;
+use Karross\Formatters\IntlCurrencyFormatter;
+use Karross\Formatters\IntlNumberFormatter;
+use Karross\Formatters\NotAvailableFormatter;
+use Karross\Formatters\StringFormatter;
 use Karross\Metadata\EntityMetadataBuilder;
 use Karross\Metadata\EntityMetadataRegistry;
 use Karross\Metadata\PropertyTypeDetector;
@@ -48,7 +59,22 @@ return static function (ContainerConfigurator $configurator) {
         ->arg('$config', param('karross.config'));
 
     // Formatters
-    $services->set(FormatterResolver::class);
+    $services
+        ->set(NumberFormatRepository::class)
+        ->set(CurrencyRepository::class)
+        ->set(StringFormatter::class)
+        ->set(BooleanFormatter::class)
+        ->set(IntlNumberFormatter::class)
+        ->set(IntlCurrencyFormatter::class)
+        ->set(EnumFormatter::class)
+        ->set(DateFormatter::class)
+        ->set(TimeFormatter::class)
+        ->set(DateTimeFormatter::class)
+        ->set(NotAvailableFormatter::class);
+
+    $services
+        ->set(FormatterResolver::class)
+        ->arg('$formatters', tagged_iterator('karross.formatter'));
 
     // Metadata
     $services
@@ -92,7 +118,8 @@ return static function (ContainerConfigurator $configurator) {
 
     $services->set(StringableExtension::class);
 
-    $services->set(PropertyAccessorExtension::class);
+    $services
+        ->set(PropertyAccessorExtension::class);
 
     $services
         ->set(FieldLabelExtension::class)

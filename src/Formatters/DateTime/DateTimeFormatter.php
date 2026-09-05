@@ -3,10 +3,12 @@
 namespace Karross\Formatters\DateTime;
 
 use Karross\Formatters\FormattingContext;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
+#[AutoconfigureTag('karross.formatter')]
 class DateTimeFormatter extends AbstractDateTimeFormatter
 {
-    protected static function resolvePattern(?FormattingContext $context): array
+    protected function resolvePattern(?FormattingContext $context): array
     {
         // Priority: dateTimeFormat, then (dateFormat + timeFormat), then localized default
         if (null !== $context?->dateTimeFormat) {

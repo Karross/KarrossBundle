@@ -2,8 +2,6 @@
 
 namespace Karross\Metadata;
 
-use Karross\Formatters\FormattingContext;
-
 class PropertyMetadata
 {
     /**
@@ -16,10 +14,5 @@ class PropertyMetadata
         public PropertyType $type,
         public string $formatter,
     ) {
-    }
-
-    public function format(mixed $value, ?FormattingContext $context = null): string
-    {
-        return $this->formatter::format($value, $context);
     }
 }

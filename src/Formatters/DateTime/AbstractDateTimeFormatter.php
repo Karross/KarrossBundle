@@ -15,7 +15,7 @@ use Karross\Formatters\ValueFormatterInterface;
  */
 abstract class AbstractDateTimeFormatter implements ValueFormatterInterface
 {
-    public static function format(mixed $value, ?FormattingContext $context = null): string
+    public function format(mixed $value, ?FormattingContext $context = null): string
     {
         if (null === $value) {
             return '';
@@ -27,7 +27,7 @@ abstract class AbstractDateTimeFormatter implements ValueFormatterInterface
 
         $locale = $context?->locale ?? FormattingContext::DEFAULT_LOCALE;
 
-        [$dateType, $timeType, $pattern] = static::resolvePattern($context);
+        [$dateType, $timeType, $pattern] = $this->resolvePattern($context);
 
         $formatter = null !== $pattern
             ? new \IntlDateFormatter($locale, \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, null, null, $pattern)
@@ -45,5 +45,5 @@ abstract class AbstractDateTimeFormatter implements ValueFormatterInterface
      *
      * @return array{0:int, 1:int, 2:?string} [dateType, timeType, pattern]
      */
-    abstract protected static function resolvePattern(?FormattingContext $context): array;
+    abstract protected function resolvePattern(?FormattingContext $context): array;
 }

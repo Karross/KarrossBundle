@@ -33,6 +33,11 @@ final class KarrossConfig
         return $this->entityConfig($fqcn)['actions'] ?? [];
     }
 
+    public function entityPropertyFormatter(string $fqcn, string $property): ?string
+    {
+        return $this->entityConfig($fqcn)['properties'][$property]['formatter'] ?? null;
+    }
+
     public function entitySlug(string $fqcn): ?string
     {
         return $this->entityConfig($fqcn)['slug'] ?? null;

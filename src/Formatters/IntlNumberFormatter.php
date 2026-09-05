@@ -4,10 +4,16 @@ namespace Karross\Formatters;
 
 use CommerceGuys\Intl\Formatter\NumberFormatter as IntlNumberFormatterLib;
 use CommerceGuys\Intl\NumberFormat\NumberFormatRepository;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
+#[AutoconfigureTag('karross.formatter')]
 class IntlNumberFormatter implements ValueFormatterInterface
 {
-    public static function format(mixed $value, ?FormattingContext $context = null): string
+    public function __construct(private NumberFormatRepository $numberFormatRepository)
+    {
+    }
+
+    public function format(mixed $value, ?FormattingContext $context = null): string
     {
         if (null === $value) {
             return '';
@@ -15,8 +21,7 @@ class IntlNumberFormatter implements ValueFormatterInterface
 
         $locale = $context?->locale ?? FormattingContext::DEFAULT_LOCALE;
 
-        $numberFormatRepository = new NumberFormatRepository();
-        $formatter = new IntlNumberFormatterLib($numberFormatRepository, ['locale' => $locale]);
+        $formatter = new IntlNumberFormatterLib($this->numberFormatRepository, ['locale' => $locale]);
 
         return $formatter->format((string) $value);
     }

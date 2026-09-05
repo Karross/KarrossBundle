@@ -13,6 +13,19 @@ use Karross\Metadata\PropertyType;
  */
 final class FormatterResolver
 {
+    /** @var array<class-string<ValueFormatterInterface>, ValueFormatterInterface> */
+    private array $formatters = [];
+
+    /**
+     * @param iterable<ValueFormatterInterface> $formatters
+     */
+    public function __construct(iterable $formatters)
+    {
+        foreach ($formatters as $formatter) {
+            $this->formatters[$formatter::class] = $formatter;
+        }
+    }
+
     /**
      * @return class-string<ValueFormatterInterface>
      */
@@ -31,5 +44,10 @@ final class FormatterResolver
             PropertyType::Collection,
             PropertyType::Unknown => NotAvailableFormatter::class,
         };
+    }
+
+    public function get(string $formatter): ValueFormatterInterface
+    {
+        return $this->formatters[$formatter] ?? throw new \InvalidArgumentException(\sprintf('Unknown formatter "%s". Registered formatters: %s', $formatter, implode(', ', array_keys($this->formatters) ?: ['none'])));
     }
 }

@@ -5,10 +5,18 @@ namespace Karross\Formatters;
 use CommerceGuys\Intl\Currency\CurrencyRepository;
 use CommerceGuys\Intl\Formatter\CurrencyFormatter as IntlCurrencyFormatterLib;
 use CommerceGuys\Intl\NumberFormat\NumberFormatRepository;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
+#[AutoconfigureTag('karross.formatter')]
 class IntlCurrencyFormatter implements ValueFormatterInterface
 {
-    public static function format(mixed $value, ?FormattingContext $context = null): string
+    public function __construct(
+        private NumberFormatRepository $numberFormatRepository,
+        private CurrencyRepository $currencyRepository,
+    ) {
+    }
+
+    public function format(mixed $value, ?FormattingContext $context = null): string
     {
         if (null === $value) {
             return '';
@@ -17,9 +25,7 @@ class IntlCurrencyFormatter implements ValueFormatterInterface
         $locale = $context?->locale ?? FormattingContext::DEFAULT_LOCALE;
         $currencyCode = 'EUR'; // Default currency, could be passed via context
 
-        $numberFormatRepository = new NumberFormatRepository();
-        $currencyRepository = new CurrencyRepository();
-        $formatter = new IntlCurrencyFormatterLib($numberFormatRepository, $currencyRepository, ['locale' => $locale]);
+        $formatter = new IntlCurrencyFormatterLib($this->numberFormatRepository, $this->currencyRepository, ['locale' => $locale]);
 
         return $formatter->format((string) $value, $currencyCode);
     }

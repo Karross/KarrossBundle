@@ -8,6 +8,7 @@ use Karross\Actions\Action;
 use Karross\Config\KarrossConfig;
 use Karross\Exceptions\EntityShortnameException;
 use Karross\Formatters\FormatterResolver;
+use Karross\Formatters\ValueFormatterInterface;
 use ReflectionProperty;
 
 readonly class EntityMetadataBuilder
@@ -65,7 +66,7 @@ readonly class EntityMetadataBuilder
             );
 
             // Resolve formatter
-            $formatter = $this->formatterResolver->resolve($type);
+            $formatter = $this->resolveFormatter($classMetadata->getName(), $associationName, $type);
 
             $associations[$associationName] = new AssociationMetadata(
                 name: $associationName,
@@ -101,7 +102,7 @@ readonly class EntityMetadataBuilder
             );
 
             // Resolve formatter
-            $formatter = $this->formatterResolver->resolve($type);
+            $formatter = $this->resolveFormatter($classMetadata->getName(), $fieldName, $type);
 
             $fields[$fieldName] = new FieldMetadata(
                 name: $fieldName,
@@ -112,6 +113,14 @@ readonly class EntityMetadataBuilder
         }
 
         return $fields;
+    }
+
+    /**
+     * @return class-string<ValueFormatterInterface>
+     */
+    private function resolveFormatter(string $fqcn, string $property, PropertyType $type): string
+    {
+        return $this->config->entityPropertyFormatter($fqcn, $property) ?? $this->formatterResolver->resolve($type);
     }
 
     /**

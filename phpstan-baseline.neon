@@ -85,6 +85,12 @@ parameters:
 			path: src/Config/KarrossConfig.php
 
 		-
+			message: '#^Cannot access offset ''formatter'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
 			message: '#^Cannot access offset ''html'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -93,7 +99,7 @@ parameters:
 		-
 			message: '#^Cannot access offset string on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 2
 			path: src/Config/KarrossConfig.php
 
 		-
@@ -145,6 +151,12 @@ parameters:
 			path: src/Config/KarrossConfig.php
 
 		-
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityPropertyFormatter\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Config/KarrossConfig.php
+
+		-
 			message: '#^Method Karross\\Config\\KarrossConfig\:\:entitySlug\(\) should return string\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -167,12 +179,6 @@ parameters:
 			identifier: nullCoalesce.variable
 			count: 1
 			path: src/DependencyInjection/KarrossExtension.php
-
-		-
-			message: '#^Method Karross\\Formatters\\BooleanFormatter\:\:format\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Formatters/BooleanFormatter.php
 
 		-
 			message: '#^Using nullsafe property access "\?\-\>locale" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
@@ -211,28 +217,10 @@ parameters:
 			path: src/Formatters/IntlNumberFormatter.php
 
 		-
-			message: '#^Method Karross\\Formatters\\NoFormatter\:\:format\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Formatters/NoFormatter.php
-
-		-
-			message: '#^Method Karross\\Formatters\\NotAvailableFormatter\:\:format\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Formatters/NotAvailableFormatter.php
-
-		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
 			count: 1
 			path: src/Formatters/StringFormatter.php
-
-		-
-			message: '#^Method Karross\\Formatters\\ValueFormatterInterface\:\:format\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Formatters/ValueFormatterInterface.php
 
 		-
 			message: '#^Method Karross\\Metadata\\AssociationMetadata\:\:__construct\(\) has parameter \$identifier with no value type specified in iterable type array\.$#'
@@ -415,6 +403,12 @@ parameters:
 			path: src/Metadata/EntityMetadataBuilder.php
 
 		-
+			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:resolveFormatter\(\) should return class\-string\<Karross\\Formatters\\ValueFormatterInterface\> but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Metadata/EntityMetadataBuilder.php
+
+		-
 			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:resolveReflectionProperty\(\) has parameter \$reflectionClass with generic class ReflectionClass but does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
@@ -443,12 +437,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Metadata/EntityMetadataRegistry.php
-
-		-
-			message: '#^Method Karross\\Metadata\\PropertyMetadata\:\:format\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Metadata/PropertyMetadata.php
 
 		-
 			message: '#^Method Karross\\Responders\\JsonResponder\:\:getResponse\(\) has parameter \$data with no type specified\.$#'

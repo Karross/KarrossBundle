@@ -2,6 +2,7 @@
 
 namespace Karross\Twig;
 
+use Karross\Formatters\FormatterResolver;
 use Karross\Metadata\PropertyMetadata;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -11,7 +12,7 @@ class PropertyAccessorExtension
 {
     private PropertyAccessor $accessor;
 
-    public function __construct()
+    public function __construct(private FormatterResolver $formatterResolver)
     {
         $this->accessor = PropertyAccess::createPropertyAccessor();
     }
@@ -28,7 +29,7 @@ class PropertyAccessorExtension
         try {
             $value = $this->accessor->getValue($entity, $property->name);
 
-            return $property->format($value);
+            return $this->formatterResolver->get($property->formatter)->format($value);
         } catch (\Throwable $e) {
             return 'N/A';
         }
