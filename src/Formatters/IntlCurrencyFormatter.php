@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('karross.formatter')]
 class IntlCurrencyFormatter implements ValueFormatterInterface
 {
+    private const DEFAULT_CURRENCY = 'EUR';
+
     public function __construct(
         private NumberFormatRepository $numberFormatRepository,
         private CurrencyRepository $currencyRepository,
@@ -23,7 +25,7 @@ class IntlCurrencyFormatter implements ValueFormatterInterface
         }
 
         $locale = $context?->locale ?? FormattingContext::DEFAULT_LOCALE;
-        $currencyCode = 'EUR'; // Default currency, could be passed via context
+        $currencyCode = null === $context ? self::DEFAULT_CURRENCY : ($context->currency ?? self::DEFAULT_CURRENCY);
 
         $formatter = new IntlCurrencyFormatterLib($this->numberFormatRepository, $this->currencyRepository, ['locale' => $locale]);
 

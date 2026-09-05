@@ -33,16 +33,17 @@ class PropertyAccessorExtension
         try {
             $value = $this->accessor->getValue($entity, $property->name);
 
-            return $this->formatterResolver->get($property->formatter)->format($value, $this->context());
+            return $this->formatterResolver->get($property->formatter)->format($value, $this->context($property));
         } catch (\Throwable $e) {
             return 'N/A';
         }
     }
 
-    private function context(): FormattingContext
+    private function context(PropertyMetadata $property): FormattingContext
     {
         return FormattingContext::forLocale(
-            $this->requestStack->getCurrentRequest()?->getLocale() ?? FormattingContext::DEFAULT_LOCALE
+            $this->requestStack->getCurrentRequest()?->getLocale() ?? FormattingContext::DEFAULT_LOCALE,
+            $property->formatterOptions['currency'] ?? null,
         );
     }
 }

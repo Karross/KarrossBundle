@@ -2,6 +2,17 @@
 
 namespace Karross\Config;
 
+/**
+ * @param array{
+ *   output?: array{api?: bool, html?: string},
+ *   routes?: array{prefix?: string, index?: string, show?: string},
+ *   entities?: array<string, array{
+ *     actions?: string[],
+ *     slug?: string,
+ *     properties?: array<string, array{formatter?: string, formatter_options?: array<string, string|null>}>
+ *   }>
+ * } $config
+ */
 final class KarrossConfig
 {
     public function __construct(private array $config)
@@ -23,6 +34,13 @@ final class KarrossConfig
         return $this->config['entities'] ?? [];
     }
 
+    /**
+     * @return array{
+     *   actions?: string[],
+     *   slug?: string,
+     *   properties?: array<string, array{formatter?: string, formatter_options?: array<string, string|null>}>
+     * }
+     */
     public function entityConfig(string $fqcn): array
     {
         return $this->config['entities'][$fqcn] ?? [];
@@ -36,6 +54,26 @@ final class KarrossConfig
     public function entityPropertyFormatter(string $fqcn, string $property): ?string
     {
         return $this->entityConfig($fqcn)['properties'][$property]['formatter'] ?? null;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function entityPropertyFormatterOptions(string $fqcn, string $property): array
+    {
+        $options = $this->entityConfig($fqcn)['properties'][$property]['formatter_options'] ?? null;
+        if (!\is_array($options)) {
+            return [];
+        }
+
+        $formatterOptions = [];
+        foreach ($options as $key => $value) {
+            if (\is_string($key) && \is_string($value)) {
+                $formatterOptions[$key] = $value;
+            }
+        }
+
+        return $formatterOptions;
     }
 
     public function entitySlug(string $fqcn): ?string

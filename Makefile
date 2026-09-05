@@ -1,4 +1,4 @@
-.PHONY: build install update test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check all-fix all-check seed serve run-test-app
+.PHONY: build install update test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check all-fix all-check seed serve
 
 # (Re)build the Docker image (when Dockerfile or composer.json change)
 build:
@@ -54,12 +54,16 @@ bash:
 seed:
 	docker compose run --rm php php tests/Integration/TestedApp/bin/seed.php
 
-# Serve the TestedApp admin over real HTTP (browse locally in a real browser)
+# Hydrate the data, then serve ALL apps for real-browser testing (Ctrl-C to stop)
 serve:
-	docker compose run --rm -p 8000:8000 php php -S 0.0.0.0:8000 -t tests/Integration/TestedApp/public tests/Integration/TestedApp/public/index.php
-
-# Hydrate the test data, then serve the test app on http://localhost:8000 (Ctrl-C to stop)
-run-test-app:
-	docker rm -f karross-test-app 2>/dev/null || true
-	docker compose run --rm --name karross-test-app -p 8000:8000 php \
-		bash -c 'php tests/Integration/TestedApp/bin/seed.php && exec php -S 0.0.0.0:8000 -t tests/Integration/TestedApp/public tests/Integration/TestedApp/public/index.php'
+	docker rm -f karross-serve 2>/dev/null || true
+	docker compose run --rm --name karross-serve -p 8000:8000 -p 8080:8080 php \
+		bash -c 'php tests/Integration/TestedApp/bin/seed.php && \
+			printf "\n\033[1;32mKarrossBundle demo apps ready:\033[0m\n" && \
+			printf "  http://127.0.0.1:8000/admin/article                no Karross config (out of the box)\n" && \
+			printf "  http://127.0.0.1:8080/fr/dashboard/article         with config — prefix dashboard + locale\n" && \
+			printf "  http://127.0.0.1:8080/en/dashboard/article\n" && \
+			printf "Press Ctrl-C to stop.\n\n" && \
+			(php -S 0.0.0.0:8000 -t tests/Integration/TestedApp/public tests/Integration/TestedApp/public/index.php & \
+			 php -S 0.0.0.0:8080 -t tests/Integration/TestedApp/public tests/Integration/TestedApp/public/index_with_config.php & \
+			 wait)'

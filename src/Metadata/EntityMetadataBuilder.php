@@ -74,6 +74,7 @@ readonly class EntityMetadataBuilder
                 fqcn: $associationClass,
                 type: $type,
                 formatter: $formatter,
+                formatterOptions: $this->config->entityPropertyFormatterOptions($classMetadata->getName(), $associationName),
             );
         }
 
@@ -109,6 +110,7 @@ readonly class EntityMetadataBuilder
                 fqcn: $classMetadata->getName(),
                 type: $type,
                 formatter: $formatter,
+                formatterOptions: $this->config->entityPropertyFormatterOptions($classMetadata->getName(), $fieldName),
             );
         }
 

@@ -67,13 +67,13 @@ parameters:
 			path: src/Actions/Show.php
 
 		-
-			message: '#^Cannot access offset ''api'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Config/KarrossConfig.php
 
 		-
-			message: '#^Cannot access offset ''formatter'' on mixed\.$#'
+			message: '#^Cannot access offset ''api'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Config/KarrossConfig.php
@@ -87,7 +87,7 @@ parameters:
 		-
 			message: '#^Cannot access offset string on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: src/Config/KarrossConfig.php
 
 		-
@@ -121,31 +121,7 @@ parameters:
 			path: src/Config/KarrossConfig.php
 
 		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityActions\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityConfig\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityConfig\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityPropertyFormatter\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:entitySlug\(\) should return string\|null but returns mixed\.$#'
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityConfig\(\) should return array\{actions\?\: array\<string\>, slug\?\: string, properties\?\: array\<string, array\{formatter\?\: string, formatter_options\?\: array\<string, string\|null\>\}\>\} but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Config/KarrossConfig.php

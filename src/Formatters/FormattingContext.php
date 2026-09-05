@@ -13,6 +13,7 @@ final readonly class FormattingContext
         public ?string $dateFormat,
         public ?string $timeFormat,
         public ?string $dateTimeFormat,
+        public ?string $currency = null,
     ) {
     }
 
@@ -21,9 +22,9 @@ final readonly class FormattingContext
         return new self(null, null, null, null, null, null);
     }
 
-    public static function forLocale(string $locale): self
+    public static function forLocale(string $locale, ?string $currency = null): self
     {
-        return new self($locale, null, null, null, null, null);
+        return new self($locale, null, null, null, null, null, $currency);
     }
 
     public static function forDate(
@@ -48,6 +49,7 @@ final readonly class FormattingContext
         ?string $dateFormat = null,
         ?string $timeFormat = null,
         ?string $dateTimeFormat = null,
+        ?string $currency = null,
     ): self {
         return new self(
             $locale ?? $this->locale,
@@ -56,6 +58,7 @@ final readonly class FormattingContext
             $dateFormat ?? $this->dateFormat,
             $timeFormat ?? $this->timeFormat,
             $dateTimeFormat ?? $this->dateTimeFormat,
+            $currency ?? $this->currency,
         );
     }
 }
