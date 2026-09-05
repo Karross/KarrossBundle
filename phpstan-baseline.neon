@@ -7,18 +7,6 @@ parameters:
 			path: src/Actions/Action.php
 
 		-
-			message: '#^Method Karross\\Actions\\Action\:\:routePattern\(\) has parameter \$identifiers with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Actions/Action.php
-
-		-
-			message: '#^Part \$i \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: src/Actions/Action.php
-
-		-
 			message: '#^Cannot call method getOption\(\) on Symfony\\Component\\Routing\\Route\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -266,12 +254,6 @@ parameters:
 
 		-
 			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getExplodedProperties\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Metadata/EntityMetadata.php
-
-		-
-			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getIdentifier\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Metadata/EntityMetadata.php
@@ -661,12 +643,6 @@ parameters:
 			path: tests/Integration/Routes/LoaderTest.php
 
 		-
-			message: '#^Method Integration\\Routes\\LoaderTest\:\:testRoutesAreLoaded\(\) has parameter \$expectedRouteNames with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: tests/Integration/Routes/LoaderTest.php
-
-		-
 			message: '#^Method Integration\\Routes\\LoaderTest\:\:testRoutesCannotBeLoaded\(\) has parameter \$configFilenames with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -685,12 +661,6 @@ parameters:
 			path: tests/Integration/Routes/LoaderTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Component\\Routing\\RouteCollection\:\:get\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Routes/LoaderTest.php
-
-		-
 			message: '#^Parameter \#1 \$value of static method Karross\\Actions\\Action\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -700,12 +670,6 @@ parameters:
 			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array given\.$#'
 			identifier: argument.type
 			count: 2
-			path: tests/Integration/Routes/LoaderTest.php
-
-		-
-			message: '#^Part \$routeName \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
 			path: tests/Integration/Routes/LoaderTest.php
 
 		-

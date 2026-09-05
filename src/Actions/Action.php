@@ -28,16 +28,6 @@ enum Action: string
         };
     }
 
-    public function routePattern(string $slug, array $identifiers = ['id']): string
-    {
-        $identifierPath = implode('/', array_map(static fn ($i) => "{{$i}}", $identifiers));
-
-        return match ($this) {
-            self::INDEX => "/admin/$slug",
-            self::SHOW => "/admin/$slug/{$identifierPath}",
-        };
-    }
-
     public function controller(): string
     {
         return match ($this) {

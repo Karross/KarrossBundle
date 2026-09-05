@@ -3,7 +3,9 @@
 namespace Karross\Twig;
 
 use Karross\Formatters\FormatterResolver;
+use Karross\Formatters\FormattingContext;
 use Karross\Metadata\PropertyMetadata;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Twig\Attribute\AsTwigFunction;
@@ -12,8 +14,10 @@ class PropertyAccessorExtension
 {
     private PropertyAccessor $accessor;
 
-    public function __construct(private FormatterResolver $formatterResolver)
-    {
+    public function __construct(
+        private FormatterResolver $formatterResolver,
+        private RequestStack $requestStack,
+    ) {
         $this->accessor = PropertyAccess::createPropertyAccessor();
     }
 
@@ -29,9 +33,16 @@ class PropertyAccessorExtension
         try {
             $value = $this->accessor->getValue($entity, $property->name);
 
-            return $this->formatterResolver->get($property->formatter)->format($value);
+            return $this->formatterResolver->get($property->formatter)->format($value, $this->context());
         } catch (\Throwable $e) {
             return 'N/A';
         }
+    }
+
+    private function context(): FormattingContext
+    {
+        return FormattingContext::forLocale(
+            $this->requestStack->getCurrentRequest()?->getLocale() ?? FormattingContext::DEFAULT_LOCALE
+        );
     }
 }

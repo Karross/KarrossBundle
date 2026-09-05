@@ -39,6 +39,9 @@ readonly class EntityMetadata
         return $this->properties;
     }
 
+    /**
+     * @return string[]
+     */
     public function getIdentifier(): array
     {
         return $this->classMetadata->getIdentifier();

@@ -22,6 +22,7 @@ use Karross\Responders\ResponderInterface;
 use Karross\Responders\ResponderManager;
 use Karross\Routes\RouteGenerator;
 use Karross\Routes\RouteLoader;
+use Karross\Routes\RoutePattern;
 use Karross\Twig\FieldLabelExtension;
 use Karross\Twig\HtmlLocaleExtension;
 use Karross\Twig\PropertyAccessorExtension;
@@ -100,6 +101,7 @@ return static function (ContainerConfigurator $configurator) {
         ->arg('$responders', tagged_iterator('karross.responder', ResponderInterface::class));
 
     // Routes
+    $services->set(RoutePattern::class);
     $services->set(RouteGenerator::class);
 
     $services

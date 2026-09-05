@@ -3,12 +3,19 @@
 namespace Karross\Routes;
 
 use Karross\Actions\Action;
+use Karross\Config\KarrossConfig;
 use Karross\Metadata\EntityMetadata;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class RouteGenerator
 {
+    public function __construct(
+        private readonly KarrossConfig $config,
+        private readonly RoutePattern $routePattern,
+    ) {
+    }
+
     /**
      * @param EntityMetadata[] $metadata
      */
@@ -18,7 +25,17 @@ class RouteGenerator
 
         foreach ($metadata as $fqcn => $entityMetadata) {
             foreach (Action::cases() as $action) {
-                $routesCollection->add(self::routeName($fqcn, $action), new Route($action->routePattern($entityMetadata->slug, $entityMetadata->getIdentifier()), defaults: ['_controller' => $action->controller()], options: ['fqcn' => $fqcn, 'karross_action' => $action->value], methods: $action->httpMethods()));
+                $pattern = $this->config->routePattern($action->value);
+                $this->routePattern->validate($pattern);
+
+                $path = $this->routePattern->resolve(
+                    $pattern,
+                    $this->config->routePrefix(),
+                    $entityMetadata->slug,
+                    $entityMetadata->getIdentifier(),
+                );
+
+                $routesCollection->add(self::routeName($fqcn, $action), new Route($path, defaults: ['_controller' => $action->controller()], options: ['fqcn' => $fqcn, 'karross_action' => $action->value], methods: $action->httpMethods()));
             }
         }
 
