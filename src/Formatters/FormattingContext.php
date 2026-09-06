@@ -14,6 +14,9 @@ final readonly class FormattingContext
         public ?string $timeFormat,
         public ?string $dateTimeFormat,
         public ?string $currency = null,
+        public ?string $entitySlug = null,
+        public ?string $propertyName = null,
+        public bool $ucfirst = false,
     ) {
     }
 
@@ -50,6 +53,9 @@ final readonly class FormattingContext
         ?string $timeFormat = null,
         ?string $dateTimeFormat = null,
         ?string $currency = null,
+        ?string $entitySlug = null,
+        ?string $propertyName = null,
+        ?bool $ucfirst = null,
     ): self {
         return new self(
             $locale ?? $this->locale,
@@ -59,6 +65,9 @@ final readonly class FormattingContext
             $timeFormat ?? $this->timeFormat,
             $dateTimeFormat ?? $this->dateTimeFormat,
             $currency ?? $this->currency,
+            $entitySlug ?? $this->entitySlug,
+            $propertyName ?? $this->propertyName,
+            $ucfirst ?? $this->ucfirst,
         );
     }
 }

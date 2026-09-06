@@ -1,5 +1,6 @@
 <?php
 
+use Karross\Formatters\Boolean\YesNoFormatter;
 use Karross\Formatters\IntlCurrencyFormatter;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use TestedApp\Entity\Article;
@@ -26,6 +27,10 @@ return static function (ContainerConfigurator $config) {
                     'price' => [
                         'formatter' => IntlCurrencyFormatter::class,
                         'formatter_options' => ['currency' => 'EUR'],
+                    ],
+                    'published' => [
+                        'formatter' => YesNoFormatter::class,
+                        'formatter_options' => ['ucfirst' => true],
                     ],
                 ],
             ],

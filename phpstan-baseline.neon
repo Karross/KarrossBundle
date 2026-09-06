@@ -121,7 +121,7 @@ parameters:
 			path: src/Config/KarrossConfig.php
 
 		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityConfig\(\) should return array\{actions\?\: array\<string\>, slug\?\: string, properties\?\: array\<string, array\{formatter\?\: string, formatter_options\?\: array\<string, string\|null\>\}\>\} but returns mixed\.$#'
+			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityConfig\(\) should return array\{actions\?\: array\<string\>, slug\?\: string, properties\?\: array\<string, array\{formatter\?\: string, formatter_options\?\: array\<string, bool\|string\|null\>\}\>\} but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Config/KarrossConfig.php

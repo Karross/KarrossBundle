@@ -71,6 +71,8 @@ final class ArticleIndexConfiguredTest extends PlaywrightTestCase
         $this->assertStringContainsString('42', $this->cellForColumn($page, 'Viewcount'));
         $this->assertPriceCellUsesLocaleAndCurrency($page, 'fr');
         $this->assertPriceCellUsesLocaleAndCurrency($this->visit('/en/dashboard/article'), 'en');
+        $this->assertCellEquals($this->visit('/fr/dashboard/article'), 'Published', 'Oui');
+        $this->assertCellEquals($this->visit('/en/dashboard/article'), 'Published', 'Yes');
     }
 
     private function assertPriceCellUsesLocaleAndCurrency(PageInterface $page, string $locale): void

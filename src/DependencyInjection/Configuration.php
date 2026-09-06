@@ -67,6 +67,7 @@ class Configuration implements ConfigurationInterface
                                             ->addDefaultsIfNotSet()
                                             ->children()
                                                 ->scalarNode('currency')->defaultNull()->end()
+                                                ->booleanNode('ucfirst')->defaultFalse()->end()
                                             ->end()
                                         ->end()
                                     ->end()

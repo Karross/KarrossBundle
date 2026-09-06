@@ -32,7 +32,7 @@ final class CurrencyFormatterConfigTest extends TestCase
         $price = $registry->get(Article::class)->getProperties()['price'];
         self::assertInstanceOf(PropertyMetadata::class, $price);
         self::assertSame(IntlCurrencyFormatter::class, $price->formatter);
-        self::assertSame(['currency' => 'USD'], $price->formatterOptions);
+        self::assertSame(['currency' => 'USD', 'ucfirst' => false], $price->formatterOptions);
     }
 
     public function testCurrencyFormatterRendersCurrencyFromTheContext(): void

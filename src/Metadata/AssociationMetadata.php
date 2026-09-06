@@ -5,9 +5,9 @@ namespace Karross\Metadata;
 class AssociationMetadata extends PropertyMetadata
 {
     /**
-     * @param class-string          $fqcn
-     * @param class-string          $formatter
-     * @param array<string, string> $formatterOptions
+     * @param class-string               $fqcn
+     * @param class-string               $formatter
+     * @param array<string, string|bool> $formatterOptions
      */
     public function __construct(
         public string $name,
@@ -16,7 +16,8 @@ class AssociationMetadata extends PropertyMetadata
         public PropertyType $type,
         public string $formatter,
         public array $formatterOptions = [],
+        public ?string $entitySlug = null,
     ) {
-        parent::__construct($name, false, true, $type, $formatter, $formatterOptions);
+        parent::__construct($name, false, true, $type, $formatter, $formatterOptions, $entitySlug);
     }
 }

@@ -10,6 +10,22 @@
         <source>k_index_value.not_supported</source>
         <target>Non supporté</target>
       </trans-unit>
+    <trans-unit id="k_value.true">
+        <source>k_value.true</source>
+        <target>vrai</target>
+      </trans-unit>
+    <trans-unit id="k_value.false">
+        <source>k_value.false</source>
+        <target>faux</target>
+      </trans-unit>
+    <trans-unit id="k_value.yes">
+        <source>k_value.yes</source>
+        <target>oui</target>
+      </trans-unit>
+    <trans-unit id="k_value.no">
+        <source>k_value.no</source>
+        <target>non</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

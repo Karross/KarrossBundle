@@ -34,7 +34,7 @@ readonly class EntityMetadataBuilder
                 $entities[$classMetadata->getName()] = new EntityMetadata(
                     slug: $slug,
                     actions: $this->resolveActions($this->config),
-                    properties: $this->buildAssociations($classMetadata) + $this->buildFields($classMetadata),
+                    properties: $this->buildAssociations($slug, $classMetadata) + $this->buildFields($slug, $classMetadata),
                     classMetadata: $classMetadata,
                 );
                 $fqcnToSlugMap[$classMetadata->getName()] = $slug;
@@ -44,7 +44,7 @@ readonly class EntityMetadataBuilder
         return $entities;
     }
 
-    private function buildAssociations(ClassMetadata $classMetadata): array
+    private function buildAssociations(string $entitySlug, ClassMetadata $classMetadata): array
     {
         $associations = [];
         $reflectionClass = new \ReflectionClass($classMetadata->getName());
@@ -75,13 +75,14 @@ readonly class EntityMetadataBuilder
                 type: $type,
                 formatter: $formatter,
                 formatterOptions: $this->config->entityPropertyFormatterOptions($classMetadata->getName(), $associationName),
+                entitySlug: $entitySlug,
             );
         }
 
         return $associations;
     }
 
-    private function buildFields(ClassMetadata $classMetadata): array
+    private function buildFields(string $entitySlug, ClassMetadata $classMetadata): array
     {
         $fields = [];
         $reflectionClass = new \ReflectionClass($classMetadata->getName());
@@ -111,6 +112,7 @@ readonly class EntityMetadataBuilder
                 type: $type,
                 formatter: $formatter,
                 formatterOptions: $this->config->entityPropertyFormatterOptions($classMetadata->getName(), $fieldName),
+                entitySlug: $entitySlug,
             );
         }
 

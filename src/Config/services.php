@@ -5,7 +5,8 @@ namespace Karross\Config;
 use CommerceGuys\Intl\Currency\CurrencyRepository;
 use CommerceGuys\Intl\NumberFormat\NumberFormatRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Karross\Formatters\BooleanFormatter;
+use Karross\Formatters\Boolean\TrueFalseFormatter;
+use Karross\Formatters\Boolean\YesNoFormatter;
 use Karross\Formatters\DateTime\DateFormatter;
 use Karross\Formatters\DateTime\DateTimeFormatter;
 use Karross\Formatters\DateTime\TimeFormatter;
@@ -15,6 +16,7 @@ use Karross\Formatters\IntlCurrencyFormatter;
 use Karross\Formatters\IntlNumberFormatter;
 use Karross\Formatters\NotAvailableFormatter;
 use Karross\Formatters\StringFormatter;
+use Karross\Formatters\ValueTranslator;
 use Karross\Metadata\EntityMetadataBuilder;
 use Karross\Metadata\EntityMetadataRegistry;
 use Karross\Metadata\PropertyTypeDetector;
@@ -64,14 +66,16 @@ return static function (ContainerConfigurator $configurator) {
         ->set(NumberFormatRepository::class)
         ->set(CurrencyRepository::class)
         ->set(StringFormatter::class)
-        ->set(BooleanFormatter::class)
+        ->set(TrueFalseFormatter::class)
+        ->set(YesNoFormatter::class)
         ->set(IntlNumberFormatter::class)
         ->set(IntlCurrencyFormatter::class)
         ->set(EnumFormatter::class)
         ->set(DateFormatter::class)
         ->set(TimeFormatter::class)
         ->set(DateTimeFormatter::class)
-        ->set(NotAvailableFormatter::class);
+        ->set(NotAvailableFormatter::class)
+        ->set(ValueTranslator::class);
 
     $services
         ->set(FormatterResolver::class)

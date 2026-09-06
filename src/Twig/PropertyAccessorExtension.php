@@ -41,9 +41,11 @@ class PropertyAccessorExtension
 
     private function context(PropertyMetadata $property): FormattingContext
     {
+        $currency = $property->formatterOptions['currency'] ?? null;
+
         return FormattingContext::forLocale(
             $this->requestStack->getCurrentRequest()?->getLocale() ?? FormattingContext::DEFAULT_LOCALE,
-            $property->formatterOptions['currency'] ?? null,
-        );
+            \is_string($currency) ? $currency : null,
+        )->with(entitySlug: $property->entitySlug, propertyName: $property->name, ucfirst: (bool) ($property->formatterOptions['ucfirst'] ?? false));
     }
 }

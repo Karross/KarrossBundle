@@ -9,7 +9,7 @@ namespace Karross\Config;
  *   entities?: array<string, array{
  *     actions?: string[],
  *     slug?: string,
- *     properties?: array<string, array{formatter?: string, formatter_options?: array<string, string|null>}>
+ *     properties?: array<string, array{formatter?: string, formatter_options?: array<string, string|bool|null>}>
  *   }>
  * } $config
  */
@@ -38,7 +38,7 @@ final class KarrossConfig
      * @return array{
      *   actions?: string[],
      *   slug?: string,
-     *   properties?: array<string, array{formatter?: string, formatter_options?: array<string, string|null>}>
+     *   properties?: array<string, array{formatter?: string, formatter_options?: array<string, string|bool|null>}>
      * }
      */
     public function entityConfig(string $fqcn): array
@@ -57,7 +57,7 @@ final class KarrossConfig
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, string|bool>
      */
     public function entityPropertyFormatterOptions(string $fqcn, string $property): array
     {
@@ -68,7 +68,7 @@ final class KarrossConfig
 
         $formatterOptions = [];
         foreach ($options as $key => $value) {
-            if (\is_string($key) && \is_string($value)) {
+            if (\is_string($key) && (\is_string($value) || \is_bool($value))) {
                 $formatterOptions[$key] = $value;
             }
         }

@@ -2,6 +2,7 @@
 
 namespace Karross\Formatters;
 
+use Karross\Formatters\Boolean\TrueFalseFormatter;
 use Karross\Formatters\DateTime\DateFormatter;
 use Karross\Formatters\DateTime\DateTimeFormatter;
 use Karross\Formatters\DateTime\TimeFormatter;
@@ -32,7 +33,7 @@ final class FormatterResolver
     public function resolve(PropertyType $type): string
     {
         return match ($type) {
-            PropertyType::Boolean => BooleanFormatter::class,
+            PropertyType::Boolean => TrueFalseFormatter::class,
             PropertyType::Integer, PropertyType::Float => IntlNumberFormatter::class,
             PropertyType::String, PropertyType::Text => StringFormatter::class,
             PropertyType::Date => DateFormatter::class,

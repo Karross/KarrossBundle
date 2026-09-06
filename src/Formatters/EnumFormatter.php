@@ -7,6 +7,10 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('karross.formatter')]
 class EnumFormatter implements ValueFormatterInterface
 {
+    public function __construct(private ValueTranslator $valueTranslator)
+    {
+    }
+
     public function format(mixed $value, ?FormattingContext $context = null): string
     {
         if (null === $value) {
@@ -17,11 +21,9 @@ class EnumFormatter implements ValueFormatterInterface
             return 'N/A';
         }
 
-        // For BackedEnum, return the value, otherwise return the name
-        if ($value instanceof \BackedEnum) {
-            return (string) $value->value;
-        }
+        // For BackedEnum, use the value as the raw display, otherwise the name
+        $raw = $value instanceof \BackedEnum ? (string) $value->value : $value->name;
 
-        return $value->name;
+        return $this->valueTranslator->translate($raw, $context);
     }
 }
