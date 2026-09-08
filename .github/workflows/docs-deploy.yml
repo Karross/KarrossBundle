@@ -1,0 +1,42 @@
+name: docs-deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+  workflow_dispatch:
+
+concurrency:
+  group: docs-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the site (strict)
+        run: |
+          pip install mkdocs mkdocs-material
+          mkdocs build --config-file docs/mkdocs.yml --strict
+
+      - name: Deploy to Karross/karross.github.io (main)
+        env:
+          DEPLOY_KEY: ${{ secrets.KARROSS_DEPLOY_KEY }}
+        run: |
+          echo "$DEPLOY_KEY" > /tmp/karross_deploy_key
+          chmod 600 /tmp/karross_deploy_key
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          export GIT_SSH_COMMAND="ssh -i /tmp/karross_deploy_key -o StrictHostKeyChecking=accept-new"
+          git remote add site git@github.com:Karross/karross.github.io.git
+          mkdocs gh-deploy --config-file docs/mkdocs.yml --remote-name site --remote-branch main --force

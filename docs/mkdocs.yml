@@ -1,0 +1,28 @@
+site_name: Karross documentation
+docs_dir: src
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Presentation: presentation.md
+  - Customization:
+      - Overview: customization/index.md
+      - Routes: customization/routes.md
+      - Formatting values: customization/formatting-values.md
+      - Templates: customization/templates.md
+      - Translations: customization/translations.md
+      - Output: customization/output.md
+  - Roadmap: roadmap.md
+  - How to contribute: contribute.md
+theme:
+  name: material
+  logo: img/logo-white.png
+  favicon: img/logo.png
+# Port dev : 8000/8080 sont réservés aux apps de démo du bundle (make serve)
+dev_addr: 127.0.0.1:8001
+markdown_extensions:
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_css:
+  - stylesheets/extra.css

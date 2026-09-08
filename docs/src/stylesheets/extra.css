@@ -1,0 +1,177 @@
+/* Karross — habillage sobre "maison de luxe" : noir et blanc, or discret.
+   Pas de palette Material : les couleurs sont definies ici, en CSS pur. */
+
+/* Nuancier */
+:root {
+    --md-primary-fg-color: #111111;
+    --md-primary-bg-color: #ffffff;
+    --md-primary-fg-color--dark: #000000;
+    --md-accent-fg-color: #9a7b4f;
+}
+
+/* Header : fond noir, titre en serif espace (style enseigne) */
+.md-header {
+    background: #111111;
+    border-top: 2px solid #9a7b4f;
+}
+
+.md-header__title {
+    font-family: Georgia, "Times New Roman", serif;
+    letter-spacing: 0.08em;
+}
+
+/* Logo : un peu plus present dans le header */
+.md-header .md-logo img {
+    height: 2.6rem;
+}
+
+/* Titres : serif classique, espacement leger ; titres de page en or */
+.md-typeset h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: #9a7b4f;
+}
+
+.md-typeset h2 {
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+/* Rubriques principales : bandeau noir, texte blanc, filet or en retrait
+   au-dessus pour se detacher des sous-titres. */
+.md-content h2 {
+    background: #111111;
+    color: #ffffff;
+    border-top: 2px solid #9a7b4f;
+    font-size: 1.35em;
+    margin: 2em 0 0.6em;
+    padding: 0.5em 0.8em;
+}
+
+.md-content h2:first-child {
+    margin-top: 0;
+}
+
+.md-content h2 a {
+    color: inherit;
+}
+
+/* Sous-titres : attenues */
+.md-content h3 {
+    font-size: 1.2em;
+    color: #555555;
+    margin-top: 1.6em;
+}
+
+/* Liens : soulignes finement, hover or */
+.md-typeset a {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.md-typeset a:hover {
+    color: #9a7b4f;
+}
+
+/* Puces : losange or expression d'un niveau, ligne discreta au niveau 2 */
+.md-typeset ul > li {
+    list-style: none;
+    padding-left: 0.5em;
+}
+
+.md-typeset ul > li::before {
+    content: "\25C6";
+    color: #9a7b4f;
+    font-size: 0.55em;
+    vertical-align: 0.15em;
+    margin-right: 0.55em;
+}
+
+.md-typeset ul ul > li::before {
+    content: "\2013";
+    color: #9a7b4f;
+    font-size: 0.9em;
+    vertical-align: 0;
+}
+
+/* Codage : filet de contraste discret */
+.md-typeset code,
+.md-typeset pre {
+    font-size: 0.95em;
+}
+
+/* =========================================================
+   Panneaux lateraux : fond ivoire, filets, typo "enseigne".
+   ========================================================= */
+
+/* NB: Material pose une marge laterale sur le scrollwrap pour la
+   scrollbar -> on la neutralise pour que l'ivoire touche les bords. */
+.md-sidebar__scrollwrap {
+    margin: 0;
+}
+
+/* Colonne gauche : ivoire sur toute la hauteur + filet or d'accent */
+.md-sidebar--primary .md-sidebar__scrollwrap {
+    background: #f7f6f3;
+    border-left: 2px solid #9a7b4f;
+}
+
+/* Colonne droite : le fond epouse la hauteur du TOC, on ne l'etire pas */
+.md-sidebar--secondary .md-sidebar__inner {
+    background: #f7f6f3;
+}
+
+.md-sidebar .md-sidebar__inner {
+    padding: 0.6rem 0.9rem;
+}
+
+/* Titres de nav (site + "On this page") : sticky sur fond ivoire,
+   sans bande blanche, et le menu qui defile ne transparait pas !*/
+.md-sidebar .md-nav__title {
+    background: #f7f6f3;
+    box-shadow: none;
+    color: #111111;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Liens de navigation : meme taille a gauche et a droite */
+.md-nav__link {
+    color: #333333;
+    font-size: 0.85rem;
+}
+
+.md-nav__link:hover {
+    color: #9a7b4f;
+}
+
+.md-nav__item--active > .md-nav__link {
+    color: #111111;
+    font-weight: 600;
+}
+
+.md-nav__item--active > .md-nav__link::before {
+    content: "\25C6";
+    color: #9a7b4f;
+    font-size: 0.5rem;
+    vertical-align: 0.1em;
+    margin-right: 0.4em;
+}
+
+/* Etiquette "On this page" (TOC) : discret, police du theme */
+.md-sidebar--secondary .md-nav__title {
+    letter-spacing: 0.02em;
+    color: #9a7b4f;
+}
+
+/* Tableaux : en-tetes discrets, police heritee, fines lignes */
+.md-typeset table th {
+    font-weight: 600;
+    color: #333333;
+    background: #f7f6f3;
+    border-bottom: 1px solid #e5e0d8;
+}
+
+.md-typeset table {
+    border: 1px solid #e5e0d8;
+}
