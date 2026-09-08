@@ -9,10 +9,7 @@ entities - out of the box, and fully customizable.
 - [Roadmap](roadmap.md) - what's planned
 - [How to contribute](contribute.md) - help the project
 
-## Repositories
+## Source code
 
-| Repository | Purpose |
-|---|---|
-| [Karross/KarrossBundle](https://github.com/Karross/KarrossBundle) | The Symfony bundle (code, tests, CI) |
-| [Karross/docs](https://github.com/Karross/docs) | Sources of this documentation (MkDocs) |
-| [karross.github.io](https://karross.github.io) | Published static site (GitHub Pages) |
+The bundle code and this documentation live in
+[Karross/KarrossBundle](https://github.com/Karross/KarrossBundle).

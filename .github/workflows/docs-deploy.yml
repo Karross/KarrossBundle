@@ -35,8 +35,15 @@ jobs:
         run: |
           echo "$DEPLOY_KEY" > /tmp/karross_deploy_key
           chmod 600 /tmp/karross_deploy_key
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          export GIT_SSH_COMMAND="ssh -i /tmp/karross_deploy_key -o StrictHostKeyChecking=accept-new"
+          export GIT_SSH_COMMAND="ssh -i /tmp/karross_deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          rm -rf /tmp/site-deploy && mkdir /tmp/site-deploy && cd /tmp/site-deploy
+          git init
+          git symbolic-ref HEAD refs/heads/main
+          cp -r "$GITHUB_WORKSPACE"/docs/site/* .
+          touch .nojekyll
+          git add -A
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -qm "deploy: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git remote add site git@github.com:Karross/karross.github.io.git
-          mkdocs gh-deploy --config-file docs/mkdocs.yml --remote-name site --remote-branch main --force
+          git push --force --no-thin site HEAD:main

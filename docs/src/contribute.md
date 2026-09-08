@@ -35,8 +35,8 @@ make serve          # serve the demo apps (Ctrl-C to stop)
 
 ## Working locally on the documentation
 
-The documentation sources live in the `docs/` repository (Markdown + MkDocs),
-written in English.
+The documentation sources live in the bundle repository (`docs/`: Markdown +
+MkDocs), written in English.
 
 ```bash
 cd docs
@@ -44,4 +44,4 @@ mkdocs serve                  # preview on http://127.0.0.1:8001/
 mkdocs build                  # regenerate site/
 ```
 
-Open a pull request against `Karross/docs` with your changes.
+Open a pull request against `Karross/KarrossBundle` with your changes.
