@@ -31,9 +31,3 @@ et pousse le résultat vers le repo **`Karross/karross.github.io`** (branche
 `main`) via une deploy key SSH — URL inchangée : `https://karross.github.io`.
 
 Ne **jamais** éditer à la main le repo publié : c'est une cible générée.
-Déploiement manuel de secours :
-
-```bash
-git remote add site git@github.com:Karross/karross.github.io.git   # une fois
-mkdocs gh-deploy --config-file docs/mkdocs.yml --remote-name site --remote-branch main
-```
