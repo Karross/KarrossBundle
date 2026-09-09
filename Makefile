@@ -1,4 +1,4 @@
-.PHONY: build install update test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check all-fix all-check seed serve
+.PHONY: build install update test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check all-fix all-check check-commit-message install-hooks seed serve
 
 # (Re)build the Docker image (when Dockerfile or composer.json change)
 build:
@@ -39,6 +39,15 @@ cs-fix:
 # Check code style without modifying files (php-cs-fixer dry-run)
 cs-fix-check:
 	docker compose run --rm php vendor/bin/php-cs-fixer fix --dry-run
+
+# Validate the last commit message (single-line "type(scope): summary")
+check-commit-message:
+	git log -1 --format=%B | bin/check-commit-message
+
+# Install the commit-msg hook locally (git config core.hooksPath)
+install-hooks:
+	git config core.hooksPath hooks
+	git --version >/dev/null && echo "commit-msg hook installed (core.hooksPath=hooks)"
 
 # Run every auto-fixable tool (code style, ...)
 all-fix: cs-fix

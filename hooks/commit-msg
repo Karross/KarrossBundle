@@ -1,0 +1,4 @@
+#!/bin/sh
+# Git commit-msg hook (install via core.hooksPath, see make install-hooks).
+root=$(git rev-parse --show-toplevel)
+exec "$root/bin/check-commit-message" "$1"

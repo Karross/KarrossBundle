@@ -1,0 +1,41 @@
+#!/bin/sh
+# Validates a commit message against the KarrossBundle convention:
+# a single line "type(scope): summary" (lowercase type, optional scope).
+#
+# Usage: bin/check-commit-message [file]
+#   - file: read the message from this file (git commit-msg hook)
+#   - no arg: read from stdin (make check-commit-msg)
+#
+# Exit 0 on success, 1 with a clear error otherwise.
+
+message=$(cat "$1" 2>/dev/null || cat)
+
+subject=$(printf '%s\n' "$message" | sed -n '1p')
+body=$(printf '%s\n' "$message" | sed -n '2,$p' | sed '/^[[:space:]]*$/d')
+
+fail() {
+    printf 'Invalid commit message: %s\n' "$1" >&2
+    printf 'Expected a single line matching "type(scope): summary", e.g.\n' >&2
+    printf '  feat(home): add admin portal with hideable doc card\n' >&2
+    exit 1
+}
+
+# Auto-generated messages are out of scope.
+case "$subject" in
+    Merge\ * | Revert\ *) exit 0 ;;
+esac
+
+if [ -n "$body" ]; then
+    fail 'a body is forbidden (single-line subjects only)'
+fi
+
+length=$(printf '%s' "$subject" | wc -m | tr -d ' ')
+if [ "$length" -gt 100 ]; then
+    fail "subject is $length characters long (max 100)"
+fi
+
+if ! printf '%s\n' "$subject" | grep -Eq '^[a-z]+(\([a-z0-9_-]+\))?: .+$'; then
+    fail 'subject does not match "type(scope): summary" (lowercase type, one space after ":")'
+fi
+
+exit 0

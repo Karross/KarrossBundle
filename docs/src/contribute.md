@@ -23,6 +23,29 @@ make serve          # serve the demo apps (Ctrl-C to stop)
 
 `make all-check` must be green before submitting a PR.
 
+### Commit messages
+
+Commit messages follow the conventional single-line style:
+
+```text
+type(scope): summary
+```
+
+- `type` (lowercase): `feat`, `fix`, `refactor`, `docs`, `test`, `ci`, `chore`, ...
+- `scope` (optional, lowercase): the touched area (e.g. `home`, `routes`, `formatters`)
+- `summary`: what the commit does, concisely — no body, one line only
+
+`bin/check-commit-message` enforces this rule. Locally it runs as a git hook
+(install once per machine):
+
+```bash
+make install-hooks       # git config core.hooksPath hooks
+```
+
+The standalone target `make check-commit-message` validates the last commit
+message and is run by CI on every push / pull request. It is deliberately NOT
+part of `make all-check`: you may run the checks before any commit exists.
+
 ### Demo apps and local URLs
 
 `make serve` starts the bundle's test apps:

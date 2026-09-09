@@ -21,6 +21,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      # Mirrors the local convention: a single-line "type(scope): summary"
+      # subject is enforced by bin/check-commit-message (also a git hook,
+      # see `make install-hooks` and docs/src/contribute.md).
+      - name: Validate commit message
+        run: make check-commit-message
+
       - name: Prepare environment (image + deps)
         uses: ./.github/actions/php-env
 
