@@ -18,8 +18,9 @@ final class ArticleIndexConfiguredTest extends PlaywrightTestCase
     protected static function createKernel(array $options = []): KernelInterface
     {
         return new Kernel('e2e_with_config', true, [
-            __DIR__.'/../../tests/Integration/TestedApp/config/doctrine_no_shortname_entity_conflicts.php',
-            __DIR__.'/../../tests/Integration/TestedApp/config/karross_with_config.php',
+            __DIR__.'/../../tests/Integration/TestedApp/config/doctrine_standard.php',
+            __DIR__.'/../../tests/Integration/TestedApp/config/karross_custom.php',
+            __DIR__.'/../../tests/Integration/TestedApp/config/framework_locales.php',
         ]);
     }
 

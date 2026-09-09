@@ -18,8 +18,8 @@ final class CurrencyFormatterConfigTest extends TestCase
     public function testPropertyFormatterOptionsFlowFromConfigToMetadata(): void
     {
         $kernel = new Kernel('test_currency_formatter', true, [
-            __DIR__.'/../TestedApp/config/doctrine_no_shortname_entity_conflicts.php',
-            __DIR__.'/../TestedApp/config/karross_currency_formatter.php',
+            __DIR__.'/../TestedApp/config/doctrine_standard.php',
+            __DIR__.'/../TestedApp/config/karross_formatters_currency.php',
         ]);
         $kernel->boot();
 

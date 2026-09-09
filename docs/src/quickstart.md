@@ -54,14 +54,8 @@ routes file (all standard Symfony formats are supported):
     </routes>
     ```
 
-## First admin interface
+## Access the admin
 
-No configuration needed. Suppose your application has an `Article` entity: it
-is exposed with two routes:
+Visit `/admin`.
 
-| Route | Action |
-|---|---|
-| `/admin/article` | list (index) |
-| `/admin/article/1` | single row (show) |
-
-> Composite identifiers are supported.
+Want `/dashboard` instead? See [Configuring routes](customization/routes.md).

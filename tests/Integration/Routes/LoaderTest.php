@@ -4,6 +4,7 @@ namespace Integration\Routes;
 
 use Karross\Actions\Action;
 use Karross\Exceptions\EntityShortnameException;
+use Karross\Pages\Home;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Exception\LoaderLoadException;
@@ -36,7 +37,7 @@ class LoaderTest extends TestCase
             EntityShortnameException::class,
             "Those classes (TestedApp\Domain\Entity\Article, TestedApp\Entity\Article) have the same shortname 'article'. Please provide a slug to solve the conflicts",
             [
-                'doctrine_with_shortname_entity_conflicts',
+                'doctrine_conflicts',
             ],
         ];
 
@@ -44,8 +45,8 @@ class LoaderTest extends TestCase
             LoaderLoadException::class,
             'Unknown token {bogus} in Karross route pattern "/admin/{slug}/{bogus}"',
             [
-                'doctrine_no_shortname_entity_conflicts',
-                'karross_unknown_route_token',
+                'doctrine_standard',
+                'karross_routes_invalid',
             ],
         ];
     }
@@ -79,6 +80,13 @@ class LoaderTest extends TestCase
         foreach ($expectedRouteNames as $routeName) {
             $route = $routeCollection->get($routeName);
             $this->assertNotNull($route, "Route $routeName should exist");
+
+            // Global pages (karross_home) carry no per-entity action option.
+            if ('karross_home' === $routeName) {
+                $this->assertSame(Home::class, $route->getDefault('_controller'));
+                continue;
+            }
+
             $action = Action::from($route->getOption('karross_action'));
             $this->assertSame($action->controller(), $route->getDefault('_controller'));
         }
@@ -99,9 +107,10 @@ class LoaderTest extends TestCase
                 'testedapp_entity_article_show',
                 'testedapp_entity_category_index',
                 'testedapp_entity_category_show',
+                'karross_home',
             ],
             [
-                'doctrine_no_shortname_entity_conflicts',
+                'doctrine_standard',
             ],
         ];
 
@@ -113,10 +122,11 @@ class LoaderTest extends TestCase
                 'testedapp_entity_category_show',
                 'testedapp_domain_entity_article_index',
                 'testedapp_domain_entity_article_show',
+                'karross_home',
             ],
             [
-                'doctrine_with_shortname_entity_conflicts',
-                'karross_to_resolve_entity_shortname_conflicts',
+                'doctrine_conflicts',
+                'karross_shortnames_resolved',
             ],
         ];
 
@@ -126,13 +136,15 @@ class LoaderTest extends TestCase
                 'testedapp_entity_article_show',
                 'testedapp_entity_category_index',
                 'testedapp_entity_category_show',
+                'karross_home',
             ],
             [
-                'doctrine_no_shortname_entity_conflicts',
+                'doctrine_standard',
             ],
             [
                 'testedapp_entity_article_index' => '/admin/article',
                 'testedapp_entity_article_show' => '/admin/article/{id}',
+                'karross_home' => '/admin',
             ],
         ];
 
@@ -142,14 +154,16 @@ class LoaderTest extends TestCase
                 'testedapp_entity_article_show',
                 'testedapp_entity_category_index',
                 'testedapp_entity_category_show',
+                'karross_home',
             ],
             [
-                'doctrine_no_shortname_entity_conflicts',
-                'karross_custom_routes_prefix',
+                'doctrine_standard',
+                'karross_routes_custom',
             ],
             [
                 'testedapp_entity_article_index' => '/dashboard/article',
                 'testedapp_entity_article_show' => '/dashboard/article/{id}',
+                'karross_home' => '/dashboard',
             ],
         ];
     }

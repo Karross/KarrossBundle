@@ -10,7 +10,7 @@ templates and translations - without breaking the default behavior.
 
 ## Features (current state)
 
-- **Automatic routes** - index (list) and show (detail) for every Doctrine entity
+- **Automatic routes** - a home portal plus index (list) and show (detail) pages for every Doctrine entity
 - **Two outputs** - HTML (Twig) and JSON for headless/API use, selected per request
 - **Table views** - handle embedded fields and associations (links to the related row)
 - **Value formatting** - dates/numbers/locale (ICU), currency, booleans;
@@ -19,6 +19,27 @@ templates and translations - without breaking the default behavior.
   your own translation files (bundle ships English and French defaults)
 
 ## Admin pages
+
+### Home page (portal)
+
+`/admin` (or `/admin/`) opens the portal: one card per mapped entity, each
+linking to its listing page. A documentation card links to the online
+documentation.
+
+With no mapped entity, an onboarding block replaces the entity cards and points
+to the Symfony/Doctrine mapping documentation.
+
+Hide the documentation card:
+
+```yaml
+karross:
+  home:
+    show_documentation: false
+```
+
+The "Karross administration" header label comes from the templates; add a
+logo or restyle the header by overriding them (see
+[Overriding templates](customization/templates.md)).
 
 ### Listing page (index)
 
@@ -31,7 +52,7 @@ link to the related row, and an empty list renders a message.
 `/admin/{slug}/{identifiers}` displays a single row. The detail page is still
 early-stage; expect its rendering to evolve.
 
-Both pages reuse the same value formatting and templates - they are
+All pages share the same value formatting and templates - they are
 customizable through [Formatting values](customization/formatting-values.md)
 and [Overriding templates](customization/templates.md).
 

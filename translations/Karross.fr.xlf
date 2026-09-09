@@ -26,6 +26,34 @@
         <source>k_value.no</source>
         <target>non</target>
       </trans-unit>
+    <trans-unit id="k_header.title">
+        <source>k_header.title</source>
+        <target>Administration Karross</target>
+      </trans-unit>
+    <trans-unit id="k_home.documentation.title">
+        <source>k_home.documentation.title</source>
+        <target>Documentation</target>
+      </trans-unit>
+    <trans-unit id="k_home.documentation.tagline">
+        <source>k_home.documentation.tagline</source>
+        <target>Apprenez à personnaliser le backoffice</target>
+      </trans-unit>
+    <trans-unit id="k_home.no_entities.title">
+        <source>k_home.no_entities.title</source>
+        <target>Aucune entité pour l'instant</target>
+      </trans-unit>
+    <trans-unit id="k_home.no_entities.body">
+        <source>k_home.no_entities.body</source>
+        <target>Mappez votre première entité Doctrine pour la voir apparaître dans le portail.</target>
+      </trans-unit>
+    <trans-unit id="k_home.no_entities.link_symfony">
+        <source>k_home.no_entities.link_symfony</source>
+        <target>Docs Symfony — Base de données et Doctrine</target>
+      </trans-unit>
+    <trans-unit id="k_home.no_entities.link_doctrine">
+        <source>k_home.no_entities.link_doctrine</source>
+        <target>Référence des attributs Doctrine ORM</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

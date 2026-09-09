@@ -14,6 +14,11 @@
   {% endblock %}
   </head>
   <body>
+  <header class="k-header">
+      <a class="k-header__brand" href="{{ path('karross_home') }}">
+          <span>{% trans from 'Karross' %}k_header.title{% endtrans %}</span>
+      </a>
+  </header>
   {% block body %}
   {% endblock %}
   </body>

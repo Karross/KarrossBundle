@@ -39,7 +39,7 @@ final class ValueTranslationTest extends TestCase
     public function testHostOverridesWinWithTheMostSpecificKeyFirst(): void
     {
         [$container, $metadata] = $this->boot('test_value_translation_override', [
-            __DIR__.'/../TestedApp/config/translator_value_override.php',
+            __DIR__.'/../TestedApp/config/framework_translator.php',
         ]);
 
         $bool = $this->formatter($container, $metadata, 'published');
@@ -58,7 +58,8 @@ final class ValueTranslationTest extends TestCase
     public function testYesNoFormatterTranslationsForTheConfiguredApp(): void
     {
         [$container, $metadata] = $this->boot('test_value_translation_configured', [
-            __DIR__.'/../TestedApp/config/karross_with_config.php',
+            __DIR__.'/../TestedApp/config/karross_custom.php',
+            __DIR__.'/../TestedApp/config/framework_locales.php',
         ]);
         $formatter = $this->formatter($container, $metadata, 'published');
 
@@ -85,7 +86,7 @@ final class ValueTranslationTest extends TestCase
     private function boot(string $environment, array $configFiles = []): array
     {
         $kernel = new Kernel($environment, true, array_merge([
-            __DIR__.'/../TestedApp/config/doctrine_no_shortname_entity_conflicts.php',
+            __DIR__.'/../TestedApp/config/doctrine_standard.php',
         ], $configFiles));
         $kernel->boot();
 

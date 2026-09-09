@@ -15,7 +15,7 @@ final class ArticleIndexTest extends PlaywrightTestCase
     protected static function createKernel(array $options = []): KernelInterface
     {
         return new Kernel('e2e', true, [
-            __DIR__.'/../../tests/Integration/TestedApp/config/doctrine_no_shortname_entity_conflicts.php',
+            __DIR__.'/../../tests/Integration/TestedApp/config/doctrine_standard.php',
         ]);
     }
 

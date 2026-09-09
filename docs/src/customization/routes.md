@@ -21,12 +21,14 @@ All knobs live under `karross.routes`:
 karross:
   routes:
     prefix: dashboard                        # default: admin
+    home: /{prefix}                          # default home pattern
     index: /{prefix}/{slug}                   # default index pattern
     show: /{prefix}/{slug}/{identifiers}      # default show pattern
 ```
 
-With the configuration above, routes become `/dashboard/{slug}` and
-`/dashboard/{slug}/{identifiers}`.
+With the configuration above, the admin portal listens at `/dashboard` -
+trailing slash (`/dashboard/`) also works - and the entity routes become
+`/dashboard/{slug}` and `/dashboard/{slug}/{identifiers}`.
 
 ### Recognized tokens
 

@@ -1,0 +1,38 @@
+{% extends '@Karross/base.html.twig' %}
+
+{% block body %}
+    {% if entities is empty %}
+        <section class="k-onboarding">
+            <h2>{% trans from 'Karross' %}k_home.no_entities.title{% endtrans %}</h2>
+            <p>{% trans from 'Karross' %}k_home.no_entities.body{% endtrans %}</p>
+            <ul>
+                <li>
+                    <a href="https://symfony.com/doc/current/doctrine.html">
+                        {% trans from 'Karross' %}k_home.no_entities.link_symfony{% endtrans %}
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/attributes-reference.html">
+                        {% trans from 'Karross' %}k_home.no_entities.link_doctrine{% endtrans %}
+                    </a>
+                </li>
+            </ul>
+        </section>
+    {% else %}
+        <div class="k-portal-grid">
+            {% for entity in entities %}
+                <a class="k-card" href="{{ entity.href }}">
+                    <span>{{ entity.slug }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if showDocumentation %}
+        <aside class="k-doc-card">
+            <h2>{% trans from 'Karross' %}k_home.documentation.title{% endtrans %}</h2>
+            <p>{% trans from 'Karross' %}k_home.documentation.tagline{% endtrans %}</p>
+            <a href="https://karross.github.io">karross.github.io</a>
+        </aside>
+    {% endif %}
+{% endblock %}

@@ -5,7 +5,8 @@ namespace Karross\Config;
 /**
  * @param array{
  *   output?: array{api?: bool, html?: string},
- *   routes?: array{prefix?: string, index?: string, show?: string},
+ *   routes?: array{prefix?: string, index?: string, show?: string, home?: string},
+ *   home?: array{show_documentation?: bool},
  *   entities?: array<string, array{
  *     actions?: string[],
  *     slug?: string,
@@ -27,6 +28,17 @@ final class KarrossConfig
     public function htmlRenderer(): string
     {
         return $this->config['output']['html'] ?? 'twig';
+    }
+
+    public function homeShowDocumentation(): bool
+    {
+        $home = $this->config['home'] ?? [];
+        if (!\is_array($home)) {
+            return true;
+        }
+        $show = $home['show_documentation'] ?? true;
+
+        return \is_bool($show) ? $show : true;
     }
 
     public function entities(): array
@@ -105,6 +117,7 @@ final class KarrossConfig
         return match ($action) {
             'index' => '/{prefix}/{slug}',
             'show' => '/{prefix}/{slug}/{identifiers}',
+            'home' => '/{prefix}',
             default => throw new \InvalidArgumentException("Unknown Karross route action \"$action\"."),
         };
     }

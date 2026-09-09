@@ -56,6 +56,11 @@ return static function (ContainerConfigurator $configurator) {
         ->exclude([__DIR__.'/../Actions/ActionContext.php'])
         ->tag('controller.service_arguments');
 
+    // Pages (global pages, outside the per-entity action flow)
+    $services
+        ->load('Karross\\Pages\\', __DIR__.'/../Pages/*')
+        ->tag('controller.service_arguments');
+
     // Config
     $services
         ->set(KarrossConfig::class)
