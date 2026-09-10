@@ -150,14 +150,6 @@
     font-weight: 600;
 }
 
-.md-nav__item--active > .md-nav__link::before {
-    content: "\25C6";
-    color: #9a7b4f;
-    font-size: 0.5rem;
-    vertical-align: 0.1em;
-    margin-right: 0.4em;
-}
-
 /* Etiquette "On this page" (TOC) : discret, police du theme */
 .md-sidebar--secondary .md-nav__title {
     letter-spacing: 0.02em;
@@ -174,4 +166,120 @@
 
 .md-typeset table {
     border: 1px solid #e5e0d8;
+}
+
+/* =========================================================
+   Statuts du backlog (roadmap) — pastilles de couleur
+   ========================================================= */
+.k-status {
+    display: inline-block;
+    padding: 0 0.6em;
+    border-radius: 999px;
+    font-size: 0.78em;
+    font-weight: 600;
+    line-height: 1.7;
+    white-space: nowrap;
+}
+
+.k-status--red    { background: #d64545; color: #ffffff; }
+.k-status--orange { background: #e0962b; color: #ffffff; }
+.k-status--yellow { background: #eab308; color: #422006; }
+.k-status--green  { background: #2f9e44; color: #ffffff; }
+.k-status--blue   { background: #1c7ed6; color: #ffffff; }
+
+/* Piloter la largeur de la zone de contenu (marges Material par défaut) */
+.md-grid {
+    max-width: 96rem;
+}
+
+/* Colonnes détachées des bords de l'écran */
+.md-main .md-grid {
+    margin-left: 1.25rem;
+    margin-right: 1.25rem;
+}
+
+.md-sidebar__inner {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.md-sidebar--secondary .md-sidebar__inner {
+    border-left: none;
+}
+
+/* Colonnes latérales vides ou réduites à 0/1 entrée : on ne les montre pas
+   (CSS pur, pas de JS → pas de flash), mais on RESERVE leur place en flex
+   pour que la largeur du contenu central soit constante d'une page à l'autre. */
+@media screen and (min-width: 60em) {
+    .md-sidebar--secondary[hidden],
+    .md-sidebar:not(:has(.md-nav__item + .md-nav__item)) {
+        display: block;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .md-sidebar--secondary[hidden] .md-sidebar__scrollwrap,
+    .md-sidebar--secondary[hidden] .md-sidebar__inner,
+    .md-sidebar:not(:has(.md-nav__item + .md-nav__item)) .md-sidebar__scrollwrap,
+    .md-sidebar:not(:has(.md-nav__item + .md-nav__item)) .md-sidebar__inner {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    /* Le contenu garde la même marge intérieure que si la colonne était là */
+    .md-sidebar--secondary ~ .md-content .md-content__inner {
+        margin-right: 1.2rem;
+    }
+}
+
+/* Tickets de la roadmap : titre (ancre TOC) + corps, liseré = statut */
+.md-typeset .k-status {
+    vertical-align: middle;
+    margin-left: 0.4em;
+}
+
+.md-typeset table.k-ticket {
+    border: 1px solid #e5e0d8;
+    margin: 0.5em 0 1.6em 0;
+    width: 100%;
+}
+
+.md-typeset table.k-ticket td {
+    border-top: 1px solid #eee;
+    padding: 0.35em 0.9em;
+}
+
+.md-typeset table.k-ticket--red    { border-left: 5px solid #d64545; }
+.md-typeset table.k-ticket--orange { border-left: 5px solid #e0962b; }
+.md-typeset table.k-ticket--yellow { border-left: 5px solid #eab308; }
+.md-typeset table.k-ticket--green  { border-left: 5px solid #2f9e44; }
+.md-typeset table.k-ticket--blue   { border-left: 5px solid #1c7ed6; }
+
+/* =========================================================
+   Footer : attribution à gauche, licence + dépôt GitHub à droite
+   (classes Material v9 : md-copyright / md-copyright__highlight)
+   ========================================================= */
+.md-copyright {
+    flex: 1;
+}
+
+.md-copyright__highlight {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem 2rem;
+}
+
+.md-footer-repo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.md-footer-repo svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    fill: currentColor;
 }

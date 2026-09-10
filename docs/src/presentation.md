@@ -1,5 +1,8 @@
 # Presentation
 
+Karross is a Symfony bundle that gives you an instant admin interface for your
+Doctrine entities - out of the box, and fully customizable.
+
 ## Philosophy
 
 Karross works out of the box: no configuration, no boilerplate, no controller
@@ -65,4 +68,9 @@ The bundle currently implements two actions:
 | `index` | `/admin/{slug}` | list rows |
 | `show` | `/admin/{slug}/{identifiers}` | display one row |
 
-Create, update and delete are planned (see [Roadmap](roadmap.md)).
+Create, update and delete are planned (see [Roadmap](roadmap/index.md)).
+
+## Source code
+
+The bundle code and this documentation live in
+[Karross/KarrossBundle](https://github.com/Karross/KarrossBundle).
