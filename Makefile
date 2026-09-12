@@ -1,4 +1,4 @@
-.PHONY: build install update test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check all-fix all-check check-commit-message install-hooks seed serve
+.PHONY: build install update test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check qa all-fix all-check check-commit-message install-hooks seed serve
 
 # (Re)build the Docker image (when Dockerfile or composer.json change)
 build:
@@ -32,6 +32,11 @@ test-e2e:
 phpstan:
 	docker compose run --rm php vendor/bin/phpstan analyse --no-progress
 
+# Complexity/volume gate (ast-metrics, with baseline) — deterministic measure
+# over src/: only NEW violations beyond .ast-metrics-baseline.yaml fail.
+qa:
+	docker compose run --rm php ast-metrics lint
+
 # Auto-fix code style (php-cs-fixer)
 cs-fix:
 	docker compose run --rm php vendor/bin/php-cs-fixer fix
@@ -52,8 +57,8 @@ install-hooks:
 # Run every auto-fixable tool (code style, ...)
 all-fix: cs-fix
 
-# Run every checker in order (style, static analysis, tests)
-all-check: cs-fix-check phpstan test
+# Run every checker in order (style, static analysis, complexity, tests)
+all-check: cs-fix-check phpstan qa test
 
 # Open a shell inside the container
 bash:

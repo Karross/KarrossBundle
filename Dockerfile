@@ -44,6 +44,15 @@ RUN     apt-get update && apt-get install -y --no-install-recommends \
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# AST Metrics (deterministic complexity/volume gate, `make qa` + CI): single
+# static binary, downloaded during build and verified against a pinned SHA256.
+ARG AST_METRICS_VERSION=v0.43.0
+ARG AST_METRICS_SHA256=afebb971f6b16878e3a4e58b74e0e6dcf9a9161f34b54547a7799219df789161
+RUN     curl -fsSL -o /usr/local/bin/ast-metrics \
+        https://github.com/ast-metrics/ast-metrics/releases/download/${AST_METRICS_VERSION}/ast-metrics_Linux_x86_64 \
+    && printf '%s  %s\n' "${AST_METRICS_SHA256}" /usr/local/bin/ast-metrics | sha256sum -c - \
+    && chmod +x /usr/local/bin/ast-metrics
+
 # Playwright browsers are installed in a project-persistent directory
 # (persisted on the host via the mounted volume), see Makefile (e2e-browsers).
 ENV PLAYWRIGHT_BROWSERS_PATH=/app/var/ms-playwright

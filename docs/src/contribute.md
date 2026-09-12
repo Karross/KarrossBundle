@@ -16,12 +16,39 @@ PHP lacks `ext-intl`).
 
 ```bash
 make all-fix        # auto-fix code style (php-cs-fixer)
-make all-check      # full check: style → phpstan → tests (must be green)
+make all-check      # full check: style → phpstan → complexity → tests (must be green)
 make test           # phpunit suites (incl. E2E Playwright)
+make qa             # complexity/volume gate only (ast-metrics)
 make serve          # serve the demo apps (Ctrl-C to stop)
 ```
 
 `make all-check` must be green before submitting a PR.
+
+### Complexity gate (ast-metrics)
+
+`make qa` runs [ast-metrics](https://ast-metrics.dev/) over `src/` with the
+thresholds declared in `.ast-metrics.yaml` (max cyclomatic complexity 10, max
+20 logical lines of code per file). Like the PHPStan baseline,
+`.ast-metrics-baseline.yaml` freezes the violations that already existed when
+it was generated: **only new or worsened violations fail**.
+
+> Note: ast-metrics v0.43 only measures `max_loc_by_method` /
+> `max_logical_loc_by_method` for top-level functions — PHP methods of a
+> class are not covered, so those two rules stay declared but do not fire on
+> class-based code. The logical-lines rule (`max_logical_loc`) is the one
+> that reports actual PHP code: physical line counts (`max_loc`) were tried
+> and dropped because docblocks inflated them (seen up to 49 physical lines
+> for 27 code lines); the declared thresholds are those to meet, past
+> overruns being frozen in the baseline.
+
+When a cleanup sprint genuinely reduces the complexity of `src/`, regenerate
+the baseline so the reduced state becomes the new reference:
+
+```bash
+docker compose run --rm php ast-metrics baseline src
+```
+
+`make qa` is part of `make all-check` and of the CI pipeline.
 
 ### Commit messages
 

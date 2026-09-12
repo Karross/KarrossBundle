@@ -55,18 +55,20 @@
       "Tests\\": "tests/"
     }
   },
-  "scripts": {
-    "phpstan": "phpstan analyse --no-progress",
-    "cs-fix": "php-cs-fixer fix",
-    "cs-fix-check": "php-cs-fixer fix --dry-run",
-    "all-fix": [
-      "@cs-fix"
-    ],
-    "all-check": [
-      "@cs-fix-check",
-      "@phpstan",
-      "@test"
-    ],
-    "test": "phpunit"
-  }
+"scripts": {
+        "phpstan": "phpstan analyse --no-progress",
+        "cs-fix": "php-cs-fixer fix",
+        "cs-fix-check": "php-cs-fixer fix --dry-run",
+        "qa": "ast-metrics lint",
+        "all-fix": [
+            "@cs-fix"
+        ],
+        "all-check": [
+            "@cs-fix-check",
+            "@phpstan",
+            "@qa",
+            "@test"
+        ],
+        "test": "phpunit"
+    }
 }

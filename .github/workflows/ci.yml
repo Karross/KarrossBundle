@@ -56,5 +56,10 @@ jobs:
       - name: Static analysis (phpstan, level max)
         run: make phpstan
 
+      # Complexity/volume gate (ast-metrics, baseline) — same target as local
+      # `make qa`; only new violations beyond the baseline block the pipeline.
+      - name: Complexity gate (ast-metrics)
+        run: make qa
+
       - name: Run test suite (integration + e2e)
         run: make test

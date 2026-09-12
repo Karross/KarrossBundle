@@ -1,0 +1,15 @@
+sources:
+  - ./src
+
+exclude:
+  - /vendor/
+  - /node_modules/
+
+requirements:
+  rules:
+    volume:
+      max_logical_loc: 20
+      max_loc_by_method: 30
+      max_logical_loc_by_method: 20
+    complexity:
+      max_cyclomatic: 10
