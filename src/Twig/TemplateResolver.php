@@ -41,7 +41,7 @@ readonly class TemplateResolver
                                                 '{fieldOrAssociation}' => $property instanceof FieldMetadata ? 'field' : 'association',
                                                 '{entitySlug}' => $entityMetadata->slug,
                                                 '{propertyName}' => str_replace('.', '_', $property->name),
-                                                '{propertyType}' => $property instanceof FieldMetadata ? $entityMetadata->getTypeOfField($property->name) : $entityMetadata->getTypeOfAssociation($property->name),
+                                                '{propertyType}' => $property->type->value,
                                             ]);
                                     }, $templatePatterns)
                                 )->getTemplateName();

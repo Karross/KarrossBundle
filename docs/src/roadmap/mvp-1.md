@@ -1,7 +1,7 @@
 # MVP 1 — Full CRUD on simple entities
 
-<details class="k-ticket k-ticket--green" open>
-  <summary>1. Dead code &amp; deprecated methods <span class="k-status k-status--green">Ready</span></summary>
+<details class="k-ticket k-ticket--blue">
+  <summary>1. Dead code &amp; deprecated methods <span class="k-status k-status--blue">Done</span></summary>
 
   <table class="k-ticket">
     <tbody>

@@ -199,21 +199,9 @@ parameters:
 			path: src/Metadata/EntityMetadata.php
 
 		-
-			message: '#^Access to property \$type on an unknown class Karross\\Metadata\\PropertyInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Metadata/EntityMetadata.php
-
-		-
 			message: '#^Cannot access offset int\<0, max\> on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/Metadata/EntityMetadata.php
-
-		-
-			message: '#^Cannot access property \$name on mixed\.$#'
-			identifier: property.nonObject
-			count: 4
 			path: src/Metadata/EntityMetadata.php
 
 		-
@@ -235,20 +223,8 @@ parameters:
 			path: src/Metadata/EntityMetadata.php
 
 		-
-			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getProperties\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Metadata/EntityMetadata.php
-
-		-
 			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getPropertyLabelsHierarchy\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Metadata/EntityMetadata.php
-
-		-
-			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getPropertyType\(\) should return Karross\\Metadata\\PropertyType but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Metadata/EntityMetadata.php
 
@@ -260,18 +236,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$array of function array_slice expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Metadata/EntityMetadata.php
-
-		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(Karross\\Metadata\\PropertyMetadata\)\: int\<0, max\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Metadata/EntityMetadata.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function str_starts_with expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Metadata/EntityMetadata.php
@@ -301,32 +265,14 @@ parameters:
 			path: src/Metadata/EntityMetadata.php
 
 		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Metadata/EntityMetadata.php
-
-		-
 			message: '#^Parameter \$label of class Karross\\Metadata\\FieldLabel constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Metadata/EntityMetadata.php
 
 		-
-			message: '#^Parameter \$properties of method Karross\\Metadata\\EntityMetadata\:\:__construct\(\) has invalid type Karross\\Metadata\\PropertyInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Metadata/EntityMetadata.php
-
-		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
-			count: 2
-			path: src/Metadata/EntityMetadata.php
-
-		-
-			message: '#^Property Karross\\Metadata\\EntityMetadata\:\:\$properties has unknown class Karross\\Metadata\\PropertyInterface as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: src/Metadata/EntityMetadata.php
 
@@ -385,7 +331,7 @@ parameters:
 			path: src/Metadata/EntityMetadataBuilder.php
 
 		-
-			message: '#^Parameter \$properties of class Karross\\Metadata\\EntityMetadata constructor expects array\<Karross\\Metadata\\PropertyInterface\>, array given\.$#'
+			message: '#^Parameter \$properties of class Karross\\Metadata\\EntityMetadata constructor expects array\<Karross\\Metadata\\PropertyMetadata\>, array given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Metadata/EntityMetadataBuilder.php
@@ -517,13 +463,7 @@ parameters:
 			path: src/Twig/TemplateRegistry.php
 
 		-
-			message: '#^Cannot access property \$name on mixed\.$#'
-			identifier: property.nonObject
-			count: 3
-			path: src/Twig/TemplateResolver.php
-
-		-
-			message: '#^Cannot assign offset mixed to array\<string\>\|string\.$#'
+			message: '#^Cannot assign offset string to array\<string, string\>\|string\.$#'
 			identifier: offsetAssign.dimType
 			count: 1
 			path: src/Twig/TemplateResolver.php
@@ -547,12 +487,6 @@ parameters:
 			path: src/Twig/TemplateResolver.php
 
 		-
-			message: '#^Parameter \#1 \$fieldName of method Karross\\Metadata\\EntityMetadata\:\:getTypeOfAssociation\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Twig/TemplateResolver.php
-
-		-
 			message: '#^Parameter \#1 \$str of function strtr expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -562,18 +496,6 @@ parameters:
 			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Twig/TemplateResolver.php
-
-		-
-			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Twig/TemplateResolver.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
 			path: src/Twig/TemplateResolver.php
 
 		-

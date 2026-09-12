@@ -8,8 +8,8 @@ use Karross\Actions\Action;
 readonly class EntityMetadata
 {
     /**
-     * @param Action[]            $actions
-     * @param PropertyInterface[] $properties
+     * @param Action[]           $actions
+     * @param PropertyMetadata[] $properties
      */
     public function __construct(
         public string $slug,
@@ -34,6 +34,9 @@ readonly class EntityMetadata
         return $this->actions;
     }
 
+    /**
+     * @return PropertyMetadata[]
+     */
     public function getProperties(): array
     {
         return $this->properties;
@@ -50,31 +53,6 @@ readonly class EntityMetadata
     public function getValue(object $entity, string $property): mixed
     {
         return $this->classMetadata->getFieldValue($entity, $property);
-    }
-
-    /**
-     * Get the semantic type of a property.
-     */
-    public function getPropertyType(string $propertyName): PropertyType
-    {
-        return $this->properties[$propertyName]->type
-            ?? throw new \InvalidArgumentException("Property $propertyName not found");
-    }
-
-    /**
-     * @deprecated Use getPropertyType() instead. This method is kept for backward compatibility.
-     */
-    public function getTypeOfField(string $fieldName): string
-    {
-        return $this->getPropertyType($fieldName)->value;
-    }
-
-    /**
-     * @deprecated Use getPropertyType() instead. This method is kept for backward compatibility.
-     */
-    public function getTypeOfAssociation(string $fieldName): string
-    {
-        return $this->getPropertyType($fieldName)->value;
     }
 
     public function isEmbedded(string $fieldName): bool
