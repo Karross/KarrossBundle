@@ -48,8 +48,16 @@ jobs:
       - name: Fix Playwright browser permissions
         run: docker compose run --rm php sh -c 'chmod -R a+rX /app/var/ms-playwright'
 
-      # Mirrors `make all-check` (cs-fix-check -> phpstan -> test); `make test`
-      # runs both the integration and e2e PHPUnit suites.
+      # Mirrors `make all-check` (css-check -> cs-fix-check -> phpstan -> qa ->
+      # test). css-check runs first: it is the cheapest gate by far (a single
+      # CSS file), so a failure stops the pipeline before the heavier analyses
+      # and the test suite run. `make test` runs both the integration and e2e
+      # PHPUnit suites.
+      # Browser CSS compatibility gate (stylelint + Baseline "widely" policy) —
+      # same target as local `make css-check`; any warning is an error.
+      - name: Browser CSS compatibility gate (stylelint baseline)
+        run: make css-check
+
       - name: Code style check (no modifications)
         run: make cs-fix-check
 

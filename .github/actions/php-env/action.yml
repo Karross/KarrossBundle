@@ -33,3 +33,17 @@ runs:
       # Here we resolve from composer.json at install time.
       run: make update
       shell: bash
+
+    - name: Cache npm packages (var/npm)
+      uses: actions/cache@v5
+      with:
+        path: var/npm
+        key: npm-packages-${{ runner.os }}-${{ hashFiles('package.json') }}
+        restore-keys: |
+          npm-packages-${{ runner.os }}-
+
+    - name: Install npm tooling
+      # stylelint + stylelint-plugin-use-baseline, exact pins, no committed lock —
+      # mirrors the composer flow above (make npm-install).
+      run: make npm-install
+      shell: bash

@@ -1,5 +1,6 @@
 .git
 .idea
+node_modules
 vendor
 var
 .phpunit.result.cache

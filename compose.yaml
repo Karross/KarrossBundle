@@ -10,3 +10,6 @@ services:
       # Persist Composer's package cache on the host (var/composer is gitignored):
       # `composer update` becomes near-instant on subsequent runs, locally AND in CI.
       COMPOSER_CACHE_DIR: /app/var/composer
+      # Same trick for npm (the stylelint tooling): keep the package cache on the
+      # host so `make npm-install` is fast on subsequent runs locally AND in CI.
+      NPM_CONFIG_CACHE: /app/var/npm

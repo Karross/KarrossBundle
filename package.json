@@ -1,0 +1,8 @@
+{
+  "name": "karross/karross-bundle",
+  "private": true,
+  "devDependencies": {
+    "stylelint": "17.15.0",
+    "stylelint-plugin-use-baseline": "1.4.6"
+  }
+}

@@ -1,0 +1,9 @@
+/* KarrossBundle canonical stylesheet.
+
+   The gate (`make css-check`) lints this file against the Baseline "widely"
+   policy: any CSS feature that the target browsers do not all support for at
+   least 30 months fails the check, unless it is guarded by an @supports block.
+
+   The actual design rules arrive with the theme tickets — see roadmap MVP-1
+   ticket "Minimal design decision". Delivery (compression, cache, hashing)
+   stays out of the bundle scope. */

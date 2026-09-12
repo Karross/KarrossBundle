@@ -60,10 +60,12 @@
         "cs-fix": "php-cs-fixer fix",
         "cs-fix-check": "php-cs-fixer fix --dry-run",
         "qa": "ast-metrics lint",
+        "css-check": "node_modules/.bin/stylelint \"src/Resources/public/css/**/*.css\" --max-warnings 0",
         "all-fix": [
             "@cs-fix"
         ],
         "all-check": [
+            "@css-check",
             "@cs-fix-check",
             "@phpstan",
             "@qa",

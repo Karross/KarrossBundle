@@ -1,4 +1,4 @@
-.PHONY: build install update test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check qa all-fix all-check check-commit-message install-hooks seed serve
+.PHONY: build install update npm-install test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check qa css-check all-fix all-check check-commit-message install-hooks seed serve
 
 # (Re)build the Docker image (when Dockerfile or composer.json change)
 build:
@@ -11,6 +11,11 @@ install:
 # Update dependencies from composer.json (no committed lock) inside the container
 update:
 	docker compose run --rm php composer update --no-interaction --prefer-dist
+
+# Install the npm dev-deps (stylelint tooling) on the host via the container
+# bind mount — mirrors the composer flow (exact pins, no committed lock)
+npm-install:
+	docker compose run --rm php npm install
 
 # Run the whole PHPUnit test suite
 test:
@@ -37,6 +42,11 @@ phpstan:
 qa:
 	docker compose run --rm php ast-metrics lint
 
+# Browser CSS compatibility gate (stylelint + Baseline policy) over the bundle's
+# own stylesheet; every warning counts as an error via --max-warnings 0.
+css-check:
+	docker compose run --rm php node_modules/.bin/stylelint "src/Resources/public/css/**/*.css" --max-warnings 0
+
 # Auto-fix code style (php-cs-fixer)
 cs-fix:
 	docker compose run --rm php vendor/bin/php-cs-fixer fix
@@ -57,8 +67,8 @@ install-hooks:
 # Run every auto-fixable tool (code style, ...)
 all-fix: cs-fix
 
-# Run every checker in order (style, static analysis, complexity, tests)
-all-check: cs-fix-check phpstan qa test
+# Run every checker in order (style, static analysis, complexity, CSS compat, tests)
+all-check: css-check cs-fix-check phpstan qa test
 
 # Open a shell inside the container
 bash:

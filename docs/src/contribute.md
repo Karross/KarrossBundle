@@ -16,9 +16,11 @@ PHP lacks `ext-intl`).
 
 ```bash
 make all-fix        # auto-fix code style (php-cs-fixer)
-make all-check      # full check: style → phpstan → complexity → tests (must be green)
+make all-check      # full check: CSS compat → style → phpstan → complexity → tests (must be green)
 make test           # phpunit suites (incl. E2E Playwright)
 make qa             # complexity/volume gate only (ast-metrics)
+make css-check      # browser CSS compatibility gate only (stylelint + Baseline)
+make npm-install    # install the npm tooling (stylelint) — once, after a fresh clone
 make serve          # serve the demo apps (Ctrl-C to stop)
 ```
 
@@ -49,6 +51,25 @@ docker compose run --rm php ast-metrics baseline src
 ```
 
 `make qa` is part of `make all-check` and of the CI pipeline.
+
+### Browser CSS compatibility gate (stylelint + Baseline)
+
+`make css-check` runs [stylelint](https://stylelint.io/) with
+[`stylelint-plugin-use-baseline`](https://www.npmjs.com/package/stylelint-plugin-use-baseline)
+over the bundle's own stylesheet — `src/Resources/public/css/karross.css`. The
+rule (`plugin/use-baseline`, configured in `.stylelintrc.mjs`) enforces the
+[Baseline](https://web.dev/baseline) **`widely`** policy: any CSS feature that
+is not supported in all Baseline browsers for at least 30 months is a warning,
+unless it is wrapped in an `@supports` block. The gate treats warnings as
+errors (`--max-warnings 0`), so the bundle cannot silently ship a feature that
+the target browsers do not all support.
+
+The npm tooling (stylelint + the Baseline plugin) is pinned to exact versions
+in `package.json`; like Composer, there is no committed lock file —
+`node_modules` lives on the host through the Docker volume. Install it once
+per clone with `make npm-install` (the php-env CI action does the same).
+
+`make css-check` is part of `make all-check` and of the CI pipeline.
 
 ### Commit messages
 

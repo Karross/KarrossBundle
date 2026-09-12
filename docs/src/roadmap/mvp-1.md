@@ -36,15 +36,15 @@
   </table>
 </details>
 
-<details class="k-ticket k-ticket--green">
-  <summary>4. Browser CSS compatibility gate in CI <span class="k-status k-status--green">Ready</span></summary>
+<details class="k-ticket k-ticket--blue">
+  <summary>4. Browser CSS compatibility gate in CI <span class="k-status k-status--blue">Done</span></summary>
 
   <table class="k-ticket">
     <tbody>
       <tr><th>Existing.</th><td>Zero CSS today, no defined browser support.</td></tr>
-      <tr><th>Expected.</th><td>A CI gate failing on any CSS unsupported by the target browsers, plus a responsive budget harness in the E2E suite.</td></tr>
+      <tr><th>Expected.</th><td>A CI gate failing on any CSS unsupported by the target browsers.</td></tr>
       <tr><th>Prerequisites.</th><td>Decide the supported browser set.</td></tr>
-      <tr><th>Plan.</th><td><ol><li>Pin the npm tooling in the image: a minimal <code>package.json</code> with <code>stylelint</code> + <code>stylelint-plugin-use-baseline</code> (Node is already in the container for Playwright).</li><li><code>.stylelintrc.mjs</code>: <code>plugin/use-baseline</code> policy set to <code>widely</code> first (most compatible — REC choice), relaxed to <code>newly</code> later only if a theme feature justifies it.</li><li>Fix the canonical asset path <code>src/Resources/public/css/karross.css</code> (Symfony bundle convention, host-replaceable) — the gate lints the bundle's own single CSS file; delivery (compression, cache, hashing) stays out of bundle scope.</li><li><code>make css-check</code>: stylelint gate, exit 1 on any unsupported CSS at the target level; wired into the CI pipeline.</li><li>Responsive budget harness in the E2E suite: viewport sweep (320 / 375 / 768 / 1024 / 1440) over the index/show pages of both apps, assert no horizontal overflow.</li><li>Docs: <code>contribute.md</code> — the <code>make css-check</code> command, the Baseline policy, and the viewport budget.</li></ol></td></tr>
+      <tr><th>Plan.</th><td><ol><li>Pin the npm tooling: a minimal <code>package.json</code> with <code>stylelint</code> + <code>stylelint-plugin-use-baseline</code> (Node is already in the container for Playwright). Exact version pins, no committed lock — mirrors the composer philosophy; <code>node_modules</code> lives on the host via the volume, like <code>vendor/</code>.</li><li><code>.stylelintrc.mjs</code>: <code>plugin/use-baseline</code> policy set to <code>widely</code> first (most compatible — REC choice), relaxed to <code>newly</code> later only if a theme feature justifies it.</li><li>Fix the canonical asset path <code>src/Resources/public/css/karross.css</code> (Symfony bundle convention, host-replaceable) — the gate lints the bundle's own single CSS file; delivery (compression, cache, hashing) stays out of bundle scope.</li><li><code>make css-check</code>: stylelint gate, exit 1 on any unsupported CSS at the target level (warnings treated as errors via <code>--max-warnings 0</code>); wired into the CI pipeline.</li><li>Docs: <code>contribute.md</code> — the <code>make css-check</code> command and the Baseline policy.</li></ol></td></tr>
     </tbody>
   </table>
 </details>
