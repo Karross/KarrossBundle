@@ -96,7 +96,8 @@ return static function (ContainerConfigurator $configurator) {
     $services
         ->set(EntityMetadataRegistry::class)
         ->arg('$cache', service(CacheInterface::class))
-        ->arg('$builder', service(EntityMetadataBuilder::class));
+        ->arg('$builder', service(EntityMetadataBuilder::class))
+        ->arg('$debug', param('kernel.debug'));
 
     $services->set(PropertyTypeDetector::class);
 
@@ -125,7 +126,8 @@ return static function (ContainerConfigurator $configurator) {
     $services
         ->set(TemplateRegistry::class)
         ->arg('$cache', service(CacheInterface::class))
-        ->arg('$templateResolver', service(TemplateResolver::class));
+        ->arg('$templateResolver', service(TemplateResolver::class))
+        ->arg('$debug', param('kernel.debug'));
 
     $services->set(StringableExtension::class);
 

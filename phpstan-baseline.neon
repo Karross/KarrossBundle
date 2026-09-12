@@ -193,20 +193,8 @@ parameters:
 			path: src/Metadata/AssociationMetadata.php
 
 		-
-			message: '#^Access to an undefined property Doctrine\\Persistence\\Mapping\\ClassMetadata\:\:\$embeddedClasses\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Metadata/EntityMetadata.php
-
-		-
 			message: '#^Cannot access offset int\<0, max\> on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Metadata/EntityMetadata.php
-
-		-
-			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:__construct\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Metadata/EntityMetadata.php
 
@@ -225,12 +213,6 @@ parameters:
 		-
 			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getPropertyLabelsHierarchy\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Metadata/EntityMetadata.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Metadata/EntityMetadata.php
 
@@ -335,12 +317,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Metadata/EntityMetadataBuilder.php
-
-		-
-			message: '#^Property Karross\\Metadata\\EntityMetadataRegistry\:\:\$cache is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Metadata/EntityMetadataRegistry.php
 
 		-
 			message: '#^Method Karross\\Responders\\JsonResponder\:\:getResponse\(\) has parameter \$data with no type specified\.$#'
@@ -448,18 +424,6 @@ parameters:
 			message: '#^Method Karross\\Twig\\TemplateRegistry\:\:getTemplate\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 2
-			path: src/Twig/TemplateRegistry.php
-
-		-
-			message: '#^Property Karross\\Twig\\TemplateRegistry\:\:\$cache is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Twig/TemplateRegistry.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
 			path: src/Twig/TemplateRegistry.php
 
 		-

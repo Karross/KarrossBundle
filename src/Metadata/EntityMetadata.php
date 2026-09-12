@@ -2,7 +2,6 @@
 
 namespace Karross\Metadata;
 
-use Doctrine\Persistence\Mapping\ClassMetadata;
 use Karross\Actions\Action;
 
 readonly class EntityMetadata
@@ -10,18 +9,20 @@ readonly class EntityMetadata
     /**
      * @param Action[]           $actions
      * @param PropertyMetadata[] $properties
+     * @param string[]           $identifier
      */
     public function __construct(
         public string $slug,
         public array $actions,
         public array $properties,
-        private ClassMetadata $classMetadata,
+        private string $fqcn,
+        private array $identifier,
     ) {
     }
 
     public function getFqcn(): string
     {
-        return $this->classMetadata->getName();
+        return $this->fqcn;
     }
 
     public function getSlug(): string
@@ -47,18 +48,7 @@ readonly class EntityMetadata
      */
     public function getIdentifier(): array
     {
-        return $this->classMetadata->getIdentifier();
-    }
-
-    public function getValue(object $entity, string $property): mixed
-    {
-        return $this->classMetadata->getFieldValue($entity, $property);
-    }
-
-    public function isEmbedded(string $fieldName): bool
-    {
-        return str_contains($fieldName, '.')
-        && \in_array(strtok($fieldName, '.'), array_keys($this->classMetadata->embeddedClasses));
+        return $this->identifier;
     }
 
     public function hasEmbeddedField(): bool

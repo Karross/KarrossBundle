@@ -6,18 +6,22 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class EntityMetadataRegistry
 {
+    private bool $cacheEnabled;
+
     public function __construct(
         private CacheInterface $cache,
         private EntityMetadataBuilder $builder,
+        bool $debug,
     ) {
+        $this->cacheEnabled = !$debug;
     }
 
     /** @return EntityMetadata[] */
     public function all(): array
     {
-        // dd($this->builder->buildAllMetadata());
-        return $this->builder->buildAllMetadata();
-        // return $this->cache->get('karross.metadata', fn () => $this->builder->buildAllMetadata());
+        return $this->cacheEnabled
+            ? $this->cache->get('karross.metadata', fn () => $this->builder->buildAllMetadata())
+            : $this->builder->buildAllMetadata();
     }
 
     public function get(string $fqcn): EntityMetadata

@@ -35,7 +35,8 @@ readonly class EntityMetadataBuilder
                     slug: $slug,
                     actions: $this->resolveActions($this->config),
                     properties: $this->buildAssociations($slug, $classMetadata) + $this->buildFields($slug, $classMetadata),
-                    classMetadata: $classMetadata,
+                    fqcn: $classMetadata->getName(),
+                    identifier: $classMetadata->getIdentifier(),
                 );
                 $fqcnToSlugMap[$classMetadata->getName()] = $slug;
             }
