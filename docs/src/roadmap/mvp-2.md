@@ -7,7 +7,7 @@
     <tbody>
       <tr><th>Existing.</th><td>Example-driven tests only (integration fixtures + E2E declarative assertions). The BlackBox references (<code>innmind.org/BlackBox</code>) are recorded in <code>@contexts/e2e.md</code> as the future property-based testing basis.</td></tr>
       <tr><th>Expected.</th><td>BlackBox wired as the property-based testing harness: deterministic runner (fixed seed), shrinking of failing cases, integrated into the Makefile and CI — probing the Collect &amp; Computed pipeline (facts → formatter → render) and the CRUD write path with a rich generated dataset.</td></tr>
-      <tr><th>Prerequisites.</th><td>MVP 1 — CRUD lane operational (forms, delete): the harness varies data over the stabilized write + read paths, which requires the faits portés par <code>PropertyMetadata</code> (socle Collect &amp; Computed) and the WidgetResolver (form mapping).</td></tr>
+      <tr><th>Prerequisites.</th><td>MVP 1 — CRUD lane operational (forms, delete): the harness varies data over the stabilized write + read paths, which requires the facts carried by <code>PropertyMetadata</code> (the Collect &amp; Computed foundation) and the WidgetResolver (form mapping).</td></tr>
       <tr><th>Analysis.</th><td>Opens MVP 2 deliberately: once the CRUD is operational is exactly when a rich data game puts the bundle to the test — invariants over the Collect &amp; Computed pipeline (facts → deductions, render never throws, values round-trip) that example-driven tests cannot probe exhaustively. Deterministic by design (fixed seed), shrinks failures (BlackBox), and lands in CI + local <code>make</code> per the deterministic-tooling principle — never a one-shot check. The E2E assertion patterns already built are its base.</td></tr>
     </tbody>
   </table>
@@ -31,7 +31,7 @@
   <table class="k-ticket">
     <tbody>
       <tr><th>Expected.</th><td>Per-property form customization (widget, constraints, labels), configurable like the formatters.</td></tr>
-      <tr><th>Prerequisites.</th><td>MVP 1 — Collect &amp; Computed socle and WidgetResolver (facts portés par <code>PropertyMetadata</code>).</td></tr>
+      <tr><th>Prerequisites.</th><td>MVP 1 — Collect &amp; Computed foundation and WidgetResolver (facts carried by <code>PropertyMetadata</code>).</td></tr>
     </tbody>
   </table>
 </details>
