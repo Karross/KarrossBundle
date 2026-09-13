@@ -7,7 +7,7 @@
 namespace Karross\Routes;
 
 use Karross\Config\KarrossConfig;
-use Karross\Metadata\EntityMetadataRegistry;
+use Karross\Metadata\Computed\EntityMetadataRegistry;
 use Karross\Pages\Home;
 use Symfony\Component\Config\Loader\Loader as SFLoader;
 use Symfony\Component\Routing\Route;

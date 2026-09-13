@@ -49,20 +49,20 @@
   </table>
 </details>
 
-<details class="k-ticket k-ticket--green">
-  <summary>5. Reorganize Metadata folder — Collect/Computed <span class="k-status k-status--green">Ready</span></summary>
+<details class="k-ticket k-ticket--blue">
+  <summary>5. Reorganize Metadata folder — Collect/Computed <span class="k-status k-status--blue">Done</span></summary>
 
   <table class="k-ticket">
     <tbody>
       <tr><th>Existing.</th><td>The <code>Metadata</code> namespace mixes analysis machinery (<code>PropertyTypeDetector</code>, <code>EntityMetadataBuilder</code>) and output read-models (<code>EntityMetadata</code>, <code>PropertyMetadata</code>, <code>FieldMetadata</code>, <code>AssociationMetadata</code>, registry). The DTO <code>PropertyTypeInfo</code> (no consumer) sits in <code>Karross\Formatters</code>, unused.</td></tr>
       <tr><th>Expected.</th><td>Two clean, non-crossing namespaces:
       <ul>
-        <li><strong><code>Metadata\Collect</code></strong> (ex <code>Builder</code>): machinery only — <code>PropertyTypeDetector</code> (facts collector), <code>EntityMetadataBuilder</code> (orchestrator). Dependency direction: Computed → Collect, never the reverse.</li>
-        <li><strong><code>Metadata\Computed</code></strong>: read-models — <code>EntityMetadata</code>, <code>PropertyMetadata</code> (carries the facts <em>and</em> the deductions: formatter, templateKey, future widget), <code>FieldMetadata</code>, <code>AssociationMetadata</code>, <code>FieldLabel</code>, registry.</li>
+        <li><strong><code>Metadata\Collect</code></strong>: machinery only — <code>PropertyTypeDetector</code> (type detection), <code>EntityMetadataBuilder</code> (orchestrator that constructs the read-models).</li>
+        <li><strong><code>Metadata\Computed</code></strong>: read-models — <code>EntityMetadata</code>, <code>PropertyMetadata</code>, <code>FieldMetadata</code>, <code>AssociationMetadata</code>, <code>FieldLabel</code>, <code>EntityMetadataRegistry</code> (the access layer).</li>
       </ul>
-      The DTO <code>PropertyTypeInfo</code> is deleted (the collector builds the final <code>PropertyMetadata</code> directly, no intermediate DTO).</td></tr>
+      Dependency rule (corrected): the pure read-models (Computed) never import Collect machinery — they are inert data. The only seam is the registry (Computed) consuming the builder (Collect), while the builder constructs the read-models (so Collect → Computed exists by construction). <code>PropertyType</code> stays at the <code>Karross\Metadata</code> root (shared vocabulary between both sides and the Formatters) — it is meant to disappear with the "Collect & Computed" refactor. The DTO <code>PropertyTypeInfo</code> (no consumer) is deleted.</td></tr>
       <tr><th>Prerequisites.</th><td>None.</td></tr>
-      <tr><th>Plan.</th><td><ol><li>Create <code>src/Metadata/Collect/</code> and <code>src/Metadata/Computed/</code>.</li><li>Move the machinery (<code>PropertyTypeDetector</code>, <code>EntityMetadataBuilder</code>) into <code>Collect/</code>.</li><li>Move the read-models (<code>EntityMetadata</code>, <code>PropertyMetadata</code>, <code>FieldMetadata</code>, <code>AssociationMetadata</code>, <code>FieldLabel</code>) into <code>Computed/</code>.</li><li>Delete <code>PropertyTypeInfo</code> (DTO with no consumer); the collector builds the <code>PropertyMetadata</code> directly.</li><li>Update <code>services.php</code> + <code>EntityMetadataRegistry</code> (imports).</li><li>Docs: architecture context and <code>docs/src</code> note the rule — <code>Collect</code> = machinery (Computed → Collect dependency), <code>Computed</code> = read-models carrying facts + deductions.</li></ol></td></tr>
+      <tr><th>Plan.</th><td><ol><li>Create <code>src/Metadata/Collect/</code> and <code>src/Metadata/Computed/</code>.</li><li>Move the machinery (<code>PropertyTypeDetector</code>, <code>EntityMetadataBuilder</code>) into <code>Collect/</code>.</li><li>Move the read-models (<code>EntityMetadata</code>, <code>PropertyMetadata</code>, <code>FieldMetadata</code>, <code>AssociationMetadata</code>, <code>FieldLabel</code>) into <code>Computed/</code>.</li><li>Move <code>EntityMetadataRegistry</code> into <code>Computed/</code> (the access layer over the read-models).</li><li>Leave <code>PropertyType</code> at the <code>Karross\Metadata</code> root — shared vocabulary, destined to disappear with the "Collect & Computed" refactor.</li><li>Delete <code>PropertyTypeInfo</code> (DTO with no consumer).</li><li>Update every import: <code>services.php</code>, <code>EntityMetadataRegistry</code>, <code>EntityMetadata</code> (creates <code>FieldLabel</code>), Twig extensions, Routes, Pages, Actions, tests.</li><li>Docs: architecture context and <code>docs/src</code> note the rule — Computed read-models stay inert (no Collect import); the seam is the registry → builder.</li></ol></td></tr>
     </tbody>
   </table>
 </details>

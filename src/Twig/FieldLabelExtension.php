@@ -3,8 +3,8 @@
 namespace Karross\Twig;
 
 use Karross\Actions\ActionContext;
-use Karross\Metadata\EntityMetadata;
-use Karross\Metadata\FieldLabel;
+use Karross\Metadata\Computed\EntityMetadata;
+use Karross\Metadata\Computed\FieldLabel;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Attribute\AsTwigFunction;
 

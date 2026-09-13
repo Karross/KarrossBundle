@@ -25,7 +25,7 @@ parameters:
 			path: src/Actions/Index.php
 
 		-
-			message: '#^Parameter \#1 \$fqcn of method Karross\\Metadata\\EntityMetadataRegistry\:\:get\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$fqcn of method Karross\\Metadata\\Computed\\EntityMetadataRegistry\:\:get\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Actions/Index.php
@@ -187,136 +187,136 @@ parameters:
 			path: src/Formatters/StringFormatter.php
 
 		-
-			message: '#^Method Karross\\Metadata\\AssociationMetadata\:\:__construct\(\) has parameter \$identifier with no value type specified in iterable type array\.$#'
+			message: '#^Method Karross\\Metadata\\Computed\\AssociationMetadata\:\:__construct\(\) has parameter \$identifier with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Metadata/AssociationMetadata.php
+			path: src/Metadata/Computed/AssociationMetadata.php
 
 		-
 			message: '#^Cannot access offset int\<0, max\> on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/Metadata/EntityMetadata.php
+			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
-			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getActions\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Karross\\Metadata\\Computed\\EntityMetadata\:\:getActions\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Metadata/EntityMetadata.php
+			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
-			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getExplodedProperties\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Karross\\Metadata\\Computed\\EntityMetadata\:\:getExplodedProperties\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Metadata/EntityMetadata.php
+			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
-			message: '#^Method Karross\\Metadata\\EntityMetadata\:\:getPropertyLabelsHierarchy\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Karross\\Metadata\\Computed\\EntityMetadata\:\:getPropertyLabelsHierarchy\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Metadata/EntityMetadata.php
+			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
 			message: '#^Parameter \#1 \$array of function array_slice expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Metadata/EntityMetadata.php
+			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
 			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Metadata/EntityMetadata.php
+			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Metadata/EntityMetadata.php
+			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
 			message: '#^Parameter \#1 \.\.\.\$arg1 of function max expects non\-empty\-array, array\<int\<0, max\>\> given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Metadata/EntityMetadata.php
+			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
 			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Metadata/EntityMetadata.php
+			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
-			message: '#^Parameter \$label of class Karross\\Metadata\\FieldLabel constructor expects string, mixed given\.$#'
+			message: '#^Parameter \$label of class Karross\\Metadata\\Computed\\FieldLabel constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Metadata/EntityMetadata.php
+			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 1
-			path: src/Metadata/EntityMetadata.php
+			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
 			message: '#^Cannot call method getClassMetadata\(\) on Doctrine\\Persistence\\ObjectManager\|null\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: src/Metadata/EntityMetadataBuilder.php
+			path: src/Metadata/Collect/EntityMetadataBuilder.php
 
 		-
-			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:buildAssociations\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
+			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:buildAssociations\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
-			path: src/Metadata/EntityMetadataBuilder.php
+			path: src/Metadata/Collect/EntityMetadataBuilder.php
 
 		-
-			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:buildAssociations\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:buildAssociations\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Metadata/EntityMetadataBuilder.php
+			path: src/Metadata/Collect/EntityMetadataBuilder.php
 
 		-
-			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:buildFields\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
+			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:buildFields\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
-			path: src/Metadata/EntityMetadataBuilder.php
+			path: src/Metadata/Collect/EntityMetadataBuilder.php
 
 		-
-			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:buildFields\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:buildFields\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Metadata/EntityMetadataBuilder.php
+			path: src/Metadata/Collect/EntityMetadataBuilder.php
 
 		-
-			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:resolveFormatter\(\) should return class\-string\<Karross\\Formatters\\ValueFormatterInterface\> but returns string\.$#'
+			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:resolveFormatter\(\) should return class\-string\<Karross\\Formatters\\ValueFormatterInterface\> but returns string\.$#'
 			identifier: return.type
 			count: 1
-			path: src/Metadata/EntityMetadataBuilder.php
+			path: src/Metadata/Collect/EntityMetadataBuilder.php
 
 		-
-			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:resolveReflectionProperty\(\) has parameter \$reflectionClass with generic class ReflectionClass but does not specify its types\: T$#'
+			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:resolveReflectionProperty\(\) has parameter \$reflectionClass with generic class ReflectionClass but does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
-			path: src/Metadata/EntityMetadataBuilder.php
+			path: src/Metadata/Collect/EntityMetadataBuilder.php
 
 		-
-			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:resolveSlug\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
+			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:resolveSlug\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
-			path: src/Metadata/EntityMetadataBuilder.php
+			path: src/Metadata/Collect/EntityMetadataBuilder.php
 
 		-
-			message: '#^Method Karross\\Metadata\\EntityMetadataBuilder\:\:resolveSlug\(\) has parameter \$fqcnToSlugMap with no value type specified in iterable type array\.$#'
+			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:resolveSlug\(\) has parameter \$fqcnToSlugMap with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Metadata/EntityMetadataBuilder.php
+			path: src/Metadata/Collect/EntityMetadataBuilder.php
 
 		-
-			message: '#^Parameter \$properties of class Karross\\Metadata\\EntityMetadata constructor expects array\<Karross\\Metadata\\PropertyMetadata\>, array given\.$#'
+			message: '#^Parameter \$properties of class Karross\\Metadata\\Computed\\EntityMetadata constructor expects array\<Karross\\Metadata\\Computed\\PropertyMetadata\>, array given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Metadata/EntityMetadataBuilder.php
+			path: src/Metadata/Collect/EntityMetadataBuilder.php
 
 		-
 			message: '#^Method Karross\\Responders\\JsonResponder\:\:getResponse\(\) has parameter \$data with no type specified\.$#'

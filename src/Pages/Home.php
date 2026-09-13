@@ -4,7 +4,7 @@ namespace Karross\Pages;
 
 use Karross\Actions\Action;
 use Karross\Config\KarrossConfig;
-use Karross\Metadata\EntityMetadataRegistry;
+use Karross\Metadata\Computed\EntityMetadataRegistry;
 use Karross\Routes\RouteGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

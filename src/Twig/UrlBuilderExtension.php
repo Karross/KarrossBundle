@@ -3,7 +3,7 @@
 namespace Karross\Twig;
 
 use Karross\Actions\Action;
-use Karross\Metadata\AssociationMetadata;
+use Karross\Metadata\Computed\AssociationMetadata;
 use Karross\Routes\RouteGenerator;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;

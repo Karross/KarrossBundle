@@ -2,8 +2,8 @@
 
 namespace Integration\Cache;
 
-use Karross\Metadata\EntityMetadataBuilder;
-use Karross\Metadata\EntityMetadataRegistry;
+use Karross\Metadata\Collect\EntityMetadataBuilder;
+use Karross\Metadata\Computed\EntityMetadataRegistry;
 use Karross\Twig\TemplateRegistry;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemPoolInterface;

@@ -3,9 +3,9 @@
 namespace Karross\Twig;
 
 use Karross\Actions\Action;
-use Karross\Metadata\EntityMetadata;
-use Karross\Metadata\EntityMetadataRegistry;
-use Karross\Metadata\FieldMetadata;
+use Karross\Metadata\Computed\EntityMetadata;
+use Karross\Metadata\Computed\EntityMetadataRegistry;
+use Karross\Metadata\Computed\FieldMetadata;
 use Twig\Environment;
 use Twig\TemplateWrapper;
 

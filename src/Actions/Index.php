@@ -3,7 +3,7 @@
 namespace Karross\Actions;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Karross\Metadata\EntityMetadataRegistry;
+use Karross\Metadata\Computed\EntityMetadataRegistry;
 use Karross\Responders\ResponderManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -1,8 +1,9 @@
 <?php
 
-namespace Karross\Metadata;
+namespace Karross\Metadata\Collect;
 
 use Doctrine\DBAL\Types\Types;
+use Karross\Metadata\PropertyType;
 use ReflectionProperty;
 
 /**

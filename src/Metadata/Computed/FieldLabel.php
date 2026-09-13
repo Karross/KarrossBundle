@@ -1,6 +1,6 @@
 <?php
 
-namespace Karross\Metadata;
+namespace Karross\Metadata\Computed;
 
 class FieldLabel
 {

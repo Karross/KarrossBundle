@@ -1,6 +1,6 @@
 <?php
 
-namespace Karross\Metadata;
+namespace Karross\Metadata\Collect;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\ClassMetadata;
@@ -9,6 +9,10 @@ use Karross\Config\KarrossConfig;
 use Karross\Exceptions\EntityShortnameException;
 use Karross\Formatters\FormatterResolver;
 use Karross\Formatters\ValueFormatterInterface;
+use Karross\Metadata\Computed\AssociationMetadata;
+use Karross\Metadata\Computed\EntityMetadata;
+use Karross\Metadata\Computed\FieldMetadata;
+use Karross\Metadata\PropertyType;
 use ReflectionProperty;
 
 readonly class EntityMetadataBuilder

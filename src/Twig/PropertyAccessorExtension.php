@@ -4,7 +4,7 @@ namespace Karross\Twig;
 
 use Karross\Formatters\FormatterResolver;
 use Karross\Formatters\FormattingContext;
-use Karross\Metadata\PropertyMetadata;
+use Karross\Metadata\Computed\PropertyMetadata;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;

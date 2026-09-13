@@ -1,8 +1,10 @@
 <?php
 
-namespace Karross\Metadata;
+namespace Karross\Metadata\Computed;
 
-class AssociationMetadata extends PropertyMetadata
+use Karross\Metadata\PropertyType;
+
+class FieldMetadata extends PropertyMetadata
 {
     /**
      * @param class-string               $fqcn
@@ -11,13 +13,12 @@ class AssociationMetadata extends PropertyMetadata
      */
     public function __construct(
         public string $name,
-        public array $identifier,
         public string $fqcn,
         public PropertyType $type,
         public string $formatter,
         public array $formatterOptions = [],
         public ?string $entitySlug = null,
     ) {
-        parent::__construct($name, false, true, $type, $formatter, $formatterOptions, $entitySlug);
+        parent::__construct($name, true, false, $type, $formatter, $formatterOptions, $entitySlug);
     }
 }

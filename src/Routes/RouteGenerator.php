@@ -4,7 +4,7 @@ namespace Karross\Routes;
 
 use Karross\Actions\Action;
 use Karross\Config\KarrossConfig;
-use Karross\Metadata\EntityMetadata;
+use Karross\Metadata\Computed\EntityMetadata;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 

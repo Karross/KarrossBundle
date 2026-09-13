@@ -1,7 +1,8 @@
 <?php
 
-namespace Karross\Metadata;
+namespace Karross\Metadata\Computed;
 
+use Karross\Metadata\Collect\EntityMetadataBuilder;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class EntityMetadataRegistry

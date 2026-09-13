@@ -1,21 +1,25 @@
 <?php
 
-namespace Karross\Metadata;
+namespace Karross\Metadata\Computed;
 
-class PropertyMetadata
+use Karross\Metadata\PropertyType;
+
+class AssociationMetadata extends PropertyMetadata
 {
     /**
+     * @param class-string               $fqcn
      * @param class-string               $formatter
      * @param array<string, string|bool> $formatterOptions
      */
     public function __construct(
         public string $name,
-        public bool $isField,
-        public bool $isAssociation,
+        public array $identifier,
+        public string $fqcn,
         public PropertyType $type,
         public string $formatter,
         public array $formatterOptions = [],
         public ?string $entitySlug = null,
     ) {
+        parent::__construct($name, false, true, $type, $formatter, $formatterOptions, $entitySlug);
     }
 }
