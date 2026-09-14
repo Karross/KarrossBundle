@@ -187,10 +187,34 @@ parameters:
 			path: src/Formatters/StringFormatter.php
 
 		-
-			message: '#^Method Karross\\Metadata\\Computed\\AssociationMetadata\:\:__construct\(\) has parameter \$identifier with no value type specified in iterable type array\.$#'
+			message: '#^Cannot call method getClassMetadata\(\) on Doctrine\\Persistence\\ObjectManager\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Metadata/Collect/ComputedMetadataBuilder.php
+
+		-
+			message: '#^Method Karross\\Metadata\\Collect\\ComputedMetadataBuilder\:\:resolveFormatter\(\) should return class\-string\<Karross\\Formatters\\ValueFormatterInterface\> but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Metadata/Collect/ComputedMetadataBuilder.php
+
+		-
+			message: '#^Method Karross\\Metadata\\Collect\\ComputedMetadataBuilder\:\:resolveReflectionProperty\(\) has parameter \$reflectionClass with generic class ReflectionClass but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Metadata/Collect/ComputedMetadataBuilder.php
+
+		-
+			message: '#^Method Karross\\Metadata\\Collect\\ComputedMetadataBuilder\:\:resolveSlug\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Metadata/Collect/ComputedMetadataBuilder.php
+
+		-
+			message: '#^Method Karross\\Metadata\\Collect\\ComputedMetadataBuilder\:\:resolveSlug\(\) has parameter \$fqcnToSlugMap with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Metadata/Computed/AssociationMetadata.php
+			path: src/Metadata/Collect/ComputedMetadataBuilder.php
 
 		-
 			message: '#^Cannot access offset int\<0, max\> on mixed\.$#'
@@ -257,66 +281,6 @@ parameters:
 			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Metadata/Computed/EntityMetadata.php
-
-		-
-			message: '#^Cannot call method getClassMetadata\(\) on Doctrine\\Persistence\\ObjectManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Metadata/Collect/EntityMetadataBuilder.php
-
-		-
-			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:buildAssociations\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Metadata/Collect/EntityMetadataBuilder.php
-
-		-
-			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:buildAssociations\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Metadata/Collect/EntityMetadataBuilder.php
-
-		-
-			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:buildFields\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Metadata/Collect/EntityMetadataBuilder.php
-
-		-
-			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:buildFields\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Metadata/Collect/EntityMetadataBuilder.php
-
-		-
-			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:resolveFormatter\(\) should return class\-string\<Karross\\Formatters\\ValueFormatterInterface\> but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Metadata/Collect/EntityMetadataBuilder.php
-
-		-
-			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:resolveReflectionProperty\(\) has parameter \$reflectionClass with generic class ReflectionClass but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Metadata/Collect/EntityMetadataBuilder.php
-
-		-
-			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:resolveSlug\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Metadata/Collect/EntityMetadataBuilder.php
-
-		-
-			message: '#^Method Karross\\Metadata\\Collect\\EntityMetadataBuilder\:\:resolveSlug\(\) has parameter \$fqcnToSlugMap with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Metadata/Collect/EntityMetadataBuilder.php
-
-		-
-			message: '#^Parameter \$properties of class Karross\\Metadata\\Computed\\EntityMetadata constructor expects array\<Karross\\Metadata\\Computed\\PropertyMetadata\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Metadata/Collect/EntityMetadataBuilder.php
 
 		-
 			message: '#^Method Karross\\Responders\\JsonResponder\:\:getResponse\(\) has parameter \$data with no type specified\.$#'
@@ -409,60 +373,6 @@ parameters:
 			path: src/Twig/StringableExtension.php
 
 		-
-			message: '#^Cannot access offset string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: src/Twig/TemplateRegistry.php
-
-		-
-			message: '#^Method Karross\\Twig\\TemplateRegistry\:\:all\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Twig/TemplateRegistry.php
-
-		-
-			message: '#^Method Karross\\Twig\\TemplateRegistry\:\:getTemplate\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 2
-			path: src/Twig/TemplateRegistry.php
-
-		-
-			message: '#^Cannot assign offset string to array\<string, string\>\|string\.$#'
-			identifier: offsetAssign.dimType
-			count: 1
-			path: src/Twig/TemplateResolver.php
-
-		-
-			message: '#^Method Karross\\Twig\\TemplateResolver\:\:getTemplatePatternsHierarchy\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Twig/TemplateResolver.php
-
-		-
-			message: '#^Method Karross\\Twig\\TemplateResolver\:\:resolveAll\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Twig/TemplateResolver.php
-
-		-
-			message: '#^PHPDoc tag @return has invalid value \(array\<string, array\<TemplateWrapper\>\)\: Unexpected token "\*/", expected ''\>'' at offset 61 on line 3$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: src/Twig/TemplateResolver.php
-
-		-
-			message: '#^Parameter \#1 \$str of function strtr expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Twig/TemplateResolver.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Twig/TemplateResolver.php
-
-		-
 			message: '#^Method Karross\\Twig\\UrlBuilderExtension\:\:getUrl\(\) has parameter \$entity with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -472,18 +382,6 @@ parameters:
 			message: '#^Parameter \#1 \$objectOrArray of method Symfony\\Component\\PropertyAccess\\PropertyAccessor\:\:getValue\(\) expects array\|object, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Twig/UrlBuilderExtension.php
-
-		-
-			message: '#^Parameter \#2 \$propertyPath of method Symfony\\Component\\PropertyAccess\\PropertyAccessor\:\:getValue\(\) expects string\|Symfony\\Component\\PropertyAccess\\PropertyPathInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Twig/UrlBuilderExtension.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
 			path: src/Twig/UrlBuilderExtension.php
 
 		-
@@ -575,6 +473,12 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: tests/Integration/TestedApp/Kernel.php
+
+		-
+			message: '#^Property TestedApp\\Unhandled\\Entity\\Item\:\:\$id \(int\|null\) is never assigned int so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: tests/Integration/TestedApp/Unhandled/Entity/Item.php
 
 		-
 			message: '#^Call to an undefined method object\:\:getManager\(\)\.$#'

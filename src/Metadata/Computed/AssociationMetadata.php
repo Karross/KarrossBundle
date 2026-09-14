@@ -2,24 +2,36 @@
 
 namespace Karross\Metadata\Computed;
 
-use Karross\Metadata\PropertyType;
-
-class AssociationMetadata extends PropertyMetadata
+/**
+ * Association read-model (discriminator over PropertyMetadata) carrying the
+ * resolved formatter for the association value. Display semantics live in the
+ * formatter, not in a stored cardinality fact.
+ */
+readonly class AssociationMetadata extends PropertyMetadata
 {
     /**
      * @param class-string               $fqcn
+     * @param string[]                   $identifier       the target entity's identifier column names
      * @param class-string               $formatter
      * @param array<string, string|bool> $formatterOptions
+     * @param array<string, string>      $templates        action → resolved template name
      */
     public function __construct(
-        public string $name,
+        string $name,
+        string $fqcn,
         public array $identifier,
-        public string $fqcn,
-        public PropertyType $type,
-        public string $formatter,
-        public array $formatterOptions = [],
-        public ?string $entitySlug = null,
+        string $formatter,
+        array $formatterOptions,
+        array $templates,
+        ?string $entitySlug,
     ) {
-        parent::__construct($name, false, true, $type, $formatter, $formatterOptions, $entitySlug);
+        parent::__construct(
+            $name,
+            $fqcn,
+            $formatter,
+            $formatterOptions,
+            $templates,
+            $entitySlug,
+        );
     }
 }

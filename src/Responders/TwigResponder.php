@@ -4,13 +4,13 @@ namespace Karross\Responders;
 
 use Karross\Actions\ActionContext;
 use Karross\Config\KarrossConfig;
-use Karross\Twig\TemplateRegistry;
+use Karross\Metadata\Computed\EntityMetadataRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
 class TwigResponder implements ResponderInterface
 {
-    public function __construct(private Environment $twig, private KarrossConfig $config, private TemplateRegistry $templateRegistry)
+    public function __construct(private Environment $twig, private KarrossConfig $config, private EntityMetadataRegistry $entityMetadataRegistry)
     {
     }
 
@@ -21,7 +21,7 @@ class TwigResponder implements ResponderInterface
 
     public function getResponse(ActionContext $actionContext, $data): Response
     {
-        $template = $this->templateRegistry->getTemplate($actionContext->slug, $actionContext->action);
+        $template = $this->entityMetadataRegistry->getBySlug($actionContext->slug)->templates[$actionContext->action]['index'];
 
         return new Response($this->twig->render($template, $data + ['actionContext' => $actionContext]));
     }

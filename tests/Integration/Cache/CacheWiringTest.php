@@ -2,9 +2,8 @@
 
 namespace Integration\Cache;
 
-use Karross\Metadata\Collect\EntityMetadataBuilder;
+use Karross\Metadata\Collect\ComputedMetadataBuilder;
 use Karross\Metadata\Computed\EntityMetadataRegistry;
-use Karross\Twig\TemplateRegistry;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
@@ -21,13 +20,9 @@ class CacheWiringTest extends TestCase
         /** @var EntityMetadataRegistry $metadata */
         $metadata = $services->get(EntityMetadataRegistry::class);
         $this->assertEquals($metadata->all(), $metadata->all());
-        /** @var EntityMetadataBuilder $builder */
-        $builder = $services->get(EntityMetadataBuilder::class);
+        /** @var ComputedMetadataBuilder $builder */
+        $builder = $services->get(ComputedMetadataBuilder::class);
         $this->assertEquals($metadata->all(), $builder->buildAllMetadata());
-
-        /** @var TemplateRegistry $templates */
-        $templates = $services->get(TemplateRegistry::class);
-        $this->assertEquals($templates->all(), $templates->all());
     }
 
     public function testCachedValuesAreWrittenToThePool(): void
@@ -37,21 +32,17 @@ class CacheWiringTest extends TestCase
         /** @var EntityMetadataRegistry $registry */
         $registry = $services->get(EntityMetadataRegistry::class);
         $registry->all();
-        /** @var TemplateRegistry $templates */
-        $templates = $services->get(TemplateRegistry::class);
-        $templates->all();
 
         /** @var CacheItemPoolInterface $pool */
         $pool = $services->get('cache.app');
         $this->assertTrue($pool->getItem('karross.metadata')->isHit());
-        $this->assertTrue($pool->getItem('karross.templates')->isHit());
     }
 
     public function testCacheSurvivesAcrossKernelBoots(): void
     {
         $first = $this->bootServices('prod', false);
-        /** @var EntityMetadataBuilder $builder */
-        $builder = $first->get(EntityMetadataBuilder::class);
+        /** @var ComputedMetadataBuilder $builder */
+        $builder = $first->get(ComputedMetadataBuilder::class);
         $coldBuild = $builder->buildAllMetadata();
         /** @var EntityMetadataRegistry $registry */
         $registry = $first->get(EntityMetadataRegistry::class);
@@ -72,15 +63,9 @@ class CacheWiringTest extends TestCase
         $this->assertNotEmpty($metadata->all());
         $this->assertEquals($metadata->all(), $metadata->all());
 
-        /** @var TemplateRegistry $templates */
-        $templates = $services->get(TemplateRegistry::class);
-        $this->assertNotEmpty($templates->all());
-        $this->assertEquals($templates->all(), $templates->all());
-
         /** @var CacheItemPoolInterface $pool */
         $pool = $services->get('cache.app');
         $this->assertFalse($pool->getItem('karross.metadata')->isHit());
-        $this->assertFalse($pool->getItem('karross.templates')->isHit());
     }
 
     private function bootServices(string $suffix, bool $debug): ContainerInterface

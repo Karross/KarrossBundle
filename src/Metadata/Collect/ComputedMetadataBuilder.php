@@ -2,6 +2,8 @@
 
 namespace Karross\Metadata\Collect;
 
+use Doctrine\ORM\Mapping\ClassMetadata as OrmClassMetadata;
+use Doctrine\ORM\Mapping\FieldMapping;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Karross\Actions\Action;
@@ -12,16 +14,23 @@ use Karross\Formatters\ValueFormatterInterface;
 use Karross\Metadata\Computed\AssociationMetadata;
 use Karross\Metadata\Computed\EntityMetadata;
 use Karross\Metadata\Computed\FieldMetadata;
-use Karross\Metadata\PropertyType;
-use ReflectionProperty;
+use Karross\Metadata\Computed\PropertyMetadata;
 
-readonly class EntityMetadataBuilder
+/**
+ * Builds the frozen Computed read-models (EntityMetadata / PropertyMetadata)
+ * from the raw sources (PHP reflection + Doctrine class metadata) and the
+ * bundle config. It is the single place where the analysis phase happens and
+ * where every precomputable fact (formatter, resolved templates, column facts)
+ * is projected into the read-models.
+ */
+readonly class ComputedMetadataBuilder
 {
     public function __construct(
         private ManagerRegistry $managerRegistry,
         private KarrossConfig $config,
-        private PropertyTypeDetector $typeDetector,
         private FormatterResolver $formatterResolver,
+        private PropertyTemplateResolverInterface $propertyTemplateResolver,
+        private EntityTemplateResolverInterface $entityTemplateResolver,
     ) {
     }
 
@@ -34,11 +43,18 @@ readonly class EntityMetadataBuilder
         $fqcnToSlugMap = [];
         foreach ($this->managerRegistry->getManagers() as $em) {
             foreach ($em->getMetadataFactory()->getAllMetadata() as $classMetadata) {
+                // getAllMetadata() types against the persistence interface; the
+                // real instance is the ORM one — guaranteed by the doctrine/orm
+                // requirement. The ORM type is what gives us getFieldMapping().
+                \assert($classMetadata instanceof OrmClassMetadata);
                 $slug = $this->resolveSlug($classMetadata, $this->config, $fqcnToSlugMap);
+                $actions = $this->resolveActions($this->config);
+                $properties = $this->buildAssociations($slug, $classMetadata) + $this->buildFields($slug, $classMetadata);
                 $entities[$classMetadata->getName()] = new EntityMetadata(
                     slug: $slug,
-                    actions: $this->resolveActions($this->config),
-                    properties: $this->buildAssociations($slug, $classMetadata) + $this->buildFields($slug, $classMetadata),
+                    actions: $actions,
+                    properties: $properties,
+                    templates: $this->resolveActionTemplates($slug, $actions, $this->hasEmbeddedFields($properties)),
                     fqcn: $classMetadata->getName(),
                     identifier: $classMetadata->getIdentifier(),
                 );
@@ -49,35 +65,32 @@ readonly class EntityMetadataBuilder
         return $entities;
     }
 
-    private function buildAssociations(string $entitySlug, ClassMetadata $classMetadata): array
+    /**
+     * @param OrmClassMetadata<object> $classMetadata
+     *
+     * @return array<string, AssociationMetadata>
+     */
+    private function buildAssociations(string $entitySlug, OrmClassMetadata $classMetadata): array
     {
         $associations = [];
         $reflectionClass = new \ReflectionClass($classMetadata->getName());
 
         foreach ($classMetadata->getAssociationNames() as $associationName) {
             $associationClass = $classMetadata->getAssociationTargetClass($associationName);
-            if (null === $associationClass) {
-                throw new \LogicException('Association class not found for '.$associationName);
-            }
             $associationMetadata = $this->managerRegistry->getManagerForClass($associationClass)->getClassMetadata($associationClass);
 
             $reflectionProperty = $reflectionClass->getProperty($associationName);
 
-            // Detect type
-            $type = $this->typeDetector->detect(
-                property: $reflectionProperty,
-                doctrineType: null,
-                isAssociation: true,
-            );
+            $isToMany = $classMetadata->isCollectionValuedAssociation($associationName);
+            $phpType = $this->resolvePhpType($reflectionProperty);
 
-            // Resolve formatter
-            $formatter = $this->resolveFormatter($classMetadata->getName(), $associationName, $type);
+            $formatter = $this->resolveFormatter($classMetadata->getName(), $associationName, $phpType, null);
 
             $associations[$associationName] = new AssociationMetadata(
                 name: $associationName,
-                identifier: $associationMetadata->getIdentifier(),
                 fqcn: $associationClass,
-                type: $type,
+                identifier: $associationMetadata->getIdentifier(),
+                templates: $this->propertyTemplateResolver->resolveAssociation($entitySlug, $associationName, $isToMany),
                 formatter: $formatter,
                 formatterOptions: $this->config->entityPropertyFormatterOptions($classMetadata->getName(), $associationName),
                 entitySlug: $entitySlug,
@@ -87,36 +100,32 @@ readonly class EntityMetadataBuilder
         return $associations;
     }
 
-    private function buildFields(string $entitySlug, ClassMetadata $classMetadata): array
+    /**
+     * @param OrmClassMetadata<object> $classMetadata
+     *
+     * @return array<string, FieldMetadata>
+     */
+    private function buildFields(string $entitySlug, OrmClassMetadata $classMetadata): array
     {
         $fields = [];
         $reflectionClass = new \ReflectionClass($classMetadata->getName());
 
         foreach ($classMetadata->getFieldNames() as $fieldName) {
-            $doctrineType = $classMetadata->getTypeOfField($fieldName);
+            $fieldMapping = $classMetadata->getFieldMapping($fieldName);
 
             // Use recursive resolution for embedded fields (e.g., 'identity.firstname')
-            $reflectionProperty = $this->resolveReflectionProperty(
-                $reflectionClass,
-                $fieldName
-            );
+            $reflectionProperty = $this->resolveReflectionProperty($reflectionClass, $fieldName);
 
-            // Detect type
-            $type = $this->typeDetector->detect(
-                property: $reflectionProperty,
-                doctrineType: $doctrineType,
-                isAssociation: false,
-            );
+            $phpType = $this->resolvePhpType($reflectionProperty);
 
-            // Resolve formatter
-            $formatter = $this->resolveFormatter($classMetadata->getName(), $fieldName, $type);
+            $formatter = $this->resolveFormatter($classMetadata->getName(), $fieldName, $phpType, $fieldMapping);
 
             $fields[$fieldName] = new FieldMetadata(
                 name: $fieldName,
                 fqcn: $classMetadata->getName(),
-                type: $type,
                 formatter: $formatter,
                 formatterOptions: $this->config->entityPropertyFormatterOptions($classMetadata->getName(), $fieldName),
+                templates: $this->propertyTemplateResolver->resolveField($entitySlug, $fieldName, $phpType, $fieldMapping),
                 entitySlug: $entitySlug,
             );
         }
@@ -127,9 +136,71 @@ readonly class EntityMetadataBuilder
     /**
      * @return class-string<ValueFormatterInterface>
      */
-    private function resolveFormatter(string $fqcn, string $property, PropertyType $type): string
+    private function resolveFormatter(string $fqcn, string $property, ?string $phpType, ?FieldMapping $fieldMapping = null): string
     {
-        return $this->config->entityPropertyFormatter($fqcn, $property) ?? $this->formatterResolver->resolve($type);
+        return $this->config->entityPropertyFormatter($fqcn, $property)
+            ?? $this->formatterResolver->resolve($phpType, $fieldMapping);
+    }
+
+    /**
+     * Resolves the bundle-defined entity page templates (index → items/no_items
+     * → item) for each action, through the renderer seam. The result is a
+     * renderer-scoped projection (action value → role → resolved template
+     * name) carried by the read-model, in the same spirit as the property
+     * templates.
+     *
+     * @param Action[] $actions
+     *
+     * @return array<string, array<string, string>>
+     */
+    private function resolveActionTemplates(string $slug, array $actions, bool $hasEmbeddedFields): array
+    {
+        $templates = [];
+        foreach ($actions as $action) {
+            $resolved = $this->entityTemplateResolver->resolve($action, $slug, $hasEmbeddedFields);
+            if ([] !== $resolved) {
+                $templates[$action->value] = $resolved;
+            }
+        }
+
+        return $templates;
+    }
+
+    /**
+     * @param PropertyMetadata[] $properties
+     */
+    private function hasEmbeddedFields(array $properties): bool
+    {
+        foreach ($properties as $property) {
+            if (str_contains($property->name, '.')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function resolvePhpType(?\ReflectionProperty $property): ?string
+    {
+        if (null === $property) {
+            return null;
+        }
+
+        $type = $property->getType();
+
+        if ($type instanceof \ReflectionNamedType) {
+            return $type->getName();
+        }
+
+        if ($type instanceof \ReflectionUnionType) {
+            foreach ($type->getTypes() as $member) {
+                if ($member instanceof \ReflectionNamedType && 'null' !== $member->getName()) {
+                    return $member->getName();
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -1,5 +1,5 @@
 {% for property in entityMetadata.getProperties() %}
     <td>
-        {% include k_template(entitySlug, action, 'property', property.name) with { property: property, item: item } %}
+        {% include property.templates[action] with { property: property, item: item } %}
     </td>
 {% endfor %}

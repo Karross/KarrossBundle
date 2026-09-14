@@ -14,12 +14,12 @@ return static function (ContainerConfigurator $container): void {
             'naming_strategy' => 'doctrine.orm.naming_strategy.underscore_number_aware',
             'auto_mapping' => false,
             'mappings' => [
-                'TestedApp' => [
+                'TestedAppUnhandled' => [
                     'is_bundle' => false,
                     'type' => 'attribute',
-                    'dir' => __DIR__.'/../Entity',
-                    'prefix' => 'TestedApp\Entity',
-                    'alias' => 'TestedApp',
+                    'dir' => __DIR__.'/../Unhandled/Entity',
+                    'prefix' => 'TestedApp\Unhandled\Entity',
+                    'alias' => 'TestedAppUnhandled',
                 ],
             ],
         ],
