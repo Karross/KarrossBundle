@@ -13,11 +13,11 @@ ignored:
       count: 1
     - rule: max_lloc
       file: src/Config/services.php
-      message: 'Logical lines of code too high : got 24 (max: 20)'
+      message: 'Logical lines of code too high : got 23 (max: 20)'
       count: 1
     - rule: cyclomatic_complexity
       file: src/Formatters/FormatterResolver.php
-      message: 'Cyclomatic complexity too high: got 13 (max: 10)'
+      message: 'Cyclomatic complexity too high: got 27 (max: 10)'
       count: 1
     - rule: cyclomatic_complexity
       file: src/Metadata/Collect/EntityMetadataBuilder.php
@@ -28,12 +28,12 @@ ignored:
       message: 'Logical lines of code too high : got 59 (max: 20)'
       count: 1
     - rule: cyclomatic_complexity
-      file: src/Metadata/Collect/PropertyTypeDetector.php
-      message: 'Cyclomatic complexity too high: got 54 (max: 10)'
+      file: src/Metadata/Collect/PropertyCollector.php
+      message: 'Cyclomatic complexity too high: got 50 (max: 10)'
       count: 1
     - rule: max_lloc
-      file: src/Metadata/Collect/PropertyTypeDetector.php
-      message: 'Logical lines of code too high : got 58 (max: 20)'
+      file: src/Metadata/Collect/PropertyCollector.php
+      message: 'Logical lines of code too high : got 44 (max: 20)'
       count: 1
     - rule: cyclomatic_complexity
       file: src/Metadata/Computed/EntityMetadata.php
@@ -45,5 +45,9 @@ ignored:
       count: 1
     - rule: cyclomatic_complexity
       file: src/Twig/TemplateResolver.php
-      message: 'Cyclomatic complexity too high: got 13 (max: 10)'
+      message: 'Cyclomatic complexity too high: got 17 (max: 10)'
+      count: 1
+    - rule: max_lloc
+      file: src/Twig/TemplateResolver.php
+      message: 'Logical lines of code too high : got 28 (max: 20)'
       count: 1

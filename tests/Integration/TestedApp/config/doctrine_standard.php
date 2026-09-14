@@ -17,7 +17,7 @@ return static function (ContainerConfigurator $container): void {
                 'TestedApp' => [
                     'is_bundle' => false,
                     'type' => 'attribute',
-                    'dir' => '%kernel.project_dir%/tests/Integration/TestedApp/Entity',
+                    'dir' => __DIR__.'/../Entity',
                     'prefix' => 'TestedApp\Entity',
                     'alias' => 'TestedApp',
                 ],

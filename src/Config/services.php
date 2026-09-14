@@ -18,7 +18,6 @@ use Karross\Formatters\NotAvailableFormatter;
 use Karross\Formatters\StringFormatter;
 use Karross\Formatters\ValueTranslator;
 use Karross\Metadata\Collect\EntityMetadataBuilder;
-use Karross\Metadata\Collect\PropertyTypeDetector;
 use Karross\Metadata\Computed\EntityMetadataRegistry;
 use Karross\Responders\ResponderInterface;
 use Karross\Responders\ResponderManager;
@@ -98,8 +97,6 @@ return static function (ContainerConfigurator $configurator) {
         ->arg('$cache', service(CacheInterface::class))
         ->arg('$builder', service(EntityMetadataBuilder::class))
         ->arg('$debug', param('kernel.debug'));
-
-    $services->set(PropertyTypeDetector::class);
 
     // Responders
     $services

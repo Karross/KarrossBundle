@@ -10,9 +10,8 @@ a message.
 
 ## Overriding templates
 
-Create a file with the same name under
-`templates/bundles/KarrossBundle/` in your project. Karross uses your file for
-every matching case.
+Create a file with the same name under `templates/bundles/KarrossBundle/` in
+your project. Karross uses your file for every matching case.
 
 ### Existing templates
 
@@ -37,13 +36,32 @@ discriminators. Resolution order, most specific first:
 4. `field_type_<type>.html.twig`
 5. default `field.html.twig`
 
-Examples:
+`<type>` is the semantic type chain of the column: a specific key first, then
+generic fallbacks. Date and time columns intentionally omit the Doctrine
+variant (`datetime_immutable` resolves to `datetime`), and enums resolve to a
+dedicated `enum` key.
 
-```text
-templates/bundles/KarrossBundle/index/items.html.twig                # all lists
-templates/bundles/KarrossBundle/index/items_entity_article.html.twig # only Article
-templates/bundles/KarrossBundle/index/field_title_entity_article.html.twig
-templates/bundles/KarrossBundle/index/field_type_string.html.twig
+| Column / association | Override files, most specific first |
+|---|---|
+| `datetime`, `datetime_immutable`, `datetimetz`, `datetimetz_immutable` | `field_type_datetime` |
+| `date`, `date_immutable` | `field_type_date` → `field_type_datetime` |
+| `time`, `time_immutable` | `field_type_time` → `field_type_datetime` |
+| enum column (`enumType`) | `field_type_enum` → `field_type_string` |
+| string, guid, ascii_string | `field_type_string` |
+| text, blob | `field_type_text` → `field_type_string` |
+| integer, smallint, bigint | `field_type_<raw>` → `field_type_int` → `field_type_number` |
+| decimal | `field_type_decimal` → `field_type_string` |
+| float | `field_type_float` → `field_type_number` |
+| boolean / bool | `field_type_boolean` → `field_type_bool` |
+| json | `field_type_json` → `field_type_array` |
+| to-one association | `association_type_one` |
+| to-many association | `association_type_many` |
+
+Example: wrap every datetime cell in a `<time>` element.
+
+```twig
+{# templates/bundles/KarrossBundle/index/field_type_datetime.html.twig #}
+<time class="datetime-cell">{{ k_formatted_value(item, property) }}</time>
 ```
 
 *How it works: `TemplateResolver` builds the resolution map once at boot. The
