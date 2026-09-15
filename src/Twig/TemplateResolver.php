@@ -7,7 +7,6 @@ use Karross\Metadata\Computed\EntityMetadata;
 use Karross\Metadata\Computed\EntityMetadataRegistry;
 use Karross\Metadata\Computed\FieldMetadata;
 use Twig\Environment;
-use Twig\TemplateWrapper;
 
 readonly class TemplateResolver
 {
@@ -16,38 +15,42 @@ readonly class TemplateResolver
     }
 
     /**
-     * @return array<string, array<TemplateWrapper>
+     * @return array<string, array<string, array<array<string, string>|string>>>
      */
     public function resolveAll(): array
     {
         $templatesMap = [];
         foreach ($this->entityMetadataRegistry->all() as $entityMetadata) {
             foreach ($entityMetadata->actions as $action) {
-                if ($this->hasTemplate($action)) {
-                    foreach ($this->getTemplatePatternsHierarchy($action, $entityMetadata) as $templateBasename => $templatePatterns) {
-                        if ('property' !== $templateBasename) {
-                            $templatesMap[$entityMetadata->slug][$action->value][$templateBasename] = $this->twig->resolveTemplate(array_map(
-                                static function ($templatePattern) use ($entityMetadata) {
-                                    return strtr($templatePattern, ['{slug}' => $entityMetadata->slug]);
-                                }, $templatePatterns)
-                            )->getTemplateName();
-                        } else {
-                            foreach ($entityMetadata->getProperties() as $property) {
-                                $templatesMap[$entityMetadata->slug][$action->value][$templateBasename][$property->name] = $this->twig->resolveTemplate(array_map(
-                                    static function ($templatePattern) use ($entityMetadata, $property) {
-                                        return strtr(
-                                            $templatePattern,
-                                            [
-                                                '{fieldOrAssociation}' => $property instanceof FieldMetadata ? 'field' : 'association',
-                                                '{entitySlug}' => $entityMetadata->slug,
-                                                '{propertyName}' => str_replace('.', '_', $property->name),
-                                                '{propertyType}' => $property->type->value,
-                                            ]);
-                                    }, $templatePatterns)
-                                )->getTemplateName();
-                            }
-                        }
+                if (!$this->hasTemplate($action)) {
+                    continue;
+                }
+
+                foreach ($this->getTemplatePatternsHierarchy($action, $entityMetadata) as $templateBasename => $templatePatterns) {
+                    $templatesMap[$entityMetadata->slug][$action->value][$templateBasename] = $this->twig->resolveTemplate(array_map(
+                        static function ($templatePattern) use ($entityMetadata) {
+                            return strtr($templatePattern, ['{slug}' => $entityMetadata->slug]);
+                        }, $templatePatterns)
+                    )->getTemplateName();
+                }
+
+                foreach ($entityMetadata->getProperties() as $property) {
+                    $propertyPatterns = $this->getPropertyPatterns($action, $property->typeHierarchy);
+                    if ([] === $propertyPatterns) {
+                        continue;
                     }
+
+                    $templatesMap[$entityMetadata->slug][$action->value]['property'][$property->name] = $this->twig->resolveTemplate(array_map(
+                        static function ($templatePattern) use ($entityMetadata, $property) {
+                            return strtr(
+                                $templatePattern,
+                                [
+                                    '{fieldOrAssociation}' => $property instanceof FieldMetadata ? 'field' : 'association',
+                                    '{entitySlug}' => $entityMetadata->slug,
+                                    '{propertyName}' => str_replace('.', '_', $property->name),
+                                ]);
+                        }, $this->getPropertyPatterns($action, $property->typeHierarchy))
+                    )->getTemplateName();
                 }
             }
         }
@@ -77,13 +80,6 @@ readonly class TemplateResolver
                     '@Karross/index/item_entity_{slug}.html.twig',
                     '@Karross/index/item.html.twig',
                 ],
-                'property' => [
-                    '@Karross/index/{fieldOrAssociation}_{propertyName}_entity_{entitySlug}.html.twig',
-                    '@Karross/index/{fieldOrAssociation}_type_{propertyType}_entity_{entitySlug}.html.twig',
-                    '@Karross/index/{fieldOrAssociation}_{propertyName}.html.twig',
-                    '@Karross/index/{fieldOrAssociation}_type_{propertyType}.html.twig',
-                    '@Karross/index/{fieldOrAssociation}.html.twig',
-                ],
             ],
             default => [],
         };
@@ -92,5 +88,38 @@ readonly class TemplateResolver
     public function hasTemplate(Action $action): bool
     {
         return \in_array($action, [Action::INDEX, Action::SHOW]);
+    }
+
+    /**
+     * Per-property candidate patterns, ordered from the most specific to the
+     * most generic. The type motifs expand over the ordered typeHierarchy
+     * (each entry owns a dedicated override slot). Principle only — no
+     * per-case override logic here.
+     *
+     * @param list<string> $typeHierarchy
+     *
+     * @return list<string>
+     */
+    private function getPropertyPatterns(Action $action, array $typeHierarchy): array
+    {
+        if (Action::INDEX !== $action) {
+            return [];
+        }
+
+        $patterns = ['@Karross/index/{fieldOrAssociation}_{propertyName}_entity_{entitySlug}.html.twig'];
+
+        foreach ($typeHierarchy as $typeName) {
+            $patterns[] = \sprintf('@Karross/index/{fieldOrAssociation}_type_%s_entity_{entitySlug}.html.twig', $typeName);
+        }
+
+        $patterns[] = '@Karross/index/{fieldOrAssociation}_{propertyName}.html.twig';
+
+        foreach ($typeHierarchy as $typeName) {
+            $patterns[] = \sprintf('@Karross/index/{fieldOrAssociation}_type_%s.html.twig', $typeName);
+        }
+
+        $patterns[] = '@Karross/index/{fieldOrAssociation}.html.twig';
+
+        return $patterns;
     }
 }

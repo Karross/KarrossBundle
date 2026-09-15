@@ -2,6 +2,8 @@
 
 namespace Karross\Metadata\Collect;
 
+use Doctrine\ORM\Mapping\ClassMetadata as OrmClassMetadata;
+use Doctrine\ORM\Mapping\FieldMapping;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Karross\Actions\Action;
@@ -10,17 +12,15 @@ use Karross\Exceptions\EntityShortnameException;
 use Karross\Formatters\FormatterResolver;
 use Karross\Formatters\ValueFormatterInterface;
 use Karross\Metadata\Computed\AssociationMetadata;
+use Karross\Metadata\Computed\Cardinality;
 use Karross\Metadata\Computed\EntityMetadata;
 use Karross\Metadata\Computed\FieldMetadata;
-use Karross\Metadata\PropertyType;
-use ReflectionProperty;
 
 readonly class EntityMetadataBuilder
 {
     public function __construct(
         private ManagerRegistry $managerRegistry,
         private KarrossConfig $config,
-        private PropertyTypeDetector $typeDetector,
         private FormatterResolver $formatterResolver,
     ) {
     }
@@ -34,6 +34,10 @@ readonly class EntityMetadataBuilder
         $fqcnToSlugMap = [];
         foreach ($this->managerRegistry->getManagers() as $em) {
             foreach ($em->getMetadataFactory()->getAllMetadata() as $classMetadata) {
+                // getAllMetadata() types against the persistence interface; the
+                // real instance is the ORM one — guaranteed by the doctrine/orm
+                // requirement. The ORM type is what gives us getFieldMapping().
+                \assert($classMetadata instanceof OrmClassMetadata);
                 $slug = $this->resolveSlug($classMetadata, $this->config, $fqcnToSlugMap);
                 $entities[$classMetadata->getName()] = new EntityMetadata(
                     slug: $slug,
@@ -49,37 +53,41 @@ readonly class EntityMetadataBuilder
         return $entities;
     }
 
-    private function buildAssociations(string $entitySlug, ClassMetadata $classMetadata): array
+    /**
+     * @param OrmClassMetadata<object> $classMetadata
+     *
+     * @return array<string, AssociationMetadata>
+     */
+    private function buildAssociations(string $entitySlug, OrmClassMetadata $classMetadata): array
     {
         $associations = [];
         $reflectionClass = new \ReflectionClass($classMetadata->getName());
 
         foreach ($classMetadata->getAssociationNames() as $associationName) {
             $associationClass = $classMetadata->getAssociationTargetClass($associationName);
-            if (null === $associationClass) {
-                throw new \LogicException('Association class not found for '.$associationName);
-            }
             $associationMetadata = $this->managerRegistry->getManagerForClass($associationClass)->getClassMetadata($associationClass);
 
             $reflectionProperty = $reflectionClass->getProperty($associationName);
 
-            // Detect type
-            $type = $this->typeDetector->detect(
-                property: $reflectionProperty,
-                doctrineType: null,
-                isAssociation: true,
-            );
+            $cardinality = $classMetadata->isCollectionValuedAssociation($associationName)
+                ? Cardinality::TO_MANY
+                : Cardinality::TO_ONE;
+            $phpType = PropertyCollector::resolvePhpType($reflectionProperty);
 
-            // Resolve formatter
-            $formatter = $this->resolveFormatter($classMetadata->getName(), $associationName, $type);
+            $formatter = $this->resolveFormatter($classMetadata->getName(), $associationName, $phpType, null);
 
             $associations[$associationName] = new AssociationMetadata(
                 name: $associationName,
-                identifier: $associationMetadata->getIdentifier(),
                 fqcn: $associationClass,
-                type: $type,
+                phpType: $phpType,
+                doctrineType: null,
+                conflict: false,
+                identifier: $associationMetadata->getIdentifier(),
+                typeHierarchy: PropertyCollector::associationTypeHierarchy($cardinality),
                 formatter: $formatter,
                 formatterOptions: $this->config->entityPropertyFormatterOptions($classMetadata->getName(), $associationName),
+                cardinality: $cardinality,
+                widget: null,
                 entitySlug: $entitySlug,
             );
         }
@@ -87,37 +95,47 @@ readonly class EntityMetadataBuilder
         return $associations;
     }
 
-    private function buildFields(string $entitySlug, ClassMetadata $classMetadata): array
+    /**
+     * @param OrmClassMetadata<object> $classMetadata
+     *
+     * @return array<string, FieldMetadata>
+     */
+    private function buildFields(string $entitySlug, OrmClassMetadata $classMetadata): array
     {
         $fields = [];
         $reflectionClass = new \ReflectionClass($classMetadata->getName());
 
         foreach ($classMetadata->getFieldNames() as $fieldName) {
-            $doctrineType = $classMetadata->getTypeOfField($fieldName);
+            $fieldMapping = $classMetadata->getFieldMapping($fieldName);
 
             // Use recursive resolution for embedded fields (e.g., 'identity.firstname')
-            $reflectionProperty = $this->resolveReflectionProperty(
-                $reflectionClass,
-                $fieldName
-            );
+            $reflectionProperty = $this->resolveReflectionProperty($reflectionClass, $fieldName);
 
-            // Detect type
-            $type = $this->typeDetector->detect(
-                property: $reflectionProperty,
-                doctrineType: $doctrineType,
-                isAssociation: false,
-            );
+            $phpType = PropertyCollector::resolvePhpType($reflectionProperty);
 
-            // Resolve formatter
-            $formatter = $this->resolveFormatter($classMetadata->getName(), $fieldName, $type);
+            $formatter = $this->resolveFormatter($classMetadata->getName(), $fieldName, $phpType, $fieldMapping);
 
             $fields[$fieldName] = new FieldMetadata(
                 name: $fieldName,
                 fqcn: $classMetadata->getName(),
-                type: $type,
+                phpType: $phpType,
+                doctrineType: $fieldMapping->type,
+                conflict: PropertyCollector::isConflict($phpType, $fieldMapping),
+                identifier: [],
                 formatter: $formatter,
                 formatterOptions: $this->config->entityPropertyFormatterOptions($classMetadata->getName(), $fieldName),
+                typeHierarchy: PropertyCollector::buildTypeHierarchy($phpType, $fieldMapping),
                 entitySlug: $entitySlug,
+                length: $fieldMapping->length,
+                precision: $fieldMapping->precision,
+                scale: $fieldMapping->scale,
+                enumType: $fieldMapping->enumType,
+                unsigned: (bool) ($fieldMapping->options['unsigned'] ?? false),
+                fixed: (bool) ($fieldMapping->options['fixed'] ?? false),
+                nullable: (bool) $fieldMapping->nullable,
+                id: (bool) $fieldMapping->id,
+                version: (bool) $fieldMapping->version,
+                generated: null !== $fieldMapping->generated,
             );
         }
 
@@ -127,9 +145,10 @@ readonly class EntityMetadataBuilder
     /**
      * @return class-string<ValueFormatterInterface>
      */
-    private function resolveFormatter(string $fqcn, string $property, PropertyType $type): string
+    private function resolveFormatter(string $fqcn, string $property, ?string $phpType, ?FieldMapping $fieldMapping = null): string
     {
-        return $this->config->entityPropertyFormatter($fqcn, $property) ?? $this->formatterResolver->resolve($type);
+        return $this->config->entityPropertyFormatter($fqcn, $property)
+            ?? $this->formatterResolver->resolve($phpType, $fieldMapping);
     }
 
     /**
