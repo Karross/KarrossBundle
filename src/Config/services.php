@@ -17,21 +17,21 @@ use Karross\Formatters\IntlNumberFormatter;
 use Karross\Formatters\NotAvailableFormatter;
 use Karross\Formatters\StringFormatter;
 use Karross\Formatters\ValueTranslator;
-use Karross\Metadata\Collect\EntityMetadataBuilder;
-use Karross\Metadata\Collect\PropertyTypeDetector;
+use Karross\Metadata\Collect\ComputedMetadataBuilder;
+use Karross\Metadata\Collect\EntityTemplateResolverInterface;
+use Karross\Metadata\Collect\PropertyTemplateResolverInterface;
 use Karross\Metadata\Computed\EntityMetadataRegistry;
 use Karross\Responders\ResponderInterface;
 use Karross\Responders\ResponderManager;
 use Karross\Routes\RouteGenerator;
 use Karross\Routes\RouteLoader;
 use Karross\Routes\RoutePattern;
+use Karross\Twig\EntityTemplateResolver;
 use Karross\Twig\FieldLabelExtension;
 use Karross\Twig\HtmlLocaleExtension;
 use Karross\Twig\PropertyAccessorExtension;
+use Karross\Twig\PropertyTemplateResolver;
 use Karross\Twig\StringableExtension;
-use Karross\Twig\TemplateRegistry;
-use Karross\Twig\TemplateRegistryExtension;
-use Karross\Twig\TemplateResolver;
 use Karross\Twig\UrlBuilderExtension;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -87,19 +87,22 @@ return static function (ContainerConfigurator $configurator) {
         ->arg('$formatters', tagged_iterator('karross.formatter'));
 
     // Metadata
+    $services->alias(PropertyTemplateResolverInterface::class, PropertyTemplateResolver::class);
+    $services->alias(EntityTemplateResolverInterface::class, EntityTemplateResolver::class);
+
     $services
-        ->set(EntityMetadataBuilder::class)
+        ->set(ComputedMetadataBuilder::class)
         ->arg('$managerRegistry', service(ManagerRegistry::class))
         ->arg('$config', service(KarrossConfig::class))
-        ->arg('$formatterResolver', service(FormatterResolver::class));
+        ->arg('$formatterResolver', service(FormatterResolver::class))
+        ->arg('$propertyTemplateResolver', service(PropertyTemplateResolver::class))
+        ->arg('$entityTemplateResolver', service(EntityTemplateResolver::class));
 
     $services
         ->set(EntityMetadataRegistry::class)
         ->arg('$cache', service(CacheInterface::class))
-        ->arg('$builder', service(EntityMetadataBuilder::class))
+        ->arg('$builder', service(ComputedMetadataBuilder::class))
         ->arg('$debug', param('kernel.debug'));
-
-    $services->set(PropertyTypeDetector::class);
 
     // Responders
     $services
@@ -121,13 +124,8 @@ return static function (ContainerConfigurator $configurator) {
         ->tag('routing.loader');
 
     // Twig
-    $services->set(TemplateResolver::class);
-
-    $services
-        ->set(TemplateRegistry::class)
-        ->arg('$cache', service(CacheInterface::class))
-        ->arg('$templateResolver', service(TemplateResolver::class))
-        ->arg('$debug', param('kernel.debug'));
+    $services->set(EntityTemplateResolver::class);
+    $services->set(PropertyTemplateResolver::class);
 
     $services->set(StringableExtension::class);
 
@@ -141,10 +139,6 @@ return static function (ContainerConfigurator $configurator) {
     $services
         ->set(HtmlLocaleExtension::class)
         ->arg('$requestStack', service(RequestStack::class));
-
-    $services
-        ->set(TemplateRegistryExtension::class)
-        ->arg('$templateRegistry', service(TemplateRegistry::class));
 
     $services->set(UrlBuilderExtension::class);
 };

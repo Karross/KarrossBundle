@@ -94,7 +94,7 @@ karross:
    - "entity_article_items.html.twig" can override "items.html.twig" for the article entity.
    - "field_title_entity_article.html.twig" can override "field.html.twig" for the specific field "title" of the article entity.
 
-See `Karross/Twig/TemplateResolver.php` for an exhaustive list of template patterns that can be overridden, and with which precedence.
+See `Karross/Twig/EntityTemplateResolver.php` and `Karross/Twig/PropertyTemplateResolver.php` for the candidate patterns that can be overridden, and with which precedence. The resolution is computed once at build time and carried by the read-models (`EntityMetadata::$templates`, `PropertyMetadata::$templates`).
 
 ## Integration Points
 

@@ -2,7 +2,7 @@
 
 namespace Karross\Metadata\Computed;
 
-use Karross\Metadata\Collect\EntityMetadataBuilder;
+use Karross\Metadata\Collect\ComputedMetadataBuilder;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class EntityMetadataRegistry
@@ -11,7 +11,7 @@ class EntityMetadataRegistry
 
     public function __construct(
         private CacheInterface $cache,
-        private EntityMetadataBuilder $builder,
+        private ComputedMetadataBuilder $builder,
         bool $debug,
     ) {
         $this->cacheEnabled = !$debug;
@@ -33,5 +33,16 @@ class EntityMetadataRegistry
         }
 
         return $entityMetadata;
+    }
+
+    public function getBySlug(string $slug): EntityMetadata
+    {
+        foreach ($this->all() as $entityMetadata) {
+            if ($slug === $entityMetadata->slug) {
+                return $entityMetadata;
+            }
+        }
+
+        throw new \LogicException(\sprintf('No entity is managed by doctrine with the slug "%s".', $slug));
     }
 }

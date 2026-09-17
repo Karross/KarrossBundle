@@ -7,14 +7,16 @@ use Karross\Actions\Action;
 readonly class EntityMetadata
 {
     /**
-     * @param Action[]           $actions
-     * @param PropertyMetadata[] $properties
-     * @param string[]           $identifier
+     * @param Action[]                             $actions
+     * @param PropertyMetadata[]                   $properties
+     * @param array<string, array<string, string>> $templates  action value → role → resolved template name
+     * @param string[]                             $identifier
      */
     public function __construct(
         public string $slug,
         public array $actions,
         public array $properties,
+        public array $templates,
         private string $fqcn,
         private array $identifier,
     ) {
@@ -49,11 +51,6 @@ readonly class EntityMetadata
     public function getIdentifier(): array
     {
         return $this->identifier;
-    }
-
-    public function hasEmbeddedField(): bool
-    {
-        return $this->getMaxEmbeddedDepth() > 0;
     }
 
     public function getMaxEmbeddedDepth(): int

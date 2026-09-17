@@ -17,33 +17,29 @@ ignored:
       count: 1
     - rule: cyclomatic_complexity
       file: src/Formatters/FormatterResolver.php
-      message: 'Cyclomatic complexity too high: got 13 (max: 10)'
+      message: 'Cyclomatic complexity too high: got 27 (max: 10)'
       count: 1
     - rule: cyclomatic_complexity
-      file: src/Metadata/Collect/EntityMetadataBuilder.php
-      message: 'Cyclomatic complexity too high: got 23 (max: 10)'
+      file: src/Metadata/Collect/ComputedMetadataBuilder.php
+      message: 'Cyclomatic complexity too high: got 35 (max: 10)'
       count: 1
     - rule: max_lloc
-      file: src/Metadata/Collect/EntityMetadataBuilder.php
-      message: 'Logical lines of code too high : got 59 (max: 20)'
-      count: 1
-    - rule: cyclomatic_complexity
-      file: src/Metadata/Collect/PropertyTypeDetector.php
-      message: 'Cyclomatic complexity too high: got 54 (max: 10)'
-      count: 1
-    - rule: max_lloc
-      file: src/Metadata/Collect/PropertyTypeDetector.php
-      message: 'Logical lines of code too high : got 58 (max: 20)'
+      file: src/Metadata/Collect/ComputedMetadataBuilder.php
+      message: 'Logical lines of code too high : got 81 (max: 20)'
       count: 1
     - rule: cyclomatic_complexity
       file: src/Metadata/Computed/EntityMetadata.php
-      message: 'Cyclomatic complexity too high: got 19 (max: 10)'
+      message: 'Cyclomatic complexity too high: got 18 (max: 10)'
       count: 1
     - rule: max_lloc
       file: src/Metadata/Computed/EntityMetadata.php
-      message: 'Logical lines of code too high : got 25 (max: 20)'
+      message: 'Logical lines of code too high : got 24 (max: 20)'
       count: 1
     - rule: cyclomatic_complexity
-      file: src/Twig/TemplateResolver.php
-      message: 'Cyclomatic complexity too high: got 13 (max: 10)'
+      file: src/Twig/PropertyTemplateResolver.php
+      message: 'Cyclomatic complexity too high: got 21 (max: 10)'
+      count: 1
+    - rule: max_lloc
+      file: src/Twig/PropertyTemplateResolver.php
+      message: 'Logical lines of code too high : got 32 (max: 20)'
       count: 1
