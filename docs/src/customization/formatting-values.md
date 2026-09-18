@@ -18,10 +18,11 @@ Each property is rendered automatically from its detected type:
 | non-null unsupported value | `N/A` |
 | currency | needs configuration - see the currency formatter below |
 
-## Example: `true`/`false` becomes `Oui`/`Non`
+## Example: a nullable boolean renders `Oui`/`Non` (or stays empty)
 
-The `published` property of `Article` is a boolean and renders `true`/`false`
-by default. A French UI may want `Oui`/`Non` instead.
+The `premium` property of `Article` is a nullable boolean and renders
+`true`/`false` by default (empty when `null`). A French UI may want
+`Oui`/`Non` instead.
 
 1. Point the property to the `YesNoFormatter` and capitalize the first letter:
    ```yaml
@@ -29,13 +30,13 @@ by default. A French UI may want `Oui`/`Non` instead.
      entities:
        App\Entity\Article:
          properties:
-           published:
+           premium:
              formatter: Karross\Formatters\Boolean\YesNoFormatter
              formatter_options:
                ucfirst: true
    ```
-2. Result: the `published` cell renders `Oui` / `Non` (French locale) instead
-   of `true` / `false`.
+2. Result: the `premium` cell renders `Oui` / `Non` (French locale) instead
+   of `true` / `false`, and stays empty when the value is `null`.
 
 ### Formatter options
 

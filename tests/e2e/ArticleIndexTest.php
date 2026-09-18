@@ -3,6 +3,7 @@
 namespace E2e;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Playwright\Page\PageInterface;
 use Playwright\Symfony\Test\PlaywrightTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -66,6 +67,47 @@ final class ArticleIndexTest extends PlaywrightTestCase
         );
     }
 
+    public function testBooleanCellRendersTrueOrFalseForRawValues(): void
+    {
+        $this->createSchema();
+
+        $registry = self::getContainer()->get('doctrine');
+        \assert($registry instanceof ManagerRegistry);
+        $em = $registry->getManager();
+        $em->persist((new Article())->setTitle('First')->setPublished(true)->setStatus(Status::DRAFT)->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00')));
+        $em->persist((new Article())->setTitle('Second')->setPublished(false)->setStatus(Status::PUBLISHED)->setCreatedAt(new \DateTimeImmutable('2026-01-02 08:00:00')));
+        $em->flush();
+
+        $page = $this->visit('/admin/article');
+
+        $this->assertCellEquals($page, 'Title', 'First', row: 0);
+        $this->assertCellEquals($page, 'Published', 'true', row: 0);
+        $this->assertCellEquals($page, 'Title', 'Second', row: 1);
+        $this->assertCellEquals($page, 'Published', 'false', row: 1);
+    }
+
+    public function testNullableBooleanRendersEmptyForNullAndTrueOrFalseOtherwise(): void
+    {
+        $this->createSchema();
+
+        $registry = self::getContainer()->get('doctrine');
+        \assert($registry instanceof ManagerRegistry);
+        $em = $registry->getManager();
+        $em->persist((new Article())->setTitle('Undecided')->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00'))->setStatus(Status::DRAFT)->setPremium(null));
+        $em->persist((new Article())->setTitle('Premium')->setCreatedAt(new \DateTimeImmutable('2026-01-02 08:00:00'))->setStatus(Status::DRAFT)->setPremium(true));
+        $em->persist((new Article())->setTitle('Not premium')->setCreatedAt(new \DateTimeImmutable('2026-01-03 08:00:00'))->setStatus(Status::DRAFT)->setPremium(false));
+        $em->flush();
+
+        $page = $this->visit('/admin/article');
+
+        $this->assertCellEquals($page, 'Title', 'Undecided', row: 0);
+        $this->assertCellEquals($page, 'Premium', '', row: 0);
+        $this->assertCellEquals($page, 'Title', 'Premium', row: 1);
+        $this->assertCellEquals($page, 'Premium', 'true', row: 1);
+        $this->assertCellEquals($page, 'Title', 'Not premium', row: 2);
+        $this->assertCellEquals($page, 'Premium', 'false', row: 2);
+    }
+
     private function createSchema(): void
     {
         /** @var EntityManagerInterface $em */
@@ -74,12 +116,12 @@ final class ArticleIndexTest extends PlaywrightTestCase
         $schemaTool->createSchema($em->getMetadataFactory()->getAllMetadata());
     }
 
-    private function assertCellEquals(PageInterface $page, string $columnName, string $expected): void
+    private function assertCellEquals(PageInterface $page, string $columnName, string $expected, int $row = 0): void
     {
-        self::assertSame($expected, $this->cellForColumn($page, $columnName));
+        self::assertSame($expected, $this->cellForColumn($page, $columnName, $row));
     }
 
-    private function cellForColumn(PageInterface $page, string $columnName): string
+    private function cellForColumn(PageInterface $page, string $columnName, int $row = 0): string
     {
         $headers = $page->locator('table.k-table thead th');
 
@@ -92,9 +134,9 @@ final class ArticleIndexTest extends PlaywrightTestCase
         }
 
         self::assertNotNull($index, "Column '$columnName' not found in table header");
-        $row = $page->locator('table.k-table tbody tr')->first();
+        $line = $page->locator('table.k-table tbody tr')->nth($row);
 
-        return trim($row->locator('td')->nth($index)->innerText());
+        return trim($line->locator('td')->nth($index)->innerText());
     }
 
     private function formatDate(\DateTimeImmutable $value, bool $dateOnly = false): string

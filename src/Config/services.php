@@ -15,6 +15,7 @@ use Karross\Formatters\FormatterResolver;
 use Karross\Formatters\IntlCurrencyFormatter;
 use Karross\Formatters\IntlNumberFormatter;
 use Karross\Formatters\NotAvailableFormatter;
+use Karross\Formatters\Resolvers\BooleanFormatterResolver;
 use Karross\Formatters\StringFormatter;
 use Karross\Formatters\ValueTranslator;
 use Karross\Metadata\Collect\ComputedMetadataBuilder;
@@ -80,11 +81,13 @@ return static function (ContainerConfigurator $configurator) {
         ->set(TimeFormatter::class)
         ->set(DateTimeFormatter::class)
         ->set(NotAvailableFormatter::class)
+        ->set(BooleanFormatterResolver::class)
         ->set(ValueTranslator::class);
 
     $services
         ->set(FormatterResolver::class)
-        ->arg('$formatters', tagged_iterator('karross.formatter'));
+        ->arg('$formatters', tagged_iterator('karross.formatter'))
+        ->arg('$resolvers', tagged_iterator('karross.formatter.resolver'));
 
     // Metadata
     $services->alias(PropertyTemplateResolverInterface::class, PropertyTemplateResolver::class);

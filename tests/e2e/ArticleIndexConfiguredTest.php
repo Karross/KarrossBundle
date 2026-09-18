@@ -40,6 +40,7 @@ final class ArticleIndexConfiguredTest extends PlaywrightTestCase
             ->setTitle('Découverte de la Provence')
             ->setContent('Un joli contenu.')
             ->setPublished(true)
+            ->setPremium(true)
             ->setViewCount(42)
             ->setPrice('19.90')
             ->setCreatedAt(new \DateTimeImmutable('2026-03-05 15:30:00'))
@@ -72,8 +73,38 @@ final class ArticleIndexConfiguredTest extends PlaywrightTestCase
         $this->assertStringContainsString('42', $this->cellForColumn($page, 'Viewcount'));
         $this->assertPriceCellUsesLocaleAndCurrency($page, 'fr');
         $this->assertPriceCellUsesLocaleAndCurrency($this->visit('/en/dashboard/article'), 'en');
-        $this->assertCellEquals($this->visit('/fr/dashboard/article'), 'Published', 'Oui');
-        $this->assertCellEquals($this->visit('/en/dashboard/article'), 'Published', 'Yes');
+        // Out-of-the-box boolean formatter: `published` (non-nullable) renders true/false,
+        // following the request locale through the bundle's own value keys.
+        $this->assertCellEquals($this->visit('/fr/dashboard/article'), 'Published', 'vrai');
+        $this->assertCellEquals($this->visit('/en/dashboard/article'), 'Published', 'true');
+        // Configured nullable boolean: `premium` renders Oui/Non through YesNoFormatter.
+        $this->assertCellEquals($this->visit('/fr/dashboard/article'), 'Premium', 'Oui');
+        $this->assertCellEquals($this->visit('/en/dashboard/article'), 'Premium', 'Yes');
+    }
+
+    public function testNullableBooleanConfiguredWithYesNoRendersThreeStates(): void
+    {
+        $this->createSchema();
+
+        $em = self::getContainer()->get(EntityManagerInterface::class);
+        if (!$em instanceof EntityManagerInterface) {
+            throw new \RuntimeException('Doctrine EntityManager not available.');
+        }
+        $em->persist((new Article())->setTitle('Undecided')->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00'))->setStatus(Status::DRAFT)->setPremium(null));
+        $em->persist((new Article())->setTitle('Premium')->setCreatedAt(new \DateTimeImmutable('2026-01-02 08:00:00'))->setStatus(Status::DRAFT)->setPremium(true));
+        $em->persist((new Article())->setTitle('Not premium')->setCreatedAt(new \DateTimeImmutable('2026-01-03 08:00:00'))->setStatus(Status::DRAFT)->setPremium(false));
+        $em->flush();
+
+        $expected = [
+            '/fr/dashboard/article' => ['', 'Oui', 'Non'],
+            '/en/dashboard/article' => ['', 'Yes', 'No'],
+        ];
+        foreach ($expected as $url => $states) {
+            $page = $this->visit($url);
+            for ($row = 0; $row < 3; ++$row) {
+                $this->assertCellEquals($page, 'Premium', $states[$row], row: $row);
+            }
+        }
     }
 
     private function assertPriceCellUsesLocaleAndCurrency(PageInterface $page, string $locale): void
@@ -103,12 +134,12 @@ final class ArticleIndexConfiguredTest extends PlaywrightTestCase
         $this->assertCellEquals($page, 'Tags', $expected);
     }
 
-    private function assertCellEquals(PageInterface $page, string $columnName, string $expected): void
+    private function assertCellEquals(PageInterface $page, string $columnName, string $expected, int $row = 0): void
     {
-        self::assertSame($expected, $this->cellForColumn($page, $columnName));
+        self::assertSame($expected, $this->cellForColumn($page, $columnName, $row));
     }
 
-    private function cellForColumn(PageInterface $page, string $columnName): string
+    private function cellForColumn(PageInterface $page, string $columnName, int $row = 0): string
     {
         $headers = $page->locator('table.k-table thead th');
 
@@ -121,9 +152,9 @@ final class ArticleIndexConfiguredTest extends PlaywrightTestCase
         }
 
         self::assertNotNull($index, "Column '$columnName' not found in table header");
-        $row = $page->locator('table.k-table tbody tr')->first();
+        $line = $page->locator('table.k-table tbody tr')->nth($row);
 
-        return trim($row->locator('td')->nth($index)->innerText());
+        return trim($line->locator('td')->nth($index)->innerText());
     }
 
     private function formatDateWith(string $locale, \DateTimeImmutable $value): string

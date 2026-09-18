@@ -14,10 +14,10 @@ class TrueFalseFormatter implements ValueFormatterInterface
     {
     }
 
-    public function format(mixed $value, ?FormattingContext $context = null): string
+    public function format(mixed $value, ?FormattingContext $context = null): ?string
     {
         if (null === $value) {
-            return '';
+            return null;
         }
 
         return $this->valueTranslator->translate($value ? 'true' : 'false', $context);

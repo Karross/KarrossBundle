@@ -2,6 +2,7 @@
 
 namespace Integration\Formatters;
 
+use Karross\Formatters\Boolean\TrueFalseFormatter;
 use Karross\Formatters\Boolean\YesNoFormatter;
 use Karross\Formatters\FormatterResolver;
 use Karross\Formatters\FormattingContext;
@@ -61,19 +62,25 @@ final class ValueTranslationTest extends TestCase
             __DIR__.'/../TestedApp/config/karross_custom.php',
             __DIR__.'/../TestedApp/config/framework_locales.php',
         ]);
-        $formatter = $this->formatter($container, $metadata, 'published');
+        $formatter = $this->formatter($container, $metadata, 'premium');
 
+        $premium = $metadata->getProperties()['premium'];
+        self::assertInstanceOf(PropertyMetadata::class, $premium);
+        self::assertSame(YesNoFormatter::class, $premium->formatter);
+
+        // The non-nullable `published` bool stays on the out-of-the-box TrueFalseFormatter.
         $published = $metadata->getProperties()['published'];
         self::assertInstanceOf(PropertyMetadata::class, $published);
-        self::assertSame(YesNoFormatter::class, $published->formatter);
+        self::assertSame(TrueFalseFormatter::class, $published->formatter);
 
         // Raw (ucfirst off) — the formatter applies the k_value.yes/no keys.
         // Capitalisation is a presentation concern handled by the rendering context (ucfirst).
-        self::assertSame('yes', $formatter->format(true, $this->context('en', $metadata, 'published')));
-        self::assertSame('oui', $formatter->format(true, $this->context('fr', $metadata, 'published')));
+        self::assertSame('yes', $formatter->format(true, $this->context('en', $metadata, 'premium')));
+        self::assertSame('oui', $formatter->format(true, $this->context('fr', $metadata, 'premium')));
+        self::assertNull($formatter->format(null, $this->context('fr', $metadata, 'premium')));
 
         // With ucfirst enabled locally on the property, the same phrase is capitalised.
-        $context = $this->context('fr', $metadata, 'published')->with(ucfirst: true);
+        $context = $this->context('fr', $metadata, 'premium')->with(ucfirst: true);
         self::assertSame('Oui', $formatter->format(true, $context));
         self::assertSame('Non', $formatter->format(false, $context));
     }

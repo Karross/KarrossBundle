@@ -28,7 +28,7 @@ class PropertyAccessorExtension
     }
 
     #[AsTwigFunction('k_formatted_value')]
-    public function getFormattedValue($entity, PropertyMetadata $property): string
+    public function getFormattedValue($entity, PropertyMetadata $property): ?string
     {
         try {
             $value = $this->accessor->getValue($entity, $property->name);

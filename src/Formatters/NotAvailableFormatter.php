@@ -12,8 +12,12 @@ class NotAvailableFormatter implements ValueFormatterInterface
     {
     }
 
-    public function format(mixed $value, ?FormattingContext $context = null): string
+    public function format(mixed $value, ?FormattingContext $context = null): ?string
     {
+        if (null === $value) {
+            return null;
+        }
+
         return $this->translator->trans('k_index_value.not_supported', [], 'Karross');
     }
 }
