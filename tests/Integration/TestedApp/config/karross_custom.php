@@ -20,7 +20,7 @@ return static function (ContainerConfigurator $config) {
                         'formatter' => IntlCurrencyFormatter::class,
                         'formatter_options' => ['currency' => 'EUR'],
                     ],
-                    'published' => [
+                    'premium' => [
                         'formatter' => YesNoFormatter::class,
                         'formatter_options' => ['ucfirst' => true],
                     ],

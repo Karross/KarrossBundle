@@ -31,6 +31,7 @@ final class MetadataCollectTest extends TestCase
             'title' => StringFormatter::class,
             'content' => StringFormatter::class,
             'published' => TrueFalseFormatter::class,
+            'premium' => TrueFalseFormatter::class,
             'viewCount' => IntlNumberFormatter::class,
             'price' => StringFormatter::class,
             'createdAt' => DateTimeFormatter::class,

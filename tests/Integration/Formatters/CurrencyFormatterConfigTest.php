@@ -42,9 +42,13 @@ final class CurrencyFormatterConfigTest extends TestCase
             new CurrencyRepository(),
         );
 
-        self::assertStringContainsString('19,90', $formatter->format('19.90', FormattingContext::forLocale('fr', 'USD')));
-        self::assertStringContainsString('$US', $formatter->format('19.90', FormattingContext::forLocale('fr', 'USD')));
+        $fr = $formatter->format('19.90', FormattingContext::forLocale('fr', 'USD'));
         $en = $formatter->format('19.90', FormattingContext::forLocale('en', 'EUR'));
+
+        self::assertNotNull($fr);
+        self::assertNotNull($en);
+        self::assertStringContainsString('19,90', $fr);
+        self::assertStringContainsString('$US', $fr);
         self::assertStringContainsString('€', $en);
         self::assertStringContainsString('.', $en);
     }

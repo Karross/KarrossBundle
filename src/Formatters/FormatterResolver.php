@@ -4,10 +4,10 @@ namespace Karross\Formatters;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\FieldMapping;
-use Karross\Formatters\Boolean\TrueFalseFormatter;
 use Karross\Formatters\DateTime\DateFormatter;
 use Karross\Formatters\DateTime\DateTimeFormatter;
 use Karross\Formatters\DateTime\TimeFormatter;
+use Karross\Formatters\Resolvers\FormatterResolverInterface;
 
 /**
  * Resolves the formatter for a property from its gathered facts.
@@ -22,13 +22,21 @@ final class FormatterResolver
     /** @var array<class-string<ValueFormatterInterface>, ValueFormatterInterface> */
     private array $formatters = [];
 
+    /** @var list<FormatterResolverInterface> */
+    private array $resolvers = [];
+
     /**
-     * @param iterable<ValueFormatterInterface> $formatters
+     * @param iterable<ValueFormatterInterface>    $formatters
+     * @param iterable<FormatterResolverInterface> $resolvers
      */
-    public function __construct(iterable $formatters)
+    public function __construct(iterable $formatters, iterable $resolvers)
     {
         foreach ($formatters as $formatter) {
             $this->formatters[$formatter::class] = $formatter;
+        }
+
+        foreach ($resolvers as $resolver) {
+            $this->resolvers[] = $resolver;
         }
     }
 
@@ -36,6 +44,20 @@ final class FormatterResolver
      * @return class-string<ValueFormatterInterface>
      */
     public function resolve(?string $phpType, ?FieldMapping $fieldMapping = null): string
+    {
+        foreach ($this->resolvers as $resolver) {
+            if ($resolver->accept($phpType, $fieldMapping)) {
+                return $resolver->resolve($phpType, $fieldMapping);
+            }
+        }
+
+        return $this->resolveFallback($phpType, $fieldMapping);
+    }
+
+    /**
+     * @return class-string<ValueFormatterInterface>
+     */
+    private function resolveFallback(?string $phpType, ?FieldMapping $fieldMapping = null): string
     {
         $doctrineType = $fieldMapping?->type;
         $enumType = $fieldMapping?->enumType;
@@ -46,7 +68,6 @@ final class FormatterResolver
 
         if (null !== $phpType) {
             return match ($phpType) {
-                'bool' => TrueFalseFormatter::class,
                 'int', 'float' => IntlNumberFormatter::class,
                 'string' => StringFormatter::class,
                 'array' => NotAvailableFormatter::class,
@@ -88,7 +109,6 @@ final class FormatterResolver
         }
 
         return match ($doctrineType) {
-            Types::BOOLEAN => TrueFalseFormatter::class,
             Types::SMALLINT, Types::INTEGER, Types::BIGINT, Types::DECIMAL, Types::FLOAT => IntlNumberFormatter::class,
             Types::STRING, Types::ASCII_STRING, Types::GUID, Types::TEXT => StringFormatter::class,
             Types::DATE_MUTABLE, Types::DATE_IMMUTABLE => DateFormatter::class,

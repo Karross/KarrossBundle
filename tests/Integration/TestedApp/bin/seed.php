@@ -28,6 +28,7 @@ $articles = [
         ->setTitle('Découverte de la Provence')
         ->setContent('Un joli contenu.')
         ->setPublished(true)
+        ->setPremium(true)
         ->setViewCount(42)
         ->setPrice('19.90')
         ->setCreatedAt(new DateTimeImmutable('2026-03-05 15:30:00'))
@@ -39,9 +40,18 @@ $articles = [
         ->setTitle('Week-end à Aix-en-Provence')
         ->setContent('Culture et calissons.')
         ->setPublished(false)
+        ->setPremium(false)
         ->setViewCount(7)
         ->setCreatedAt(new DateTimeImmutable('2026-08-20 10:00:00'))
         ->setStatus(Status::DRAFT),
+    (new Article())
+        ->setTitle('Les Calanques de Marseille')
+        ->setContent('Escapade nature entre terre et mer.')
+        ->setPublished(true)
+        ->setPremium(null)
+        ->setViewCount(3)
+        ->setCreatedAt(new DateTimeImmutable('2026-09-01 09:00:00'))
+        ->setStatus(Status::PUBLISHED),
 ];
 
 $em->persist($category);

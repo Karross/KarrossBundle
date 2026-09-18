@@ -28,6 +28,9 @@ class Article
     #[ORM\Column(type: 'boolean')]
     private bool $published = false;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $premium = null;
+
     #[ORM\Column(type: 'integer')]
     private int $viewCount = 0;
 
@@ -89,6 +92,18 @@ class Article
     public function setPublished(bool $published): self
     {
         $this->published = $published;
+
+        return $this;
+    }
+
+    public function isPremium(): ?bool
+    {
+        return $this->premium;
+    }
+
+    public function setPremium(?bool $premium): self
+    {
+        $this->premium = $premium;
 
         return $this;
     }

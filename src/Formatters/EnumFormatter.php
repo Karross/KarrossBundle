@@ -11,10 +11,10 @@ class EnumFormatter implements ValueFormatterInterface
     {
     }
 
-    public function format(mixed $value, ?FormattingContext $context = null): string
+    public function format(mixed $value, ?FormattingContext $context = null): ?string
     {
         if (null === $value) {
-            return '';
+            return null;
         }
 
         if (!$value instanceof \UnitEnum) {

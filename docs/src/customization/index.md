@@ -48,7 +48,7 @@ karross:
           formatter: Karross\Formatters\IntlCurrencyFormatter
           formatter_options:
             currency: EUR
-        published:
+        premium:
           formatter: Karross\Formatters\Boolean\YesNoFormatter
           formatter_options:
             ucfirst: true
