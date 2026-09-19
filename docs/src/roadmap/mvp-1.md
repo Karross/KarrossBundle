@@ -68,7 +68,7 @@
 </details>
 
 <details class="k-ticket k-ticket--blue">
-  <summary>Collect &amp; Computed <span class="k-status k-status--blue">Done</span></summary>
+  <summary>6. Collect &amp; Computed <span class="k-status k-status--blue">Done</span></summary>
 
   <table class="k-ticket">
     <tbody>
@@ -89,49 +89,23 @@
   </table>
 </details>
 
-<details class="k-ticket k-ticket--green">
-  <summary>Resolvers en chaîne de responsabilité + BooleanFormatterResolver <span class="k-status k-status--green">Ready</span></summary>
+<details class="k-ticket k-ticket--blue">
+  <summary>7. Formatter resolvers — chain of responsibility with a Boolean link <span class="k-status k-status--blue">Done</span></summary>
+</details>
 
-  <table class="k-ticket">
-    <tbody>
-      <tr><th>Existing.</th><td><code>FormatterResolver::resolve()</code> centralise toute la décision formatter dans un seul <code>match</code> (PHP gagne, famille datetime raffinée par Doctrine, enum, <code>__toString</code>, fallback Doctrine). Boolean est un cas parmi d'autres : <code>phpType 'bool'</code> → <code>TrueFalseFormatter</code>, <code>doctrineType boolean</code> → <code>TrueFalseFormatter</code>. Chaque nouveau cas de type gonfle le <code>match</code>.</td></tr>
-      <tr><th>Expected.</th><td>La décision de type est décomposée en <strong>maillons de responsabilité</strong> : chaque famille de types est gérée par son propre résolveur dans <code>Formatters\Resolvers</code>, qui expose <code>accept()</code> (ce cas est le mien ?) et <code>resolve()</code> (le formatter, sans risque d'échec). <code>FormatterResolver</code> interroge les maillons enregistrés (<code>tagged_iterator('karross.formatter.resolver')</code>, même mécanique que les formatteurs) ; le premier acceptant tranche, sinon la logique actuelle s'applique, avec <code>NotAvailableFormatter</code> en dernier recours. Le comportement de rendu est inchangé.<br>
-        Le premier maillon, <code>BooleanFormatterResolver</code>, couvre toutes les façons de déclarer un booléen (PHP <code>bool</code>, nullable ou non ; Doctrine <code>boolean</code>) et renvoie <code>TrueFalseFormatter</code>. Il sert de gabarit aux familles suivantes. La surcharge par configuration (<code>entityPropertyFormatter</code>) reste prioritaire.</td></tr>
-      <tr><th>Prerequisites.</th><td>Collect &amp; Computed (faits <code>phpType</code>/<code>fieldMapping</code> transitant au build).</td></tr>
-      <tr><th>Plan.</th><td><ol>
-        <li>Créer l'interface <code>src/Formatters/Resolvers/FormatterResolverInterface</code> : <code>accept(?string $phpType, ?FieldMapping $fieldMapping = null): bool</code> et <code>resolve(...): class-string&lt;ValueFormatterInterface&gt;</code>.</li>
-        <li>Créer le premier maillon <code>src/Formatters/Resolvers/BooleanFormatterResolver</code> : <code>accept()</code> = <code>'bool' === phpType</code> ou <code>doctrineType boolean</code> ; <code>resolve()</code> → <code>TrueFalseFormatter::class</code>.</li>
-        <li>Refactorer <code>FormatterResolver</code> : nouveau paramètre de constructeur <code>iterable $resolvers</code> (maillons taggés) ; <code>resolve()</code> itère — premier <code>accept()</code> gagnant → <code>resolve()</code>, sinon logique actuelle privée des deux cas bool, <code>NotAvailableFormatter</code> en dernier recours. <code>get()</code> inchangé.</li>
-        <li>Câbler la DI dans <code>src/Config/services.php</code> : tag <code>karross.formatter.resolver</code> sur le maillon et <code>arg('$resolvers', tagged_iterator('karross.formatter.resolver'))</code> sur le resolver. Les formatteurs sont déclarés par <code>set()</code> explicites (pas de <code>load()</code> de dossier) → le service <code>BooleanFormatterResolver</code> est aussi déclaré par <code>set()</code> pour que le tag s'applique.</li>
-        <li>Tester en <strong>fonctionnel uniquement</strong> (pas de tests unitaires) : <code>MetadataCollectTest</code> = gardien de la map sur les vraies entités (bool non-nullable + <code>?bool</code> <code>premium</code> → <code>TrueFalseFormatter</code>, le résiduel pour les autres types) ; E2E trois états sur <code>premium</code> : <code>true</code>/<code>false</code>/<code>null</code> → cellules <code>true</code>/<code>false</code>/vide par défaut, et <code>Oui</code>/<code>Non</code>/vide avec <code>YesNoFormatter</code> dans l'app configurée.</li>
-        <li><strong>Realized.</strong> <code>all-check</code> green — 43 tests / 282 assertions (integration 30, E2E 13), PHPStan 84, ast-metrics 11 (incl. <code>FormatterResolver</code> 29 cyclomatic + 26 lloc: cost accepted for the chain — <code>BooleanFormatterResolver</code> kept thin, the residual (PHP + Doctrine matches) will be split out by the following case tickets). Functional-only coverage (review guidance: the chain and null unit tests were removed): <code>MetadataCollectTest</code> guards the real map (non-nullable <code>bool</code> + <code>?bool</code> <code>premium</code> → <code>TrueFalseFormatter</code>, the residual for the other types); E2E covers the three states of the <code>?bool</code> <code>premium</code> (<code>true</code>/<code>false</code>/<code>null</code> → <code>true</code>/<code>false</code>/empty) out of the box — and the configured app exercises the two boolean formatters in one demo: <code>published</code> (non-nullable) stays on the default <code>true</code>/<code>false</code> while <code>premium</code> (nullable) carries the configured <code>Oui</code>/<code>Non</code>/empty. The resolver fallback method is named <code>resolveFallback()</code> (no link accepts → residual fallback, <code>NotAvailableFormatter</code> as the safety net). DI trap fixed here: the service must be declared through explicit <code>set()</code>, otherwise the tag is never read (formatters are not loaded by <code>load()</code>). Review: the <code>null</code> contract was fixed — a formatter never rewrites <code>null</code>, it passes it through; interface <code>ValueFormatterInterface::format(): ?string</code> — the rendering mechanism (<code>getFormattedValue</code> on the Twig side) still needs a separate rework, recorded as a « to reconsider » lead in the project memory.</li>
-      </ol></td></tr>
-    </tbody>
-  </table>
+<details class="k-ticket k-ticket--blue">
+  <summary>8. Integer — integer formatting rule <span class="k-status k-status--blue">Done</span></summary>
 </details>
 
 <details class="k-ticket k-ticket--red">
-  <summary>Integer — cas de lecture <span class="k-status k-status--red">Proposed</span></summary>
+  <summary>Float — maillon « Float » &amp; cas de lecture <span class="k-status k-status--red">Proposed</span></summary>
 
   <table class="k-ticket">
     <tbody>
-      <tr><th>Existing.</th><td><code>int</code> → <code>PropertyType::Integer</code> → <code>IntlNumberFormatter</code> ; Doctrine <code>smallint/integer/bigint</code> s'effondrent en Integer — taille et signe perdus.</td></tr>
-      <tr><th>Expected.</th><td>Traits de taille portés par le <code>PropertyMetadata</code> (<code>smallint</code>/<code>integer</code>/<code>bigint</code> → bornes pour le futur widget number), <code>unsigned</code>, <code>id</code>/<code>version</code>/<code>generated</code> = indicateurs read-only ; scale absente (jamais de décimales) ; non typé → Doctrine seul.</td></tr>
-      <tr><th>Prerequisites.</th><td>Collect &amp; Computed.</td></tr>
-      <tr><th>Analysis.</th><td>Smallint vs bigint est la distinction que le widget exploitera (contrainte de bornes), pas le fait d'être int — exactement la granularité que la vue 1-to-1 enum→formatter écrasait.</td></tr>
-    </tbody>
-  </table>
-</details>
-
-<details class="k-ticket k-ticket--red">
-  <summary>Float — cas de lecture <span class="k-status k-status--red">Proposed</span></summary>
-
-  <table class="k-ticket">
-    <tbody>
-      <tr><th>Existing.</th><td><code>float</code> → <code>PropertyType::Float</code> → <code>IntlNumberFormatter</code> ; <code>scale</code>/<code>precision</code> DECIMAL jetés.</td></tr>
-      <tr><th>Expected.</th><td>Traits <code>scale</code>/<code>precision</code> portés par le <code>PropertyMetadata</code> alimentent <code>IntlNumberFormatter</code> (DECIMAL(10,2) → exactement 2 décimales) ; futur widget number <code>step</code> issu du scale.</td></tr>
-      <tr><th>Prerequisites.</th><td>Collect &amp; Computed.</td></tr>
-      <tr><th>Analysis.</th><td>Scale = raffinement le plus critique (sans lui, 3.14 ou 3.140000 selon la représentation). Le maillon Float lit le <code>scale</code> porté par le <code>PropertyMetadata</code> — pas de multiplication de cases enum.</td></tr>
+      <tr><th>Existing.</th><td><code>IntlNumberFormatter</code> sert les décimaux via le <strong>fallback résiduel</strong> (match PHP <code>'float'</code>, match Doctrine <code>decimal/float</code>) ; le <code>scale</code> de colonne n'est jamais exploité au rendu.</td></tr>
+      <tr><th>Expected.</th><td>Maillon <code>FloatFormatterResolver</code> : accepte PHP <code>float</code> (typé, nullable, union) <strong>et</strong>, PHP muet, Doctrine <code>decimal/float</code> hors <code>enumType</code> ; exclut les cas booléens ; <code>resolve()</code> → <code>IntlNumberFormatter</code>. <strong>Zéro changement de comportement.</strong> Le <code>scale</code> n'a de sens que pour cette famille fractionnaire : il sera exploité quand un consommateur existera (formatteur fractionnaire ou options portées par le build) — pas avant.</td></tr>
+      <tr><th>Prerequisites.</th><td>Collect &amp; Computed + Formatter resolvers — chain of responsibility with a Boolean link.</td></tr>
+      <tr><th>Analysis.</th><td>Maillon <strong>séparé du maillon « Integer »</strong> (décision 2026-09-19) : le scale est un fait propre à la famille fractionnaire, les bornes à la famille entière — deux familles de rendu distinctes (fraction vs jamais de fraction), même formatteur aujourd'hui, seams d'évolution indépendantes. Gardes d'exclusivité identiques au maillon Integer : <code>enumType</code> non-nul → pas moi ; <code>boolean</code> → pas moi ; propriété typée non-<code>float</code> → pas moi (PHP gagne). Le décimale typé <code>string</code> (motif monétaire, ex. <code>price</code>) reste hors de la famille numérique : string PHP gagne. NB : la chaîne ne peut pas transporter le scale (contrat class-string) — il vivra au build (facts → options/formatter) quand un consommateur exigera.</td></tr>
     </tbody>
   </table>
 </details>

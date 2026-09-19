@@ -22,6 +22,7 @@ make qa             # complexity/volume gate only (ast-metrics)
 make css-check      # browser CSS compatibility gate only (stylelint + Baseline)
 make npm-install    # install the npm tooling (stylelint) — once, after a fresh clone
 make serve          # serve the demo apps (Ctrl-C to stop)
+make cache-clear    # drop the Symfony kernel caches (prod-like kernels never check freshness)
 ```
 
 `make all-check` must be green before submitting a PR.

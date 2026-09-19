@@ -30,6 +30,8 @@ $articles = [
         ->setPublished(true)
         ->setPremium(true)
         ->setViewCount(42)
+        ->setSortOrder('1234')
+        ->setBigCounter('12345')
         ->setPrice('19.90')
         ->setCreatedAt(new DateTimeImmutable('2026-03-05 15:30:00'))
         ->setStatus(Status::PUBLISHED)
@@ -42,6 +44,8 @@ $articles = [
         ->setPublished(false)
         ->setPremium(false)
         ->setViewCount(7)
+        ->setSortOrder('7')
+        ->setBigCounter('987654')
         ->setCreatedAt(new DateTimeImmutable('2026-08-20 10:00:00'))
         ->setStatus(Status::DRAFT),
     (new Article())

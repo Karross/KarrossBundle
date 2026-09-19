@@ -34,6 +34,12 @@ class Article
     #[ORM\Column(type: 'integer')]
     private int $viewCount = 0;
 
+    #[ORM\Column(type: 'integer')]
+    private string $sortOrder = '0';
+
+    #[ORM\Column(type: 'bigint')]
+    private string $bigCounter = '0';
+
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
     private ?string $price = null;
 
@@ -116,6 +122,30 @@ class Article
     public function setViewCount(int $viewCount): self
     {
         $this->viewCount = $viewCount;
+
+        return $this;
+    }
+
+    public function getSortOrder(): string
+    {
+        return $this->sortOrder;
+    }
+
+    public function setSortOrder(string $sortOrder): self
+    {
+        $this->sortOrder = $sortOrder;
+
+        return $this;
+    }
+
+    public function getBigCounter(): string
+    {
+        return $this->bigCounter;
+    }
+
+    public function setBigCounter(string $bigCounter): self
+    {
+        $this->bigCounter = $bigCounter;
 
         return $this;
     }

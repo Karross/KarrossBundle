@@ -1,4 +1,4 @@
-.PHONY: build install update npm-install test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check qa css-check all-fix all-check check-commit-message install-hooks seed serve
+.PHONY: build install update npm-install test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check qa css-check all-fix all-check check-commit-message install-hooks seed serve cache-clear
 
 # (Re)build the Docker image (when Dockerfile or composer.json change)
 build:
@@ -69,6 +69,12 @@ all-fix: cs-fix
 
 # Run every checker in order (style, static analysis, complexity, CSS compat, tests)
 all-check: css-check cs-fix-check phpstan qa test
+
+# Clear the Symfony kernel caches (var/cache) inside the container
+# (prod-like kernels never check freshness — a stale compiled container
+# survives code changes until this runs)
+cache-clear:
+	docker compose run --rm php rm -rf var/cache
 
 # Open a shell inside the container
 bash:

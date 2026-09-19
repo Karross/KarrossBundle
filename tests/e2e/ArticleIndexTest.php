@@ -38,6 +38,8 @@ final class ArticleIndexTest extends PlaywrightTestCase
             ->setContent('Un joli contenu.')
             ->setPublished(true)
             ->setViewCount(42)
+            ->setSortOrder('1234')
+            ->setBigCounter('12345')
             ->setPrice('19.90')
             ->setCreatedAt(new \DateTimeImmutable('2026-03-05 15:30:00'))
             ->setStatus(Status::PUBLISHED)
@@ -53,6 +55,8 @@ final class ArticleIndexTest extends PlaywrightTestCase
         $this->assertCellEquals($page, 'Title', 'Découverte de la Provence');
         $this->assertCellEquals($page, 'Published', 'true');
         $this->assertCellEquals($page, 'Viewcount', '42');
+        $this->assertCellEquals($page, 'Sortorder', '1,234');
+        $this->assertCellEquals($page, 'Bigcounter', '12,345');
         $this->assertCellEquals($page, 'Status', 'published');
 
         $this->assertCellEquals(

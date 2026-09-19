@@ -16,6 +16,7 @@ use Karross\Formatters\IntlCurrencyFormatter;
 use Karross\Formatters\IntlNumberFormatter;
 use Karross\Formatters\NotAvailableFormatter;
 use Karross\Formatters\Resolvers\BooleanFormatterResolver;
+use Karross\Formatters\Resolvers\IntegerFormatterResolver;
 use Karross\Formatters\StringFormatter;
 use Karross\Formatters\ValueTranslator;
 use Karross\Metadata\Collect\ComputedMetadataBuilder;
@@ -82,6 +83,7 @@ return static function (ContainerConfigurator $configurator) {
         ->set(DateTimeFormatter::class)
         ->set(NotAvailableFormatter::class)
         ->set(BooleanFormatterResolver::class)
+        ->set(IntegerFormatterResolver::class)
         ->set(ValueTranslator::class);
 
     $services
