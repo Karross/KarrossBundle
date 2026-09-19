@@ -10,7 +10,7 @@ use Twig\Environment;
 
 class TwigResponder implements ResponderInterface
 {
-    public function __construct(private Environment $twig, private KarrossConfig $config, private EntityMetadataRegistry $entityMetadataRegistry)
+    public function __construct(private readonly Environment $twig, private readonly KarrossConfig $config, private readonly EntityMetadataRegistry $entityMetadataRegistry)
     {
     }
 

@@ -6,7 +6,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final readonly class ValueTranslator
 {
-    public const DOMAIN = 'Karross';
+    public const string DOMAIN = 'Karross';
 
     public function __construct(private TranslatorInterface $translator)
     {

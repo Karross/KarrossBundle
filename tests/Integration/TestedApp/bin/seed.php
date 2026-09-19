@@ -21,10 +21,10 @@ $schemaTool = new SchemaTool($em);
 $schemaTool->dropSchema($em->getMetadataFactory()->getAllMetadata());
 $schemaTool->createSchema($em->getMetadataFactory()->getAllMetadata());
 
-$category = (new Category())->setName('Lifestyle');
+$category = new Category()->setName('Lifestyle');
 
 $articles = [
-    (new Article())
+    new Article()
         ->setTitle('Découverte de la Provence')
         ->setContent('Un joli contenu.')
         ->setPublished(true)
@@ -38,7 +38,7 @@ $articles = [
         ->setTags(['tourisme', 'nature'])
         ->setScheduledDate(new DateTimeImmutable('2026-06-01'))
         ->setPublishedAt(new DateTimeImmutable('2026-03-06 09:00:00')),
-    (new Article())
+    new Article()
         ->setTitle('Week-end à Aix-en-Provence')
         ->setContent('Culture et calissons.')
         ->setPublished(false)
@@ -48,7 +48,7 @@ $articles = [
         ->setBigCounter('987654')
         ->setCreatedAt(new DateTimeImmutable('2026-08-20 10:00:00'))
         ->setStatus(Status::DRAFT),
-    (new Article())
+    new Article()
         ->setTitle('Les Calanques de Marseille')
         ->setContent('Escapade nature entre terre et mer.')
         ->setPublished(true)

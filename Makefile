@@ -1,4 +1,4 @@
-.PHONY: build install update npm-install test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check qa css-check all-fix all-check check-commit-message install-hooks seed serve cache-clear
+.PHONY: build install update npm-install test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check qa css-check rector rector-fix all-fix all-check check-commit-message install-hooks seed serve cache-clear
 
 # (Re)build the Docker image (when Dockerfile or composer.json change)
 build:
@@ -64,11 +64,19 @@ install-hooks:
 	git config core.hooksPath hooks
 	git --version >/dev/null && echo "commit-msg hook installed (core.hooksPath=hooks)"
 
-# Run every auto-fixable tool (code style, ...)
-all-fix: cs-fix
+# Rector refactoring check (dry-run, fails on any pending change)
+rector:
+	docker compose run --rm php vendor/bin/rector process --dry-run
 
-# Run every checker in order (style, static analysis, complexity, CSS compat, tests)
-all-check: css-check cs-fix-check phpstan qa test
+# Apply Rector refactorings
+rector-fix:
+	docker compose run --rm php vendor/bin/rector process
+
+# Run every auto-fixable tool (rector first, code style normalizes its output)
+all-fix: rector-fix cs-fix
+
+# Run every checker in order (style, refactoring, static analysis, complexity, CSS compat, tests)
+all-check: css-check cs-fix-check rector phpstan qa test
 
 # Clear the Symfony kernel caches (var/cache) inside the container
 # (prod-like kernels never check freshness — a stale compiled container

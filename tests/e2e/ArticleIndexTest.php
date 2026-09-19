@@ -33,7 +33,7 @@ final class ArticleIndexTest extends PlaywrightTestCase
     {
         $this->createSchema();
 
-        $article = (new Article())
+        $article = new Article()
             ->setTitle('Découverte de la Provence')
             ->setContent('Un joli contenu.')
             ->setPublished(true)
@@ -78,8 +78,8 @@ final class ArticleIndexTest extends PlaywrightTestCase
         $registry = self::getContainer()->get('doctrine');
         \assert($registry instanceof ManagerRegistry);
         $em = $registry->getManager();
-        $em->persist((new Article())->setTitle('First')->setPublished(true)->setStatus(Status::DRAFT)->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00')));
-        $em->persist((new Article())->setTitle('Second')->setPublished(false)->setStatus(Status::PUBLISHED)->setCreatedAt(new \DateTimeImmutable('2026-01-02 08:00:00')));
+        $em->persist(new Article()->setTitle('First')->setPublished(true)->setStatus(Status::DRAFT)->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00')));
+        $em->persist(new Article()->setTitle('Second')->setPublished(false)->setStatus(Status::PUBLISHED)->setCreatedAt(new \DateTimeImmutable('2026-01-02 08:00:00')));
         $em->flush();
 
         $page = $this->visit('/admin/article');
@@ -97,9 +97,9 @@ final class ArticleIndexTest extends PlaywrightTestCase
         $registry = self::getContainer()->get('doctrine');
         \assert($registry instanceof ManagerRegistry);
         $em = $registry->getManager();
-        $em->persist((new Article())->setTitle('Undecided')->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00'))->setStatus(Status::DRAFT)->setPremium(null));
-        $em->persist((new Article())->setTitle('Premium')->setCreatedAt(new \DateTimeImmutable('2026-01-02 08:00:00'))->setStatus(Status::DRAFT)->setPremium(true));
-        $em->persist((new Article())->setTitle('Not premium')->setCreatedAt(new \DateTimeImmutable('2026-01-03 08:00:00'))->setStatus(Status::DRAFT)->setPremium(false));
+        $em->persist(new Article()->setTitle('Undecided')->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00'))->setStatus(Status::DRAFT)->setPremium(null));
+        $em->persist(new Article()->setTitle('Premium')->setCreatedAt(new \DateTimeImmutable('2026-01-02 08:00:00'))->setStatus(Status::DRAFT)->setPremium(true));
+        $em->persist(new Article()->setTitle('Not premium')->setCreatedAt(new \DateTimeImmutable('2026-01-03 08:00:00'))->setStatus(Status::DRAFT)->setPremium(false));
         $em->flush();
 
         $page = $this->visit('/admin/article');

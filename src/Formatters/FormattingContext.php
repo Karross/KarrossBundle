@@ -4,7 +4,7 @@ namespace Karross\Formatters;
 
 final readonly class FormattingContext
 {
-    public const DEFAULT_LOCALE = 'en_US';
+    public const string DEFAULT_LOCALE = 'en_US';
 
     private function __construct(
         public ?string $locale,

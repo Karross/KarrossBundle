@@ -10,7 +10,7 @@ use Twig\Attribute\AsTwigFunction;
 
 class FieldLabelExtension
 {
-    public function __construct(private TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 

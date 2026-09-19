@@ -15,13 +15,13 @@ use Twig\Environment;
  *
  * A global page, outside the per-entity action flow (no ActionContext), see contexts/architecture.md.
  */
-final class Home
+final readonly class Home
 {
     public function __construct(
-        private readonly EntityMetadataRegistry $entityMetadataRegistry,
-        private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly Environment $twig,
-        private readonly KarrossConfig $config,
+        private EntityMetadataRegistry $entityMetadataRegistry,
+        private UrlGeneratorInterface $urlGenerator,
+        private Environment $twig,
+        private KarrossConfig $config,
     ) {
     }
 

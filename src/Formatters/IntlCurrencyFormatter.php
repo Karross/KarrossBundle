@@ -10,11 +10,11 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('karross.formatter')]
 class IntlCurrencyFormatter implements ValueFormatterInterface
 {
-    private const DEFAULT_CURRENCY = 'EUR';
+    private const string DEFAULT_CURRENCY = 'EUR';
 
     public function __construct(
-        private NumberFormatRepository $numberFormatRepository,
-        private CurrencyRepository $currencyRepository,
+        private readonly NumberFormatRepository $numberFormatRepository,
+        private readonly CurrencyRepository $currencyRepository,
     ) {
     }
 

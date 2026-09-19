@@ -11,7 +11,7 @@ use TestedApp\Kernel;
 
 class CacheWiringTest extends TestCase
 {
-    private const ENV_PREFIX = 'test_cache';
+    private const string ENV_PREFIX = 'test_cache';
 
     public function testRegistriesCacheTheirResultInAProdLikeKernel(): void
     {

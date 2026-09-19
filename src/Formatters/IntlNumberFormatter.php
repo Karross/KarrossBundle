@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('karross.formatter')]
 class IntlNumberFormatter implements ValueFormatterInterface
 {
-    public function __construct(private NumberFormatRepository $numberFormatRepository)
+    public function __construct(private readonly NumberFormatRepository $numberFormatRepository)
     {
     }
 

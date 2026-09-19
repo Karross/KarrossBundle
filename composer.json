@@ -43,7 +43,8 @@
     "playwright-php/playwright-symfony": "^0.10.0",
     "phpstan/phpstan": "^2.2",
     "phpstan/phpstan-symfony": "^2.0",
-    "friendsofphp/php-cs-fixer": "^3.95"
+    "friendsofphp/php-cs-fixer": "^3.95",
+    "rector/rector": "^2.6"
   },
   "autoload": {
     "psr-4": {
@@ -61,13 +62,17 @@
         "cs-fix": "php-cs-fixer fix",
         "cs-fix-check": "php-cs-fixer fix --dry-run",
         "qa": "ast-metrics lint",
+        "rector": "rector process --dry-run",
+        "rector-fix": "rector process",
         "css-check": "node_modules/.bin/stylelint \"src/Resources/public/css/**/*.css\" --max-warnings 0",
         "all-fix": [
+            "@rector-fix",
             "@cs-fix"
         ],
         "all-check": [
             "@css-check",
             "@cs-fix-check",
+            "@rector",
             "@phpstan",
             "@qa",
             "@test"

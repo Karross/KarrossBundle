@@ -247,12 +247,6 @@ parameters:
 			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
-			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Metadata/Computed/EntityMetadata.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -267,18 +261,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Metadata/Computed/EntityMetadata.php
-
-		-
-			message: '#^Parameter \$label of class Karross\\Metadata\\Computed\\FieldLabel constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Metadata/Computed/EntityMetadata.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Metadata/Computed/EntityMetadata.php
 

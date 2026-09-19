@@ -36,7 +36,7 @@ final class ArticleIndexConfiguredTest extends PlaywrightTestCase
     public function testFormattersFollowTheRequestLocaleResolvedFromTheUrl(): void
     {
         $this->createSchema();
-        $article = (new Article())
+        $article = new Article()
             ->setTitle('Découverte de la Provence')
             ->setContent('Un joli contenu.')
             ->setPublished(true)
@@ -90,9 +90,9 @@ final class ArticleIndexConfiguredTest extends PlaywrightTestCase
         if (!$em instanceof EntityManagerInterface) {
             throw new \RuntimeException('Doctrine EntityManager not available.');
         }
-        $em->persist((new Article())->setTitle('Undecided')->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00'))->setStatus(Status::DRAFT)->setPremium(null));
-        $em->persist((new Article())->setTitle('Premium')->setCreatedAt(new \DateTimeImmutable('2026-01-02 08:00:00'))->setStatus(Status::DRAFT)->setPremium(true));
-        $em->persist((new Article())->setTitle('Not premium')->setCreatedAt(new \DateTimeImmutable('2026-01-03 08:00:00'))->setStatus(Status::DRAFT)->setPremium(false));
+        $em->persist(new Article()->setTitle('Undecided')->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00'))->setStatus(Status::DRAFT)->setPremium(null));
+        $em->persist(new Article()->setTitle('Premium')->setCreatedAt(new \DateTimeImmutable('2026-01-02 08:00:00'))->setStatus(Status::DRAFT)->setPremium(true));
+        $em->persist(new Article()->setTitle('Not premium')->setCreatedAt(new \DateTimeImmutable('2026-01-03 08:00:00'))->setStatus(Status::DRAFT)->setPremium(false));
         $em->flush();
 
         $expected = [

@@ -7,11 +7,11 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class EntityMetadataRegistry
 {
-    private bool $cacheEnabled;
+    private readonly bool $cacheEnabled;
 
     public function __construct(
-        private CacheInterface $cache,
-        private ComputedMetadataBuilder $builder,
+        private readonly CacheInterface $cache,
+        private readonly ComputedMetadataBuilder $builder,
         bool $debug,
     ) {
         $this->cacheEnabled = !$debug;

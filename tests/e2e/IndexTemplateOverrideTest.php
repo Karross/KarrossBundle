@@ -26,7 +26,7 @@ final class IndexTemplateOverrideTest extends PlaywrightTestCase
     {
         $this->createSchema();
 
-        $article = (new Article())
+        $article = new Article()
             ->setTitle('Découverte de la Provence')
             ->setCreatedAt(new \DateTimeImmutable('2026-03-05 15:30:00'))
             ->setScheduledDate(new \DateTimeImmutable('2026-06-01'))

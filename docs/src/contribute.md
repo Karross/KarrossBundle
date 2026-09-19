@@ -15,8 +15,10 @@ All commands run from the `KarrossBundle/` directory, inside Docker (the host
 PHP lacks `ext-intl`).
 
 ```bash
-make all-fix        # auto-fix code style (php-cs-fixer)
-make all-check      # full check: CSS compat → style → phpstan → complexity → tests (must be green)
+make all-fix        # auto-fix everything (rector, then php-cs-fixer)
+make all-check      # full check: CSS compat → style → rector → phpstan → complexity → tests (must be green)
+make rector         # refactoring check only (rector dry-run)
+make rector-fix     # apply rector refactorings
 make test           # phpunit suites (incl. E2E Playwright)
 make qa             # complexity/volume gate only (ast-metrics)
 make css-check      # browser CSS compatibility gate only (stylelint + Baseline)

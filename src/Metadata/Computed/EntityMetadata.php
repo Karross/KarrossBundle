@@ -83,7 +83,7 @@ readonly class EntityMetadata
             $tree[$depth] = [];
             foreach ($this->getExplodedProperties() as $explodedProperty) {
                 $fieldLabel = $explodedProperty[$depth] ?? null;
-                if ($fieldLabel && !\array_key_exists($fieldLabel, $tree[$depth])) {
+                if (\is_string($fieldLabel) && !\array_key_exists($fieldLabel, $tree[$depth])) {
                     $partialPath = implode('.', \array_slice($explodedProperty, 0, $depth + 1));
                     $tree[$depth][$fieldLabel] = new FieldLabel(
                         label: $fieldLabel,

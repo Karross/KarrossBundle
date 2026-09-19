@@ -17,7 +17,7 @@ class LoaderTest extends TestCase
     public function testRoutesCannotBeLoaded(string $expectedExceptionType, string $expectedExceptionMessage, array $configFilenames): void
     {
         $filePaths = array_map(
-            static fn (string $configFilename) => self::pathForFile($configFilename),
+            self::pathForFile(...),
             $configFilenames
         );
         $signature = implode('_PLUS_', $configFilenames);
@@ -59,7 +59,7 @@ class LoaderTest extends TestCase
     public function testRoutesAreLoaded(array $expectedRouteNames, array $configFilenames, array $expectedPaths = []): void
     {
         $filePaths = array_map(
-            static fn (string $configFilename) => self::pathForFile($configFilename),
+            self::pathForFile(...),
             $configFilenames
         );
         $signature = implode('_PLUS_', $configFilenames);

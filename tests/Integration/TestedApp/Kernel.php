@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Kernel as SFKernel;
 
 class Kernel extends SFKernel
 {
-    public function __construct(string $environment, bool $debug, private array $configFiles = [])
+    public function __construct(string $environment, bool $debug, private readonly array $configFiles = [])
     {
         parent::__construct($environment, $debug);
     }

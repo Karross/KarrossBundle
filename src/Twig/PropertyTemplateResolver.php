@@ -27,7 +27,7 @@ readonly class PropertyTemplateResolver implements PropertyTemplateResolverInter
      * plain 'string' slot (storage constraint, not a rendering difference),
      * and blob (binary) gets its own slot above the 'text' fallback.
      */
-    private const DOCTRINE_HIERARCHY = [
+    private const array DOCTRINE_HIERARCHY = [
         Types::DATE_MUTABLE => ['date', 'datetime'],
         Types::DATE_IMMUTABLE => ['date', 'datetime'],
         Types::TIME_MUTABLE => ['time', 'datetime'],
@@ -54,7 +54,7 @@ readonly class PropertyTemplateResolver implements PropertyTemplateResolverInter
      * Fallback chains for unmapped properties (no column) or columns whose
      * doctrine type is not part of the contract table.
      */
-    private const PHP_HIERARCHY = [
+    private const array PHP_HIERARCHY = [
         'bool' => ['bool'],
         'int' => ['int', 'number'],
         'float' => ['float', 'number'],

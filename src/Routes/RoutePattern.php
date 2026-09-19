@@ -13,7 +13,7 @@ namespace Karross\Routes;
  */
 final class RoutePattern
 {
-    private const TOKENS = ['{prefix}', '{slug}', '{identifiers}', '{_locale}'];
+    private const array TOKENS = ['{prefix}', '{slug}', '{identifiers}', '{_locale}'];
 
     /**
      * @param string[] $identifiers

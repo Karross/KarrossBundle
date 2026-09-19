@@ -5,7 +5,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 return static function (ContainerConfigurator $config) {
     $config->extension('karross', [
         'entities' => [
-            'TestedApp\Domain\Entity\Article' => [
+            TestedApp\Domain\Entity\Article::class => [
                 'slug' => 'domain-article',
             ],
         ],

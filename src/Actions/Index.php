@@ -12,10 +12,10 @@ use Symfony\Component\Routing\RouterInterface;
 class Index
 {
     public function __construct(
-        private EntityMetadataRegistry $entityMetadataRegistry,
-        private ManagerRegistry $managerRegistry,
-        private ResponderManager $responderManager,
-        private RouterInterface $router,
+        private readonly EntityMetadataRegistry $entityMetadataRegistry,
+        private readonly ManagerRegistry $managerRegistry,
+        private readonly ResponderManager $responderManager,
+        private readonly RouterInterface $router,
     ) {
     }
 

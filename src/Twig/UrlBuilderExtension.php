@@ -12,7 +12,7 @@ use Twig\Attribute\AsTwigFunction;
 
 class UrlBuilderExtension
 {
-    private PropertyAccessor $accessor;
+    private readonly PropertyAccessor $accessor;
 
     public function __construct(private readonly UrlGeneratorInterface $urlGenerator)
     {
@@ -28,7 +28,7 @@ class UrlBuilderExtension
             foreach ($association->identifier as $identifier) {
                 $parameters[$identifier] = $this->accessor->getValue($associationEntity, $identifier);
             }
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return 'N/A';
         }
 

@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('karross.formatter')]
 class YesNoFormatter implements ValueFormatterInterface
 {
-    public function __construct(private ValueTranslator $valueTranslator)
+    public function __construct(private readonly ValueTranslator $valueTranslator)
     {
     }
 

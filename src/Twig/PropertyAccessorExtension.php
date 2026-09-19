@@ -12,11 +12,11 @@ use Twig\Attribute\AsTwigFunction;
 
 class PropertyAccessorExtension
 {
-    private PropertyAccessor $accessor;
+    private readonly PropertyAccessor $accessor;
 
     public function __construct(
-        private FormatterResolver $formatterResolver,
-        private RequestStack $requestStack,
+        private readonly FormatterResolver $formatterResolver,
+        private readonly RequestStack $requestStack,
     ) {
         $this->accessor = PropertyAccess::createPropertyAccessor();
     }
@@ -34,7 +34,7 @@ class PropertyAccessorExtension
             $value = $this->accessor->getValue($entity, $property->name);
 
             return $this->formatterResolver->get($property->formatter)->format($value, $this->context($property));
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return 'N/A';
         }
     }
