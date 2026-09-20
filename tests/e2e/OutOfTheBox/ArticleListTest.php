@@ -8,6 +8,7 @@ use E2e\Shared\DatabaseFixture;
 use E2e\Shared\TableCellComparisons;
 use Innmind\BlackBox\PHPUnit\BlackBox;
 use Innmind\BlackBox\Set;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Playwright\Symfony\Test\PlaywrightTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 use TestedApp\Entity\Article;
@@ -108,44 +109,56 @@ final class ArticleListTest extends PlaywrightTestCase
         });
     }
 
-    public function testBooleanCellRendersTrueOrFalseForRawValues(): void
+    #[DataProvider('booleanProvider')]
+    public function testBooleanCellRendersTrueOrFalseForRawValues(bool $published): void
     {
         $this->resetSchema();
 
         $registry = self::getContainer()->get('doctrine');
         \assert($registry instanceof ManagerRegistry);
         $em = $registry->getManager();
-        $em->persist(new Article()->setTitle('First')->setPublished(true)->setStatus(Status::DRAFT)->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00')));
-        $em->persist(new Article()->setTitle('Second')->setPublished(false)->setStatus(Status::PUBLISHED)->setCreatedAt(new \DateTimeImmutable('2026-01-02 08:00:00')));
+        $em->persist(new Article()->setTitle('Boolean')->setPublished($published)->setStatus(Status::DRAFT)->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00')));
         $em->flush();
 
         $page = $this->visit('/admin/article');
 
-        $this->assertCellEquals($page, 'Title', 'First', row: 0);
-        $this->assertCellEquals($page, 'Published', 'true', row: 0);
-        $this->assertCellEquals($page, 'Title', 'Second', row: 1);
-        $this->assertCellEquals($page, 'Published', 'false', row: 1);
+        $this->assertCellEquals($page, 'Title', 'Boolean');
+        $this->assertCellEquals($page, 'Published', $published ? 'true' : 'false');
     }
 
-    public function testNullableBooleanRendersEmptyForNullAndTrueOrFalseOtherwise(): void
+    #[DataProvider('nullableBooleanProvider')]
+    public function testNullableBooleanRendersEmptyForNullAndTrueOrFalseOtherwise(?bool $premium): void
     {
         $this->resetSchema();
 
         $registry = self::getContainer()->get('doctrine');
         \assert($registry instanceof ManagerRegistry);
         $em = $registry->getManager();
-        $em->persist(new Article()->setTitle('Undecided')->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00'))->setStatus(Status::DRAFT)->setPremium(null));
-        $em->persist(new Article()->setTitle('Premium')->setCreatedAt(new \DateTimeImmutable('2026-01-02 08:00:00'))->setStatus(Status::DRAFT)->setPremium(true));
-        $em->persist(new Article()->setTitle('Not premium')->setCreatedAt(new \DateTimeImmutable('2026-01-03 08:00:00'))->setStatus(Status::DRAFT)->setPremium(false));
+        $em->persist(new Article()->setTitle('Nullable')->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00'))->setStatus(Status::DRAFT)->setPremium($premium));
         $em->flush();
 
         $page = $this->visit('/admin/article');
 
-        $this->assertCellEquals($page, 'Title', 'Undecided', row: 0);
-        $this->assertCellEquals($page, 'Premium', '', row: 0);
-        $this->assertCellEquals($page, 'Title', 'Premium', row: 1);
-        $this->assertCellEquals($page, 'Premium', 'true', row: 1);
-        $this->assertCellEquals($page, 'Title', 'Not premium', row: 2);
-        $this->assertCellEquals($page, 'Premium', 'false', row: 2);
+        $this->assertCellEquals($page, 'Title', 'Nullable');
+        $this->assertCellEquals($page, 'Premium', null === $premium ? '' : ($premium ? 'true' : 'false'));
+    }
+
+    /**
+     * @return iterable<string, array{bool}>
+     */
+    public static function booleanProvider(): iterable
+    {
+        yield 'true' => [true];
+        yield 'false' => [false];
+    }
+
+    /**
+     * @return iterable<string, array{?bool}>
+     */
+    public static function nullableBooleanProvider(): iterable
+    {
+        yield 'true' => [true];
+        yield 'false' => [false];
+        yield 'null' => [null];
     }
 }
