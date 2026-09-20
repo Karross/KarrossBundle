@@ -5,6 +5,7 @@ namespace E2e\WithConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use E2e\Shared\DatabaseFixture;
 use E2e\Shared\TableCellComparisons;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Playwright\Page\PageInterface;
 use Playwright\Symfony\Test\PlaywrightTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -87,7 +88,8 @@ final class ArticleListTest extends PlaywrightTestCase
         $this->assertCellEquals($this->visit('/en/dashboard/article'), 'Premium', 'Yes');
     }
 
-    public function testNullableBooleanConfiguredWithYesNoRendersThreeStates(): void
+    #[DataProvider('booleanFormatterProvider')]
+    public function testBooleanFormatterFollowsLocale(bool $published, string $locale): void
     {
         $this->resetSchema();
 
@@ -95,21 +97,61 @@ final class ArticleListTest extends PlaywrightTestCase
         if (!$em instanceof EntityManagerInterface) {
             throw new \RuntimeException('Doctrine EntityManager not available.');
         }
-        $em->persist(new Article()->setTitle('Undecided')->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00'))->setStatus(Status::DRAFT)->setPremium(null));
-        $em->persist(new Article()->setTitle('Premium')->setCreatedAt(new \DateTimeImmutable('2026-01-02 08:00:00'))->setStatus(Status::DRAFT)->setPremium(true));
-        $em->persist(new Article()->setTitle('Not premium')->setCreatedAt(new \DateTimeImmutable('2026-01-03 08:00:00'))->setStatus(Status::DRAFT)->setPremium(false));
+        $em->persist(new Article()->setTitle('BoolLocale')->setPublished($published)->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00'))->setStatus(Status::DRAFT));
         $em->flush();
 
-        $expected = [
-            '/fr/dashboard/article' => ['', 'Oui', 'Non'],
-            '/en/dashboard/article' => ['', 'Yes', 'No'],
-        ];
-        foreach ($expected as $url => $states) {
-            $page = $this->visit($url);
-            for ($row = 0; $row < 3; ++$row) {
-                $this->assertCellEquals($page, 'Premium', $states[$row], row: $row);
-            }
+        $page = $this->visit('/'.$locale.'/dashboard/article');
+        $this->assertCellEquals($page, 'Published', $published ? ('fr' === $locale ? 'vrai' : 'true') : ('fr' === $locale ? 'faux' : 'false'));
+    }
+
+    #[DataProvider('nullableBooleanFormatterProvider')]
+    public function testNullableBooleanConfiguredWithYesNoRendersThreeStates(?bool $premium, string $locale): void
+    {
+        $this->resetSchema();
+
+        $em = self::getContainer()->get(EntityManagerInterface::class);
+        if (!$em instanceof EntityManagerInterface) {
+            throw new \RuntimeException('Doctrine EntityManager not available.');
         }
+        $em->persist(new Article()->setTitle('Nullable')->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00'))->setStatus(Status::DRAFT)->setPremium($premium));
+        $em->flush();
+
+        $url = '/'.$locale.'/dashboard/article';
+        $page = $this->visit($url);
+        $expected = match ([$premium, $locale]) {
+            [null, 'fr'] => '',
+            [null, 'en'] => '',
+            [true, 'fr'] => 'Oui',
+            [true, 'en'] => 'Yes',
+            [false, 'fr'] => 'Non',
+            [false, 'en'] => 'No',
+            default => throw new \LogicException('Unhandled case: '.var_export([$premium, $locale], true)),
+        };
+        $this->assertCellEquals($page, 'Premium', $expected);
+    }
+
+    /**
+     * @return iterable<string, array{bool, string}>
+     */
+    public static function booleanFormatterProvider(): iterable
+    {
+        yield 'true-fr' => [true, 'fr'];
+        yield 'true-en' => [true, 'en'];
+        yield 'false-fr' => [false, 'fr'];
+        yield 'false-en' => [false, 'en'];
+    }
+
+    /**
+     * @return iterable<string, array{?bool, string}>
+     */
+    public static function nullableBooleanFormatterProvider(): iterable
+    {
+        yield 'true-fr' => [true, 'fr'];
+        yield 'true-en' => [true, 'en'];
+        yield 'false-fr' => [false, 'fr'];
+        yield 'false-en' => [false, 'en'];
+        yield 'null-fr' => [null, 'fr'];
+        yield 'null-en' => [null, 'en'];
     }
 
     private function assertPriceCellUsesLocaleAndCurrency(PageInterface $page, string $locale): void
