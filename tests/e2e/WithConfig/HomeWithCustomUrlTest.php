@@ -1,12 +1,12 @@
 <?php
 
-namespace E2e;
+namespace E2e\WithConfig;
 
 use Playwright\Symfony\Test\PlaywrightTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 use TestedApp\Kernel;
 
-final class HomeConfiguredTest extends PlaywrightTestCase
+final class HomeWithCustomUrlTest extends PlaywrightTestCase
 {
     /**
      * @param array<string, mixed> $options
@@ -14,9 +14,9 @@ final class HomeConfiguredTest extends PlaywrightTestCase
     protected static function createKernel(array $options = []): KernelInterface
     {
         return new Kernel('e2e_home_config', true, [
-            __DIR__.'/../../tests/Integration/TestedApp/config/doctrine_standard.php',
-            __DIR__.'/../../tests/Integration/TestedApp/config/karross_custom.php',
-            __DIR__.'/../../tests/Integration/TestedApp/config/framework_locales.php',
+            __DIR__.'/../../../tests/Integration/TestedApp/config/doctrine_standard.php',
+            __DIR__.'/../../../tests/Integration/TestedApp/config/karross_custom.php',
+            __DIR__.'/../../../tests/Integration/TestedApp/config/framework_locales.php',
         ]);
     }
 

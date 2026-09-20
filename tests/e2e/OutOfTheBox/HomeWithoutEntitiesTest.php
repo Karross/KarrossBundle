@@ -1,12 +1,12 @@
 <?php
 
-namespace E2e;
+namespace E2e\OutOfTheBox;
 
 use Playwright\Symfony\Test\PlaywrightTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 use TestedApp\Kernel;
 
-final class HomeOnboardingTest extends PlaywrightTestCase
+final class HomeWithoutEntitiesTest extends PlaywrightTestCase
 {
     /**
      * @param array<string, mixed> $options
@@ -14,7 +14,7 @@ final class HomeOnboardingTest extends PlaywrightTestCase
     protected static function createKernel(array $options = []): KernelInterface
     {
         return new Kernel('e2e_home_onboarding', true, [
-            __DIR__.'/../../tests/Integration/TestedApp/config/doctrine_empty.php',
+            __DIR__.'/../../../tests/Integration/TestedApp/config/doctrine_empty.php',
         ]);
     }
 

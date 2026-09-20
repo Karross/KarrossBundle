@@ -1,28 +1,38 @@
 <?php
 
-namespace E2e;
+namespace E2e\OutOfTheBox;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Playwright\Page\PageInterface;
+use E2e\Shared\DatabaseFixture;
+use E2e\Shared\TableCellComparisons;
+use Innmind\BlackBox\PHPUnit\BlackBox;
+use Innmind\BlackBox\Set;
 use Playwright\Symfony\Test\PlaywrightTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 use TestedApp\Entity\Article;
 use TestedApp\Entity\Status;
 use TestedApp\Kernel;
 
-final class ArticleIndexTest extends PlaywrightTestCase
+final class ArticleListTest extends PlaywrightTestCase
 {
+    use BlackBox;
+    use DatabaseFixture;
+    use TableCellComparisons;
+
+    /**
+     * @param array<string, mixed> $options
+     */
     protected static function createKernel(array $options = []): KernelInterface
     {
         return new Kernel('e2e', true, [
-            __DIR__.'/../../tests/Integration/TestedApp/config/doctrine_standard.php',
+            __DIR__.'/../../../tests/Integration/TestedApp/config/doctrine_standard.php',
         ]);
     }
 
     public function testIndexRendersTheAdminListing(): void
     {
-        $this->createSchema();
+        $this->resetSchema();
         $page = $this->visit('/admin/article');
 
         self::assertResponseIsSuccessful();
@@ -31,7 +41,7 @@ final class ArticleIndexTest extends PlaywrightTestCase
 
     public function testIndexFormatsEachColumnAgainstItsPredictableFormatter(): void
     {
-        $this->createSchema();
+        $this->resetSchema();
 
         $article = new Article()
             ->setTitle('Découverte de la Provence')
@@ -46,7 +56,9 @@ final class ArticleIndexTest extends PlaywrightTestCase
             ->setTags(['tourisme', 'nature'])
             ->setScheduledDate(new \DateTimeImmutable('2026-06-01'))
             ->setPublishedAt(new \DateTimeImmutable('2026-03-06 09:00:00'));
-        $em = self::getContainer()->get('doctrine')->getManager();
+        $registry = self::getContainer()->get('doctrine');
+        \assert($registry instanceof ManagerRegistry);
+        $em = $registry->getManager();
         $em->persist($article);
         $em->flush();
 
@@ -71,9 +83,34 @@ final class ArticleIndexTest extends PlaywrightTestCase
         );
     }
 
+    public function testViewCountCellMatchesOracleForAnyInteger(): void
+    {
+        $this->forAll(Set::integers())->then(function (int $viewCount): void {
+            $this->resetSchema();
+
+            $article = new Article()
+                ->setTitle('Compteur variable')
+                ->setViewCount($viewCount)
+                ->setStatus(Status::PUBLISHED)
+                ->setCreatedAt(new \DateTimeImmutable('2026-01-01 08:00:00'));
+
+            $registry = self::getContainer()->get('doctrine');
+            \assert($registry instanceof ManagerRegistry);
+            $em = $registry->getManager();
+            \assert($em instanceof EntityManagerInterface);
+            $em->persist($article);
+            $em->flush();
+
+            $page = $this->visit('/admin/article');
+
+            $this->assertCellEquals($page, 'Title', 'Compteur variable');
+            $this->assertCellEquals($page, 'Viewcount', $this->formatCount($viewCount));
+        });
+    }
+
     public function testBooleanCellRendersTrueOrFalseForRawValues(): void
     {
-        $this->createSchema();
+        $this->resetSchema();
 
         $registry = self::getContainer()->get('doctrine');
         \assert($registry instanceof ManagerRegistry);
@@ -92,7 +129,7 @@ final class ArticleIndexTest extends PlaywrightTestCase
 
     public function testNullableBooleanRendersEmptyForNullAndTrueOrFalseOtherwise(): void
     {
-        $this->createSchema();
+        $this->resetSchema();
 
         $registry = self::getContainer()->get('doctrine');
         \assert($registry instanceof ManagerRegistry);
@@ -110,45 +147,5 @@ final class ArticleIndexTest extends PlaywrightTestCase
         $this->assertCellEquals($page, 'Premium', 'true', row: 1);
         $this->assertCellEquals($page, 'Title', 'Not premium', row: 2);
         $this->assertCellEquals($page, 'Premium', 'false', row: 2);
-    }
-
-    private function createSchema(): void
-    {
-        /** @var EntityManagerInterface $em */
-        $em = self::getContainer()->get('doctrine')->getManager();
-        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($em);
-        $schemaTool->createSchema($em->getMetadataFactory()->getAllMetadata());
-    }
-
-    private function assertCellEquals(PageInterface $page, string $columnName, string $expected, int $row = 0): void
-    {
-        self::assertSame($expected, $this->cellForColumn($page, $columnName, $row));
-    }
-
-    private function cellForColumn(PageInterface $page, string $columnName, int $row = 0): string
-    {
-        $headers = $page->locator('table.k-table thead th');
-
-        $index = null;
-        for ($i = 0, $count = $headers->count(); $i < $count; ++$i) {
-            if (trim($headers->nth($i)->innerText()) === $columnName) {
-                $index = $i;
-                break;
-            }
-        }
-
-        self::assertNotNull($index, "Column '$columnName' not found in table header");
-        $line = $page->locator('table.k-table tbody tr')->nth($row);
-
-        return trim($line->locator('td')->nth($index)->innerText());
-    }
-
-    private function formatDate(\DateTimeImmutable $value, bool $dateOnly = false): string
-    {
-        $dateType = $dateOnly ? \IntlDateFormatter::MEDIUM : \IntlDateFormatter::MEDIUM;
-        $timeType = $dateOnly ? \IntlDateFormatter::NONE : \IntlDateFormatter::SHORT;
-        $formatter = new \IntlDateFormatter('en_US', $dateType, $timeType);
-
-        return $formatter->format($value) ?: 'N/A';
     }
 }

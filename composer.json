@@ -38,7 +38,9 @@
     "doctrine/doctrine-bundle": "^2.0",
     "symfony/framework-bundle": "^7.3",
     "symfony/twig-bundle": "^7.3",
-    "phpunit/phpunit": "^12.0",
+    "phpunit/phpunit": "^13.0",
+    "innmind/black-box": "^7.0",
+    "zenstruck/foundry": "^2.0",
     "symfony/translation": "^7.3",
     "playwright-php/playwright-symfony": "^0.10.0",
     "phpstan/phpstan": "^2.2",
@@ -54,7 +56,8 @@
   "autoload-dev": {
     "psr-4": {
       "TestedApp\\": "tests/Integration/TestedApp",
-      "Tests\\": "tests/"
+      "Tests\\": "tests/",
+      "E2e\\": "tests/e2e"
     }
   },
 "scripts": {

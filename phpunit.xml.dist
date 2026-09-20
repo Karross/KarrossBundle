@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.4/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true" executionOrder="depends,defects" stopOnFailure="false">
+  <extensions>
+    <bootstrap class="Innmind\BlackBox\PHPUnit\Extension"/>
+  </extensions>
   <testsuites>
     <testsuite name="integration">
       <directory>tests/Integration</directory>
@@ -10,6 +13,7 @@
   </testsuites>
   <php>
     <env name="APP_ENV" value="test"/>
+    <env name="BLACKBOX_SET_SIZE" value="10"/>
   </php>
   <source>
     <include>

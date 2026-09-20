@@ -461,27 +461,3 @@ parameters:
 			identifier: property.unusedType
 			count: 1
 			path: tests/Integration/TestedApp/Unhandled/Entity/Item.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getManager\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/e2e/ArticleIndexTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/e2e/ArticleIndexTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/e2e/ArticleIndexTest.php
-
-		-
-			message: '#^Method E2e\\ArticleIndexTest\:\:createKernel\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: tests/e2e/ArticleIndexTest.php
