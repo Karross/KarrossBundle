@@ -72,7 +72,6 @@ final class FormatterResolver
             }
 
             return match ($phpType) {
-                'string' => StringFormatter::class,
                 'array' => NotAvailableFormatter::class,
                 default => $this->resolvePhpClass($phpType, $doctrineType, $enumType),
             };
@@ -112,7 +111,6 @@ final class FormatterResolver
         }
 
         return match ($doctrineType) {
-            Types::STRING, Types::ASCII_STRING, Types::GUID, Types::TEXT => StringFormatter::class,
             Types::DATE_MUTABLE, Types::DATE_IMMUTABLE => DateFormatter::class,
             Types::TIME_MUTABLE, Types::TIME_IMMUTABLE => TimeFormatter::class,
             Types::DATETIME_MUTABLE, Types::DATETIME_IMMUTABLE,

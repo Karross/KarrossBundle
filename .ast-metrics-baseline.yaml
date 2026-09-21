@@ -17,7 +17,7 @@ ignored:
       count: 1
     - rule: cyclomatic_complexity
       file: src/Formatters/FormatterResolver.php
-      message: 'Cyclomatic complexity too high: got 28 (max: 10)'
+      message: 'Cyclomatic complexity too high: got 26 (max: 10)'
       count: 1
     - rule: max_lloc
       file: src/Formatters/FormatterResolver.php

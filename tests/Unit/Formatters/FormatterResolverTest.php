@@ -11,13 +11,14 @@ use Karross\Formatters\IntlNumberFormatter;
 use Karross\Formatters\Resolvers\BooleanFormatterResolver;
 use Karross\Formatters\Resolvers\FloatFormatterResolver;
 use Karross\Formatters\Resolvers\IntegerFormatterResolver;
+use Karross\Formatters\Resolvers\StringFormatterResolver;
 use Karross\Formatters\StringFormatter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TestedApp\Entity\Status;
 
 /**
- * Exhaustive reference of what the resolver chain (Boolean → Integer → Float)
+ * Exhaustive reference of what the resolver chain (Boolean → Integer → Float → String)
  * returns for every phpType × doctrineType pair.
  *
  * No kernel, no container — pure combinatorial logic.
@@ -30,7 +31,7 @@ final class FormatterResolverTest extends TestCase
     {
         $this->resolver = new FormatterResolver(
             [], // formatters not needed — resolve() returns class-strings, only get() uses instances
-            [new BooleanFormatterResolver(), new IntegerFormatterResolver(), new FloatFormatterResolver()],
+            [new BooleanFormatterResolver(), new IntegerFormatterResolver(), new FloatFormatterResolver(), new StringFormatterResolver()],
         );
     }
 
@@ -41,7 +42,7 @@ final class FormatterResolverTest extends TestCase
     }
 
     /**
-     * Exhaustive phpType × doctrineType matrix for the 3 specific resolvers.
+     * Exhaustive phpType × doctrineType matrix for the 4 specific resolvers.
      *
      * @return iterable<string, array{string|null, FieldMapping|null, class-string}>
      */
@@ -98,8 +99,20 @@ final class FormatterResolverTest extends TestCase
         yield 'null / float' => [null, self::mapping(Types::FLOAT), IntlNumberFormatter::class];
         yield 'string / float' => ['string', self::mapping(Types::FLOAT), IntlNumberFormatter::class];
 
-        // ── enumType rejection — all 3 resolvers refuse → fallback ──
-        // Note: phpType 'string' hits StringFormatter before enumType is checked in the fallback.
+        // ── String resolver: phpType 'string' → StringFormatter ───
+        yield 'string / string' => ['string', self::mapping(Types::STRING), StringFormatter::class];
+        yield 'string / text' => ['string', self::mapping(Types::TEXT), StringFormatter::class];
+        yield 'string / ascii_string' => ['string', self::mapping(Types::ASCII_STRING), StringFormatter::class];
+        yield 'string / guid' => ['string', self::mapping(Types::GUID), StringFormatter::class];
+        yield 'string / null mapping' => ['string', null, StringFormatter::class];
+
+        // ── String resolver: doctrineType string family → StringFormatter ──
+        yield 'null / string' => [null, self::mapping(Types::STRING), StringFormatter::class];
+        yield 'null / text' => [null, self::mapping(Types::TEXT), StringFormatter::class];
+        yield 'null / ascii_string' => [null, self::mapping(Types::ASCII_STRING), StringFormatter::class];
+        yield 'null / guid' => [null, self::mapping(Types::GUID), StringFormatter::class];
+
+        // ── enumType rejection — all 4 resolvers refuse → fallback ──
         yield 'bool / boolean + enumType' => ['bool', self::mapping(Types::BOOLEAN, Status::class), EnumFormatter::class];
         yield 'int / integer + enumType' => ['int', self::mapping(Types::INTEGER, Status::class), EnumFormatter::class];
         yield 'float / decimal + enumType' => ['float', self::mapping(Types::DECIMAL, Status::class), EnumFormatter::class];
@@ -108,6 +121,8 @@ final class FormatterResolverTest extends TestCase
         yield 'null / smallint + enumType' => [null, self::mapping(Types::SMALLINT, Status::class), EnumFormatter::class];
         yield 'string / boolean + enumType → enumType wins' => ['string', self::mapping(Types::BOOLEAN, Status::class), EnumFormatter::class];
         yield 'string / decimal + enumType → enumType wins' => ['string', self::mapping(Types::DECIMAL, Status::class), EnumFormatter::class];
+        yield 'string / string + enumType → enumType wins' => ['string', self::mapping(Types::STRING, Status::class), EnumFormatter::class];
+        yield 'null / string + enumType → enumType wins' => [null, self::mapping(Types::STRING, Status::class), EnumFormatter::class];
     }
 
     /**

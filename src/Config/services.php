@@ -18,6 +18,7 @@ use Karross\Formatters\NotAvailableFormatter;
 use Karross\Formatters\Resolvers\BooleanFormatterResolver;
 use Karross\Formatters\Resolvers\FloatFormatterResolver;
 use Karross\Formatters\Resolvers\IntegerFormatterResolver;
+use Karross\Formatters\Resolvers\StringFormatterResolver;
 use Karross\Formatters\StringFormatter;
 use Karross\Formatters\ValueTranslator;
 use Karross\Metadata\Collect\ComputedMetadataBuilder;
@@ -86,6 +87,7 @@ return static function (ContainerConfigurator $configurator) {
         ->set(BooleanFormatterResolver::class)
         ->set(IntegerFormatterResolver::class)
         ->set(FloatFormatterResolver::class)
+        ->set(StringFormatterResolver::class)
         ->set(ValueTranslator::class);
 
     $services
