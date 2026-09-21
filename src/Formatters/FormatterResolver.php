@@ -68,7 +68,6 @@ final class FormatterResolver
 
         if (null !== $phpType) {
             return match ($phpType) {
-                'float' => IntlNumberFormatter::class,
                 'string' => StringFormatter::class,
                 'array' => NotAvailableFormatter::class,
                 default => $this->resolvePhpClass($phpType, $doctrineType, $enumType),
@@ -109,7 +108,6 @@ final class FormatterResolver
         }
 
         return match ($doctrineType) {
-            Types::DECIMAL, Types::FLOAT => IntlNumberFormatter::class,
             Types::STRING, Types::ASCII_STRING, Types::GUID, Types::TEXT => StringFormatter::class,
             Types::DATE_MUTABLE, Types::DATE_IMMUTABLE => DateFormatter::class,
             Types::TIME_MUTABLE, Types::TIME_IMMUTABLE => TimeFormatter::class,

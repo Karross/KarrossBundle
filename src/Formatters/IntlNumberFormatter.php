@@ -21,7 +21,15 @@ class IntlNumberFormatter implements ValueFormatterInterface
 
         $locale = $context?->locale ?? FormattingContext::DEFAULT_LOCALE;
 
-        $formatter = new IntlNumberFormatterLib($this->numberFormatRepository, ['locale' => $locale]);
+        $options = ['locale' => $locale];
+        if (null !== $context?->maximumFractionDigits) {
+            $options['maximum_fraction_digits'] = $context->maximumFractionDigits;
+        }
+        if (null !== $context?->minimumFractionDigits) {
+            $options['minimum_fraction_digits'] = $context->minimumFractionDigits;
+        }
+
+        $formatter = new IntlNumberFormatterLib($this->numberFormatRepository, $options);
 
         return $formatter->format((string) $value);
     }

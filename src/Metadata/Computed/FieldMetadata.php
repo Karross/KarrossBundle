@@ -12,10 +12,10 @@ namespace Karross\Metadata\Computed;
 readonly class FieldMetadata extends PropertyMetadata
 {
     /**
-     * @param class-string               $fqcn
-     * @param class-string               $formatter
-     * @param array<string, string|bool> $formatterOptions
-     * @param array<string, string>      $templates        action → resolved template name
+     * @param class-string                   $fqcn
+     * @param class-string                   $formatter
+     * @param array<string, string|bool|int> $formatterOptions
+     * @param array<string, string>          $templates        action → resolved template name
      */
     public function __construct(
         string $name,

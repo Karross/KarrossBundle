@@ -16,6 +16,7 @@ use Karross\Formatters\IntlCurrencyFormatter;
 use Karross\Formatters\IntlNumberFormatter;
 use Karross\Formatters\NotAvailableFormatter;
 use Karross\Formatters\Resolvers\BooleanFormatterResolver;
+use Karross\Formatters\Resolvers\FloatFormatterResolver;
 use Karross\Formatters\Resolvers\IntegerFormatterResolver;
 use Karross\Formatters\StringFormatter;
 use Karross\Formatters\ValueTranslator;
@@ -84,6 +85,7 @@ return static function (ContainerConfigurator $configurator) {
         ->set(NotAvailableFormatter::class)
         ->set(BooleanFormatterResolver::class)
         ->set(IntegerFormatterResolver::class)
+        ->set(FloatFormatterResolver::class)
         ->set(ValueTranslator::class);
 
     $services

@@ -46,6 +46,11 @@ class PropertyAccessorExtension
         return FormattingContext::forLocale(
             $this->requestStack->getCurrentRequest()?->getLocale() ?? FormattingContext::DEFAULT_LOCALE,
             \is_string($currency) ? $currency : null,
-        )->with(entitySlug: $property->entitySlug, propertyName: $property->name, ucfirst: (bool) ($property->formatterOptions['ucfirst'] ?? false));
+        )->with(
+            entitySlug: $property->entitySlug,
+            propertyName: $property->name,
+            ucfirst: (bool) ($property->formatterOptions['ucfirst'] ?? false),
+            maximumFractionDigits: \is_int($property->formatterOptions['maximum_fraction_digits'] ?? null) ? $property->formatterOptions['maximum_fraction_digits'] : null,
+        );
     }
 }

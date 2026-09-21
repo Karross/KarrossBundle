@@ -10,6 +10,7 @@ use Karross\Actions\Action;
 use Karross\Config\KarrossConfig;
 use Karross\Exceptions\EntityShortnameException;
 use Karross\Formatters\FormatterResolver;
+use Karross\Formatters\IntlNumberFormatter;
 use Karross\Formatters\ValueFormatterInterface;
 use Karross\Metadata\Computed\AssociationMetadata;
 use Karross\Metadata\Computed\EntityMetadata;
@@ -120,11 +121,16 @@ readonly class ComputedMetadataBuilder
 
             $formatter = $this->resolveFormatter($classMetadata->getName(), $fieldName, $phpType, $fieldMapping);
 
+            $formatterOptions = $this->config->entityPropertyFormatterOptions($classMetadata->getName(), $fieldName);
+            if (IntlNumberFormatter::class === $formatter && [] === $formatterOptions && null !== $fieldMapping->scale) {
+                $formatterOptions['maximum_fraction_digits'] = $fieldMapping->scale;
+            }
+
             $fields[$fieldName] = new FieldMetadata(
                 name: $fieldName,
                 fqcn: $classMetadata->getName(),
                 formatter: $formatter,
-                formatterOptions: $this->config->entityPropertyFormatterOptions($classMetadata->getName(), $fieldName),
+                formatterOptions: $formatterOptions,
                 templates: $this->propertyTemplateResolver->resolveField($entitySlug, $fieldName, $phpType, $fieldMapping),
                 entitySlug: $entitySlug,
             );

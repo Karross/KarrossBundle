@@ -34,10 +34,10 @@ $articles = [
         ->setBigCounter('12345')
         ->setPrice('19.90')
         ->setCreatedAt(new DateTimeImmutable('2026-03-05 15:30:00'))
-        ->setStatus(Status::PUBLISHED)
-        ->setTags(['tourisme', 'nature'])
+        ->setPublishedAt(new DateTimeImmutable('2026-03-06 09:00:00'))
         ->setScheduledDate(new DateTimeImmutable('2026-06-01'))
-        ->setPublishedAt(new DateTimeImmutable('2026-03-06 09:00:00')),
+        ->setStatus(Status::PUBLISHED)
+        ->setTags(['tourisme', 'nature']),
     new Article()
         ->setTitle('Week-end à Aix-en-Provence')
         ->setContent('Culture et calissons.')
@@ -52,10 +52,35 @@ $articles = [
         ->setTitle('Les Calanques de Marseille')
         ->setContent('Escapade nature entre terre et mer.')
         ->setPublished(true)
-        ->setPremium(null)
         ->setViewCount(3)
+        ->setSortOrder('3')
+        ->setBigCounter('500')
+        ->setPrice('123.456')
         ->setCreatedAt(new DateTimeImmutable('2026-09-01 09:00:00'))
+        ->setPublishedAt(new DateTimeImmutable('2026-09-01 12:00:00'))
         ->setStatus(Status::PUBLISHED),
+    new Article()
+        ->setTitle('Bouillabaisse marseillaise')
+        ->setContent('Recette traditionnelle.')
+        ->setPublished(false)
+        ->setPremium(null)
+        ->setViewCount(0)
+        ->setSortOrder('0')
+        ->setBigCounter('0')
+        ->setCreatedAt(new DateTimeImmutable('2026-09-10 08:00:00'))
+        ->setStatus(Status::ARCHIVED),
+    new Article()
+        ->setTitle('Marché aux puces')
+        ->setContent('Buvez un pastis, troquez des timbres.')
+        ->setPublished(true)
+        ->setPremium(null)
+        ->setViewCount(158)
+        ->setSortOrder('42')
+        ->setBigCounter('1000000')
+        ->setPrice('0.01')
+        ->setCreatedAt(new DateTimeImmutable('2026-09-15 14:00:00'))
+        ->setStatus(Status::PUBLISHED)
+        ->setTags([]),
 ];
 
 $em->persist($category);

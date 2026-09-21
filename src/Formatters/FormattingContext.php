@@ -17,6 +17,8 @@ final readonly class FormattingContext
         public ?string $entitySlug = null,
         public ?string $propertyName = null,
         public bool $ucfirst = false,
+        public ?int $maximumFractionDigits = null,
+        public ?int $minimumFractionDigits = null,
     ) {
     }
 
@@ -41,8 +43,10 @@ final readonly class FormattingContext
     public static function forNumber(
         ?string $locale = null,
         ?int $precision = null,
+        ?int $maximumFractionDigits = null,
+        ?int $minimumFractionDigits = null,
     ): self {
-        return new self($locale, null, $precision, null, null, null);
+        return new self($locale, null, $precision, null, null, null, maximumFractionDigits: $maximumFractionDigits, minimumFractionDigits: $minimumFractionDigits);
     }
 
     public function with(
@@ -56,6 +60,7 @@ final readonly class FormattingContext
         ?string $entitySlug = null,
         ?string $propertyName = null,
         ?bool $ucfirst = null,
+        ?int $maximumFractionDigits = null,
     ): self {
         return new self(
             $locale ?? $this->locale,
@@ -68,6 +73,7 @@ final readonly class FormattingContext
             $entitySlug ?? $this->entitySlug,
             $propertyName ?? $this->propertyName,
             $ucfirst ?? $this->ucfirst,
+            $maximumFractionDigits ?? $this->maximumFractionDigits,
         );
     }
 }

@@ -38,12 +38,36 @@ The `premium` property of `Article` is a nullable boolean and renders
 2. Result: the `premium` cell renders `Oui` / `Non` (French locale) instead
    of `true` / `false`, and stays empty when the value is `null`.
 
+## Example: a price with trailing zeros
+
+A `decimal` column with `scale: 2` displays `19,9` by default (no trailing
+zeros). To display `19,90` with exactly two decimals, set
+`minimum_fraction_digits`:
+
+```yaml
+karross:
+  entities:
+    App\Entity\Article:
+      properties:
+        price:
+          formatter_options:
+            minimum_fraction_digits: 2
+            maximum_fraction_digits: 2
+```
+
+*How it works: the Doctrine column `scale` sets `maximum_fraction_digits`
+automatically when no `formatter_options` are provided. Adding
+`minimum_fraction_digits` pads the output with trailing zeros. Both options
+are forwarded to `commerceguys/intl` `NumberFormatter`.*
+
 ### Formatter options
 
-| Option | Purpose |
-|---|---|
-| `currency` | currency code for the currency formatter (e.g. `EUR`) |
-| `ucfirst` | capitalize the first letter of translated values |
+| Option | Applies to | Purpose |
+|---|---|---|
+| `currency` | `IntlCurrencyFormatter` | currency code (e.g. `EUR`) |
+| `ucfirst` | all formatters | capitalize the first letter of translated values |
+| `minimum_fraction_digits` | `IntlNumberFormatter` | minimum decimals to display (default: none) |
+| `maximum_fraction_digits` | `IntlNumberFormatter` | maximum decimals to display (default: Doctrine column `scale`, if set) |
 
 ## Formatter catalog
 

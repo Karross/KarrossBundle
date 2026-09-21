@@ -8,7 +8,6 @@ use Karross\Formatters\Boolean\TrueFalseFormatter;
 use Karross\Formatters\EnumFormatter;
 use Karross\Formatters\FormatterResolver;
 use Karross\Formatters\IntlNumberFormatter;
-use Karross\Formatters\StringFormatter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -46,8 +45,11 @@ final class FormatterResolverTest extends TestCase
     public static function chainCases(): iterable
     {
         yield 'string on integer becomes a number' => ['string', self::mapping(Types::INTEGER), IntlNumberFormatter::class];
-        yield 'string on decimal stays a string' => ['string', self::mapping(Types::DECIMAL), StringFormatter::class];
+        yield 'string on decimal becomes a number, Float comes after Integer' => ['string', self::mapping(Types::DECIMAL), IntlNumberFormatter::class];
         yield 'no type on integer' => [null, self::mapping(Types::INTEGER), IntlNumberFormatter::class];
+        yield 'no type on decimal' => [null, self::mapping(Types::DECIMAL), IntlNumberFormatter::class];
+        yield 'float on decimal' => ['float', self::mapping(Types::DECIMAL), IntlNumberFormatter::class];
+        yield 'float on float' => ['float', self::mapping(Types::FLOAT), IntlNumberFormatter::class];
         yield 'no type on smallint with enumType describes an enum' => [null, self::mapping(Types::SMALLINT, Status::class), EnumFormatter::class];
         yield 'int on integer' => ['int', self::mapping(Types::INTEGER), IntlNumberFormatter::class];
         yield 'int on boolean stays boolean, Boolean comes first' => ['int', self::mapping(Types::BOOLEAN), TrueFalseFormatter::class];

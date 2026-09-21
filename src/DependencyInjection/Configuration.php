@@ -79,6 +79,8 @@ class Configuration implements ConfigurationInterface
                                             ->children()
                                                 ->scalarNode('currency')->defaultNull()->end()
                                                 ->booleanNode('ucfirst')->defaultFalse()->end()
+                                                ->integerNode('minimum_fraction_digits')->defaultNull()->end()
+                                                ->integerNode('maximum_fraction_digits')->defaultNull()->end()
                                             ->end()
                                         ->end()
                                     ->end()

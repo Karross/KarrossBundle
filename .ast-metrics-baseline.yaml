@@ -5,7 +5,7 @@
 ignored:
     - rule: cyclomatic_complexity
       file: src/Config/KarrossConfig.php
-      message: 'Cyclomatic complexity too high: got 28 (max: 10)'
+      message: 'Cyclomatic complexity too high: got 29 (max: 10)'
       count: 1
     - rule: max_lloc
       file: src/Config/KarrossConfig.php
@@ -17,7 +17,7 @@ ignored:
       count: 1
     - rule: cyclomatic_complexity
       file: src/Formatters/FormatterResolver.php
-      message: 'Cyclomatic complexity too high: got 29 (max: 10)'
+      message: 'Cyclomatic complexity too high: got 27 (max: 10)'
       count: 1
     - rule: max_lloc
       file: src/Formatters/FormatterResolver.php
@@ -25,11 +25,11 @@ ignored:
       count: 1
     - rule: cyclomatic_complexity
       file: src/Metadata/Collect/ComputedMetadataBuilder.php
-      message: 'Cyclomatic complexity too high: got 35 (max: 10)'
+      message: 'Cyclomatic complexity too high: got 38 (max: 10)'
       count: 1
     - rule: max_lloc
       file: src/Metadata/Collect/ComputedMetadataBuilder.php
-      message: 'Logical lines of code too high : got 81 (max: 20)'
+      message: 'Logical lines of code too high : got 84 (max: 20)'
       count: 1
     - rule: cyclomatic_complexity
       file: src/Metadata/Computed/EntityMetadata.php
