@@ -222,6 +222,44 @@
 </details>
 
 <details class="k-ticket k-ticket--red">
+  <summary>SHOW page <span class="k-status k-status--red">Proposed</span></summary>
+
+  <table class="k-ticket">
+    <tbody>
+      <tr><th>Existing.</th><td>Le contrôleur <code>Show</code> (<code>src/Actions/Show.php</code>) est un stub : il récupère l'entité via Doctrine puis appelle <code>dd()</code>. Pas de templates, pas de résolution de templates pour l'action SHOW, pas de handling par le responder. Le <code>TwigResponder</code> résout uniquement la clé <code>['index']</code> de <code>entityMetadata->templates</code> — SHOW n'est jamais rendu. <code>EntityTemplateResolver</code> et <code>PropertyTemplateResolver</code> ne produisent de patterns que pour l'action INDEX.</td></tr>
+      <tr><th>Expected.</th><td>Le contrôleur Show récupère l'entité et délègue au pipeline de responders, qui rend une page de détail : toutes les propriétés affichées avec leurs valeurs formatées, les associations en liens. La résolution de templates fonctionne pour l'action SHOW avec les mêmes cascades que INDEX (par entité, par nom de propriété, par type Doctrine, fallback générique).</td></tr>
+      <tr><th>Prerequisites.</th><td>Collect &amp; Computed.</td></tr>
+      <tr><th>Plan.</th><td><ol>
+        <li><strong>Contrôleur Show</strong> : supprimer le <code>dd()</code>, récupérer le slug via <code>EntityMetadataRegistry::getBySlug()</code>, construire un <code>ActionContext</code>, passer l'entité au <code>ResponderManager</code> comme le fait <code>Index</code>.</li>
+        <li><strong>TwigResponder</strong> : adapter la résolution de template pour supporter les actions autres que INDEX — lire la bonne clé d'action dans <code>entityMetadata->templates[$action]</code> (au lieu de la clé hardcodée <code>['index']</code>).</li>
+        <li><strong>EntityTemplateResolver</strong> : ajouter les patterns pour l'action SHOW — rôles <code>index</code> (page wrapper), <code>items</code> (pas de table ici, mais le contenu détail), <code>no_items</code> (jamais pour SHOW mais cohérence), <code>item</code> (une propriété). Patterns : <code>{action}_entity_{slug}</code>, <code>{action}.html.twig</code>.</li>
+        <li><strong>PropertyTemplateResolver</strong> : ajouter les patterns pour SHOW — même vocabulaire que INDEX (<code>field.html.twig</code>, <code>association.html.twig</code>) avec les slots d'override par nom et par type.</li>
+        <li><strong>Templates SHOW</strong> : créer <code>templates/show/show.html.twig</code> (page wrapper), <code>templates/show/field.html.twig</code> (cellule scalaire), <code>templates/show/association.html.twig</code> (cellule lien). Le template show itère <code>entityMetadata.getProperties()</code> et affiche chaque propriété avec son label et sa valeur formatée.</li>
+        <li><strong>Tests</strong> : un test d'intégration vérifie que l'action Show rend une réponse HTTP 200 avec le contenu de l'entité. Un test E2E vérifie la navigation depuis l'index vers le show via un lien.</li>
+      </ol></td></tr>
+    </tbody>
+  </table>
+</details>
+
+<details class="k-ticket k-ticket--red">
+  <summary>Identifier as navigable link <span class="k-status k-status--red">Proposed</span></summary>
+
+  <table class="k-ticket">
+    <tbody>
+      <tr><th>Existing.</th><td>En index, la colonne identifiant (typiquement <code>id</code>) est rendue comme un <code>FieldMetadata</code> ordinaire via <code>field.html.twig</code> — texte brut, pas de lien. La fonction <code>getUrl()</code> de <code>UrlBuilderExtension</code> ne fonctionne qu'avec les <code>AssociationMetadata</code> (elle navigue via l'association pour extraire l'entité liée). L'identifiant de l'entité elle-même (<code>EntityMetadata::getIdentifier()</code>) n'est jamais consommé par un template.</td></tr>
+      <tr><th>Expected.</th><td>En index, la valeur de la colonne identifiant est un lien clivable vers la page show de la même entité. Le rendu utilise le même routeur que les associations — le pattern <code>/{prefix}/{slug}/{identifiers}</code> existe déjà. Pas de behavior change pour les autres colonnes.</td></tr>
+      <tr><th>Prerequisites.</th><td>SHOW page (le lien doit mener quelque part).</td></tr>
+      <tr><th>Plan.</th><td><ol>
+        <li><strong>UrlBuilderExtension</strong> : ajouter une méthode <code>getEntityUrl(string $action, EntityMetadata $entityMetadata, $entity): string</code> qui construit l'URL de l'entité elle-même — elle lit <code>$entityMetadata->getIdentifier()</code>, extrait les valeurs via <code>PropertyAccessor</code>, et génère la route via <code>RouteGenerator::routeName()</code> + <code>UrlGeneratorInterface::generate()</code>. La méthode existante <code>getUrl()</code> reste pour les associations.</li>
+        <li><strong>PropertyTemplateResolver</strong> : dans la résolution de patterns pour INDEX, ajouter un slot prioritaire pour l'identifiant — quand <code>$property->name</code> est dans <code>$entityMetadata->getIdentifier()</code>, le pattern <code>field_id_entity_{slug}</code> (ou <code>field_identifier_entity_{slug}</code>) passe avant le pattern générique <code>field.html.twig</code>.</li>
+        <li><strong>Template identifier</strong> : créer <code>templates/index/field_identifier.html.twig</code> qui rend <code>&lt;a href="{{ getEntityUrl('show', entityMetadata, item) }}"&gt;{{ k_formatted_value(item, property) }}&lt;/a&gt;</code>. Ce template est le slot par défaut pour l'identifiant — surchargeable par l'hôte comme tous les autres.</li>
+        <li><strong>Tests</strong> : un test E2E vérifie que la colonne identifiant dans l'index est un lien et que le clic mène à la page show.</li>
+      </ol></td></tr>
+    </tbody>
+  </table>
+</details>
+
+<details class="k-ticket k-ticket--red">
   <summary>Association to-one — cas de lecture <span class="k-status k-status--red">Proposed</span></summary>
 
   <table class="k-ticket">
