@@ -67,6 +67,10 @@ final class FormatterResolver
         }
 
         if (null !== $phpType) {
+            if (null !== $enumType) {
+                return EnumFormatter::class;
+            }
+
             return match ($phpType) {
                 'string' => StringFormatter::class,
                 'array' => NotAvailableFormatter::class,
