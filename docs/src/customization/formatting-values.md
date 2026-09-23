@@ -68,6 +68,86 @@ are forwarded to `commerceguys/intl` `NumberFormatter`.*
 | `ucfirst` | all formatters | capitalize the first letter of translated values |
 | `minimum_fraction_digits` | `IntlNumberFormatter` | minimum decimals to display (default: none) |
 | `maximum_fraction_digits` | `IntlNumberFormatter` | maximum decimals to display (default: Doctrine column `scale`, if set) |
+| `datetime_format` | date / time / datetime formatters | name of a format declared under `karross.datetime_formats` |
+
+## Named date/time formats
+
+Date, time and datetime properties are rendered with ICU lengths out of the
+box (MEDIUM date, SHORT time, MEDIUM date + SHORT time). To reuse a custom
+pattern across properties, declare a **named format** once and reference it
+per property.
+
+### The 12 built-in names
+
+| Name | ICU mapping |
+|---|---|
+| `k_short_date` | date SHORT |
+| `k_medium_date` | date MEDIUM *(default for date properties)* |
+| `k_long_date` | date LONG |
+| `k_full_date` | date FULL |
+| `k_short_time` | time SHORT *(default for time properties)* |
+| `k_medium_time` | time MEDIUM |
+| `k_long_time` | time LONG |
+| `k_full_time` | time FULL |
+| `k_short_datetime` | date SHORT + time SHORT |
+| `k_medium_datetime` | date MEDIUM + time SHORT *(default for datetime properties)* |
+| `k_long_datetime` | date LONG + time MEDIUM |
+| `k_full_datetime` | date FULL + time LONG |
+
+A property with no `datetime_format` option uses the implicit name of its
+formatter (`k_medium_date`, `k_short_time`, or `k_medium_datetime`). Overriding
+one of those names changes every matching property.
+
+### Example: a custom business format
+
+```yaml
+karross:
+  datetime_formats:
+    my_custom_datetime_format:
+      fr: "d MMMM yyyy 'à' HH:mm"
+      en: "MMMM d, yyyy 'at' HH:mm"
+      default: "yyyy-MM-dd HH:mm"
+  entities:
+    App\Entity\Article:
+      properties:
+        createdAt:
+          formatter_options:
+            datetime_format: my_custom_datetime_format
+```
+
+Result: `createdAt` renders `14 septembre 2026 à 15:30` in French,
+`September 14, 2026 at 15:30` in English, and `2026-09-14 15:30` when the
+request locale has no entry (fallback to `default`).
+
+The value can also be a single pattern (applies through the `default` key):
+
+```yaml
+karross:
+  datetime_formats:
+    compact_date: "yyyy-MM-dd"
+```
+
+At render time the pattern is picked in this order: exact request locale,
+then language only (`fr_CA` → `fr`), then `default`. If no pattern matches,
+the built-in ICU length for that name applies (or the formatter default).
+
+### Example: customize a built-in name
+
+```yaml
+karross:
+  datetime_formats:
+    k_medium_date:
+      fr: "d MMMM yyyy"
+```
+
+Every date property without an explicit `datetime_format` uses
+`k_medium_date`. In French they render `14 septembre 2026`. Other locales keep
+the ICU MEDIUM length.
+
+*How it works: names are resolved once when the metadata is built. The
+resolved patterns and ICU lengths are embedded in the property metadata; the
+render only picks the entry for the request locale. No format registry is
+consulted at render time.*
 
 ## Formatter catalog
 
