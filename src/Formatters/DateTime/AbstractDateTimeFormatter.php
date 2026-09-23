@@ -46,4 +46,20 @@ abstract class AbstractDateTimeFormatter implements ValueFormatterInterface
      * @return array{0:int, 1:int, 2:?string} [dateType, timeType, pattern]
      */
     abstract protected function resolvePattern(?FormattingContext $context): array;
+
+    /**
+     * Map an ICU length name (short|medium|long|full) to the IntlDateFormatter
+     * constant. Unknown or missing names return null so the caller keeps its
+     * own default.
+     */
+    protected static function lengthToInt(?string $length): ?int
+    {
+        return match ($length) {
+            'short' => \IntlDateFormatter::SHORT,
+            'medium' => \IntlDateFormatter::MEDIUM,
+            'long' => \IntlDateFormatter::LONG,
+            'full' => \IntlDateFormatter::FULL,
+            default => null,
+        };
+    }
 }

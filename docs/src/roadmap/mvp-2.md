@@ -1,19 +1,6 @@
 # MVP 2 — Complex properties & fine-grained customization
 
 <details class="k-ticket k-ticket--red">
-  <summary>Property-based testing harness (BlackBox) <span class="k-status k-status--red">Proposed</span></summary>
-
-  <table class="k-ticket">
-    <tbody>
-      <tr><th>Existing.</th><td>Example-driven tests only (integration fixtures + E2E declarative assertions). The BlackBox references (<code>innmind.org/BlackBox</code>) are recorded in <code>@contexts/e2e.md</code> as the future property-based testing basis.</td></tr>
-      <tr><th>Expected.</th><td>BlackBox wired as the property-based testing harness: deterministic runner (fixed seed), shrinking of failing cases, integrated into the Makefile and CI — probing the Collect &amp; Computed pipeline (facts → formatter → render) and the CRUD write path with a rich generated dataset.</td></tr>
-      <tr><th>Prerequisites.</th><td>MVP 1 — CRUD lane operational (forms, delete): the harness varies data over the stabilized write + read paths, which requires the facts carried by <code>PropertyMetadata</code> (the Collect &amp; Computed foundation) and the WidgetResolver (form mapping).</td></tr>
-      <tr><th>Analysis.</th><td>Opens MVP 2 deliberately: once the CRUD is operational is exactly when a rich data game puts the bundle to the test — invariants over the Collect &amp; Computed pipeline (facts → deductions, render never throws, values round-trip) that example-driven tests cannot probe exhaustively. Deterministic by design (fixed seed), shrinks failures (BlackBox), and lands in CI + local <code>make</code> per the deterministic-tooling principle — never a one-shot check. The E2E assertion patterns already built are its base.</td></tr>
-    </tbody>
-  </table>
-</details>
-
-<details class="k-ticket k-ticket--red">
   <summary>Complex properties <span class="k-status k-status--red">Proposed</span></summary>
 
   <table class="k-ticket">
@@ -110,7 +97,7 @@
       <tr><th>Prerequisites.</th><td>None.</td></tr>
       <tr><th>Plan.</th><td><ol>
         <li><strong>Config</strong> : ajouter <code>entities.{FQCN}.index_properties</code> (string array, nullable) et <code>entities.{FQCN}.show_properties</code> (string array, nullable) dans <code>Configuration.php</code>. <code>null</code> = toutes les propriétés (comportement actuel).</li>
-        <li><strong>EntityMetadata</strong> : ajouter deux propriétés <code>readonly array $indexProperties</code> et <code>readonly array $showProperties</code> (listes de noms de propriétés, ou vide = toutes). Les filtrer depuis <code>ComputedMetadataBuilder</code> en fonction de la config.</li>
+        <li><strong>EntityMetadata</strong> : ajouter deux propriétés <code>readonly array $indexProperties</code> et <code>readonly array $showProperties</code> (listes de noms de propriétés, ou vide = toutes). Les filtrer depuis <code>EntityMetadataBuilder</code> en fonction de la config.</li>
         <li><strong>Templates index/show</strong> : itérer <code>entityMetadata.getIndexProperties()</code> (ou <code>getShowProperties()</code>) au lieu de <code>getProperties()</code> pour les en-têtes et les cellules. Quand la liste est vide, fallback sur <code>getProperties()</code>.</li>
         <li><strong>Tests</strong> : test d'intégration vérifiant qu'avec une config <code>index_properties: ['title', 'published']</code>, seules ces colonnes apparaissent dans le HTML rendu.</li>
       </ol></td></tr>

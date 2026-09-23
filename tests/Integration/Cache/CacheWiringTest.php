@@ -2,7 +2,7 @@
 
 namespace Integration\Cache;
 
-use Karross\Metadata\Collect\ComputedMetadataBuilder;
+use Karross\Metadata\Collect\EntityMetadataBuilder;
 use Karross\Metadata\Computed\EntityMetadataRegistry;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemPoolInterface;
@@ -20,8 +20,8 @@ class CacheWiringTest extends TestCase
         /** @var EntityMetadataRegistry $metadata */
         $metadata = $services->get(EntityMetadataRegistry::class);
         $this->assertEquals($metadata->all(), $metadata->all());
-        /** @var ComputedMetadataBuilder $builder */
-        $builder = $services->get(ComputedMetadataBuilder::class);
+        /** @var EntityMetadataBuilder $builder */
+        $builder = $services->get(EntityMetadataBuilder::class);
         $this->assertEquals($metadata->all(), $builder->buildAllMetadata());
     }
 
@@ -41,8 +41,8 @@ class CacheWiringTest extends TestCase
     public function testCacheSurvivesAcrossKernelBoots(): void
     {
         $first = $this->bootServices('prod', false);
-        /** @var ComputedMetadataBuilder $builder */
-        $builder = $first->get(ComputedMetadataBuilder::class);
+        /** @var EntityMetadataBuilder $builder */
+        $builder = $first->get(EntityMetadataBuilder::class);
         $coldBuild = $builder->buildAllMetadata();
         /** @var EntityMetadataRegistry $registry */
         $registry = $first->get(EntityMetadataRegistry::class);

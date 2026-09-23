@@ -17,6 +17,7 @@
   <php>
     <env name="APP_ENV" value="test"/>
     <env name="BLACKBOX_SET_SIZE" value="10"/>
+    <env name="BLACKBOX_SEED" value="42"/>
   </php>
   <source>
     <include>

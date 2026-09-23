@@ -5,15 +5,11 @@
 ignored:
     - rule: cyclomatic_complexity
       file: src/Config/KarrossConfig.php
-      message: 'Cyclomatic complexity too high: got 29 (max: 10)'
+      message: 'Cyclomatic complexity too high: got 16 (max: 10)'
       count: 1
-    - rule: max_lloc
-      file: src/Config/KarrossConfig.php
-      message: 'Logical lines of code too high : got 30 (max: 20)'
-      count: 1
-    - rule: max_lloc
-      file: src/Config/services.php
-      message: 'Logical lines of code too high : got 24 (max: 20)'
+    - rule: cyclomatic_complexity
+      file: src/Formatters/DateTime/AbstractDateTimeFormatter.php
+      message: 'Cyclomatic complexity too high: got 12 (max: 10)'
       count: 1
     - rule: cyclomatic_complexity
       file: src/Formatters/FormatterResolver.php
@@ -24,20 +20,20 @@ ignored:
       message: 'Logical lines of code too high : got 28 (max: 20)'
       count: 1
     - rule: cyclomatic_complexity
-      file: src/Metadata/Collect/ComputedMetadataBuilder.php
-      message: 'Cyclomatic complexity too high: got 38 (max: 10)'
-      count: 1
-    - rule: max_lloc
-      file: src/Metadata/Collect/ComputedMetadataBuilder.php
-      message: 'Logical lines of code too high : got 84 (max: 20)'
-      count: 1
-    - rule: cyclomatic_complexity
       file: src/Metadata/Computed/EntityMetadata.php
       message: 'Cyclomatic complexity too high: got 18 (max: 10)'
       count: 1
     - rule: max_lloc
       file: src/Metadata/Computed/EntityMetadata.php
       message: 'Logical lines of code too high : got 24 (max: 20)'
+      count: 1
+    - rule: cyclomatic_complexity
+      file: src/Formatters/FormattingContextBuilder.php
+      message: 'Cyclomatic complexity too high: got 21 (max: 10)'
+      count: 1
+    - rule: max_lloc
+      file: src/Formatters/FormattingContextBuilder.php
+      message: 'Logical lines of code too high : got 25 (max: 20)'
       count: 1
     - rule: cyclomatic_complexity
       file: src/Twig/PropertyTemplateResolver.php

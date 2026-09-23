@@ -3,19 +3,34 @@
 namespace Karross\Config;
 
 /**
- * @param array{
- *   output?: array{api?: bool, html?: string},
- *   routes?: array{prefix?: string, index?: string, show?: string, home?: string},
- *   home?: array{show_documentation?: bool},
- *   entities?: array<string, array{
- *     actions?: string[],
- *     slug?: string,
- *     properties?: array<string, array{formatter?: string, formatter_options?: array<string, string|bool|null>}>
- *   }>
- * } $config
+ * Root slice of the Karross config (everything except `entities.*`).
+ *
+ *     karross:
+ *       output:
+ *         api: true
+ *         html: twig
+ *       routes:
+ *         prefix: admin
+ *       datetime_formats:
+ *         compact: "yyyy-MM-dd"
+ *
+ * Per-entity lookups live in {@see EntityConfig}.
  */
 final class KarrossConfig
 {
+    /**
+     * @param array{
+     *   output?: array{api?: bool, html?: string},
+     *   routes?: array{prefix?: string, index?: string, show?: string, home?: string},
+     *   home?: array{show_documentation?: bool},
+     *   datetime_formats?: array<string, array<string, string>|string>,
+     *   entities?: array<string, array{
+     *     actions?: string[],
+     *     slug?: string,
+     *     properties?: array<string, array{formatter?: string, formatter_options?: array<string, string|bool|null>}>
+     *   }>
+     * } $config
+     */
     public function __construct(private array $config)
     {
     }
@@ -32,84 +47,61 @@ final class KarrossConfig
 
     public function homeShowDocumentation(): bool
     {
-        $home = $this->config['home'] ?? [];
-        if (!\is_array($home)) {
-            return true;
-        }
-        $show = $home['show_documentation'] ?? true;
-
-        return \is_bool($show) ? $show : true;
-    }
-
-    public function entities(): array
-    {
-        return $this->config['entities'] ?? [];
+        return $this->config['home']['show_documentation'] ?? true;
     }
 
     /**
-     * @return array{
-     *   actions?: string[],
-     *   slug?: string,
-     *   properties?: array<string, array{formatter?: string, formatter_options?: array<string, string|bool|int|null>}>
-     * }
+     * Host-defined named datetime formats: name → (locale → ICU pattern).
+     *
+     * Both config shapes normalize to the same structure:
+     *
+     *     karross:
+     *       datetime_formats:
+     *         compact: "yyyy-MM-dd"              # string form
+     *         business:                          # locale → pattern map
+     *           fr: "d MMMM yyyy 'à' HH:mm"
+     *           default: "yyyy-MM-dd HH:mm"
+     *
+     * @return array<string, array<string, string>>
      */
-    public function entityConfig(string $fqcn): array
+    public function datetimeFormats(): array
     {
-        return $this->config['entities'][$fqcn] ?? [];
-    }
+        $formats = $this->config['datetime_formats'] ?? [];
 
-    public function entityActions(string $fqcn): array
-    {
-        return $this->entityConfig($fqcn)['actions'] ?? [];
-    }
-
-    public function entityPropertyFormatter(string $fqcn, string $property): ?string
-    {
-        return $this->entityConfig($fqcn)['properties'][$property]['formatter'] ?? null;
+        return array_filter(
+            array_map($this->normalizeDatetimeFormat(...), $formats),
+            static fn (?array $definition): bool => null !== $definition,
+        );
     }
 
     /**
-     * @return array<string, string|bool|int>
+     * @return array<string, string>|null null when the value is neither config shape
      */
-    public function entityPropertyFormatterOptions(string $fqcn, string $property): array
+    private function normalizeDatetimeFormat(mixed $definition): ?array
     {
-        $options = $this->entityConfig($fqcn)['properties'][$property]['formatter_options'] ?? null;
-        if (!\is_array($options)) {
-            return [];
+        if (\is_string($definition)) {
+            return ['default' => $definition];
         }
 
-        $formatterOptions = [];
-        foreach ($options as $key => $value) {
-            if (\is_string($key) && (\is_string($value) || \is_bool($value) || \is_int($value))) {
-                $formatterOptions[$key] = $value;
-            }
+        if (!\is_array($definition)) {
+            return null;
         }
 
-        return $formatterOptions;
-    }
-
-    public function entitySlug(string $fqcn): ?string
-    {
-        return $this->entityConfig($fqcn)['slug'] ?? null;
+        return array_filter(
+            $definition,
+            static fn (mixed $pattern, mixed $locale): bool => \is_string($locale) && \is_string($pattern),
+            \ARRAY_FILTER_USE_BOTH,
+        );
     }
 
     public function routePrefix(): string
     {
-        $routes = $this->config['routes'] ?? [];
-        if (!\is_array($routes)) {
-            return 'admin';
-        }
-        $prefix = $routes['prefix'] ?? 'admin';
-
-        return \is_string($prefix) ? $prefix : 'admin';
+        return $this->config['routes']['prefix'] ?? 'admin';
     }
 
     public function routePattern(string $action): string
     {
-        $routes = $this->config['routes'] ?? [];
-        $pattern = \is_array($routes) ? ($routes[$action] ?? null) : null;
-
-        return \is_string($pattern) ? $pattern : self::defaultRoutePattern($action);
+        return $this->config['routes'][$action] ?? self::defaultRoutePattern($action);
     }
 
     public static function defaultRoutePattern(string $action): string
@@ -122,6 +114,9 @@ final class KarrossConfig
         };
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function raw(): array
     {
         return $this->config;
