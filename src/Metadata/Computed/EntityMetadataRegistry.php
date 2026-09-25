@@ -2,7 +2,7 @@
 
 namespace Karross\Metadata\Computed;
 
-use Karross\Metadata\Collect\ComputedMetadataBuilder;
+use Karross\Metadata\Collect\EntityMetadataBuilder;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class EntityMetadataRegistry
@@ -11,7 +11,7 @@ class EntityMetadataRegistry
 
     public function __construct(
         private readonly CacheInterface $cache,
-        private readonly ComputedMetadataBuilder $builder,
+        private readonly EntityMetadataBuilder $builder,
         bool $debug,
     ) {
         $this->cacheEnabled = !$debug;

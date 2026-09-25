@@ -14,6 +14,8 @@ class TimeFormatter extends AbstractDateTimeFormatter
             return [\IntlDateFormatter::NONE, \IntlDateFormatter::NONE, $context->timeFormat];
         }
 
-        return [\IntlDateFormatter::NONE, \IntlDateFormatter::SHORT, null];
+        $timeType = self::lengthToInt($context?->timeFormatPreset) ?? \IntlDateFormatter::SHORT;
+
+        return [\IntlDateFormatter::NONE, $timeType, null];
     }
 }

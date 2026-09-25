@@ -8,7 +8,7 @@ readonly class EntityMetadata
 {
     /**
      * @param Action[]                             $actions
-     * @param PropertyMetadata[]                   $properties
+     * @param array<string, PropertyMetadata>      $properties
      * @param array<string, array<string, string>> $templates  action value → role → resolved template name
      * @param string[]                             $identifier
      */
@@ -38,7 +38,7 @@ readonly class EntityMetadata
     }
 
     /**
-     * @return PropertyMetadata[]
+     * @return array<string, PropertyMetadata>
      */
     public function getProperties(): array
     {

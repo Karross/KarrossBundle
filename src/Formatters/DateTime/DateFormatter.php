@@ -14,6 +14,8 @@ class DateFormatter extends AbstractDateTimeFormatter
             return [\IntlDateFormatter::NONE, \IntlDateFormatter::NONE, $context->dateFormat];
         }
 
-        return [\IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE, null];
+        $dateType = self::lengthToInt($context?->dateFormatPreset) ?? \IntlDateFormatter::MEDIUM;
+
+        return [$dateType, \IntlDateFormatter::NONE, null];
     }
 }

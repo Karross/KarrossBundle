@@ -67,78 +67,6 @@ parameters:
 			path: src/Actions/Show.php
 
 		-
-			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Cannot access offset ''api'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Cannot access offset ''html'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Cannot access offset string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:__construct\(\) has parameter \$config with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:apiEnabled\(\) should return bool but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:entities\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:entities\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityActions\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:entityConfig\(\) should return array\{actions\?\: array\<string\>, slug\?\: string, properties\?\: array\<string, array\{formatter\?\: string, formatter_options\?\: array\<string, bool\|int\|string\|null\>\}\>\} but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:htmlRenderer\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
-			message: '#^Method Karross\\Config\\KarrossConfig\:\:raw\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Config/KarrossConfig.php
-
-		-
 			message: '#^Variable \$config on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.variable
 			count: 1
@@ -187,36 +115,6 @@ parameters:
 			path: src/Formatters/StringFormatter.php
 
 		-
-			message: '#^Cannot call method getClassMetadata\(\) on Doctrine\\Persistence\\ObjectManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Metadata/Collect/ComputedMetadataBuilder.php
-
-		-
-			message: '#^Method Karross\\Metadata\\Collect\\ComputedMetadataBuilder\:\:resolveFormatter\(\) should return class\-string\<Karross\\Formatters\\ValueFormatterInterface\> but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Metadata/Collect/ComputedMetadataBuilder.php
-
-		-
-			message: '#^Method Karross\\Metadata\\Collect\\ComputedMetadataBuilder\:\:resolveReflectionProperty\(\) has parameter \$reflectionClass with generic class ReflectionClass but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Metadata/Collect/ComputedMetadataBuilder.php
-
-		-
-			message: '#^Method Karross\\Metadata\\Collect\\ComputedMetadataBuilder\:\:resolveSlug\(\) has parameter \$classMetadata with generic interface Doctrine\\Persistence\\Mapping\\ClassMetadata but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Metadata/Collect/ComputedMetadataBuilder.php
-
-		-
-			message: '#^Method Karross\\Metadata\\Collect\\ComputedMetadataBuilder\:\:resolveSlug\(\) has parameter \$fqcnToSlugMap with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Metadata/Collect/ComputedMetadataBuilder.php
-
-		-
 			message: '#^Cannot access offset int\<0, max\> on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -253,7 +151,7 @@ parameters:
 			path: src/Metadata/Computed/EntityMetadata.php
 
 		-
-			message: '#^Parameter \#1 \.\.\.\$arg1 of function max expects non\-empty\-array, array\<int\<0, max\>\> given\.$#'
+			message: '#^Parameter \#1 \.\.\.\$arg1 of function max expects non\-empty\-array, array\<string, int\<0, max\>\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Metadata/Computed/EntityMetadata.php

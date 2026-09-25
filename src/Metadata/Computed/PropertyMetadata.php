@@ -15,10 +15,10 @@ namespace Karross\Metadata\Computed;
 abstract readonly class PropertyMetadata
 {
     /**
-     * @param class-string                   $fqcn
-     * @param class-string                   $formatter
-     * @param array<string, string|bool|int> $formatterOptions
-     * @param array<string, string>          $templates        action → resolved template name
+     * @param class-string          $fqcn
+     * @param class-string          $formatter
+     * @param array<string, mixed>  $formatterOptions
+     * @param array<string, string> $templates        action → resolved template name
      */
     public function __construct(
         public string $name,
