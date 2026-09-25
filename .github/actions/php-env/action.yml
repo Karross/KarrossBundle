@@ -21,7 +21,7 @@ runs:
         cache-to: type=gha,mode=max
 
     - name: Cache Composer packages (var/composer)
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: var/composer
         key: composer-packages-${{ runner.os }}-${{ hashFiles('composer.json') }}
@@ -35,7 +35,7 @@ runs:
       shell: bash
 
     - name: Cache npm packages (var/npm)
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: var/npm
         key: npm-packages-${{ runner.os }}-${{ hashFiles('package.json') }}
