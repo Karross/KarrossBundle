@@ -9,8 +9,6 @@ return static function (ContainerConfigurator $container): void {
             'url' => 'sqlite:///:memory:',
         ],
         'orm' => [
-            'auto_generate_proxy_classes' => true,
-            'enable_native_lazy_objects' => true,
             'naming_strategy' => 'doctrine.orm.naming_strategy.underscore_number_aware',
             'auto_mapping' => false,
             'mappings' => [

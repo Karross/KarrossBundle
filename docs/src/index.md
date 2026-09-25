@@ -4,7 +4,7 @@
 
 - PHP 8.5+
 - Composer
-- Symfony 7.3+ with a Doctrine ORM configuration and mapped entities
+- Symfony 8.1+ with a Doctrine ORM configuration and mapped entities
 - PHP extensions: `intl`, `bcmath`
 
 ## Installation
