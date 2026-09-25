@@ -25,9 +25,13 @@ test:
 test-integration:
 	docker compose run --rm php vendor/bin/phpunit --testsuite integration
 
-# Install Playwright browsers (Chromium) into var/ms-playwright
+# Install Playwright browsers (Chromium) into var/ms-playwright, then restore
+# read permissions on the tree: Chromium writes root-owned files (rpm.deps/deb.deps)
+# into the bind-mount, and the CI runner user cannot read them when the cache tar
+# runs at the end of the job ("Failed to save: tar exit code 2").
 e2e-browsers:
 	docker compose run --rm php vendor/bin/playwright-install --browsers
+	docker compose run --rm php chmod -R a+rX /app/var/ms-playwright
 
 # Run only the E2E test suite
 test-e2e:

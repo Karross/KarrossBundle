@@ -5,6 +5,21 @@ on:
     branches: [main]
   pull_request:
 
+# Least privilege: the job only reads the repository.
+permissions:
+  contents: read
+
+# One run per ref. A newer push cancels the run still in flight for the same
+# branch: its content is a superset, so the surviving run covers both.
+# (docs-deploy does the opposite on purpose — a deploy must not be interrupted.)
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Ceiling on the whole job (env prep + all gates). Generous enough for a cold
+# cache (image build + full downloads); tight enough to catch a real hang.
+timeout-minutes: 20
+
 # Single job mirroring the local workflow (`make all-check`, plus the E2E
 # browser install that the full `test` suite needs). Kept sequential: the test
 # suite is tiny (~seconds), so the real cost is environment prep, which we do
@@ -40,13 +55,6 @@ jobs:
 
       - name: Install Playwright browsers
         run: make e2e-browsers
-
-      # Chromium writes root-owned files (rpm.deps/deb.deps) into the bind-mount,
-      # which the non-root runner user cannot read when the cache tar runs at the
-      # end of the job -> "Failed to save: tar exit code 2". Make everything under
-      # the browser dir traversable/readable so the actions/cache save succeeds.
-      - name: Fix Playwright browser permissions
-        run: docker compose run --rm php sh -c 'chmod -R a+rX /app/var/ms-playwright'
 
       # Mirrors `make all-check` (css-check -> cs-fix-check -> rector ->
       # phpstan -> qa -> test). css-check runs first: it is the cheapest gate
