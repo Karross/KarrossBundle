@@ -16,10 +16,6 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-# Ceiling on the whole job (env prep + all gates). Generous enough for a cold
-# cache (image build + full downloads); tight enough to catch a real hang.
-timeout-minutes: 20
-
 # Single job mirroring the local workflow (`make all-check`, plus the E2E
 # browser install that the full `test` suite needs). Kept sequential: the test
 # suite is tiny (~seconds), so the real cost is environment prep, which we do
@@ -32,6 +28,9 @@ timeout-minutes: 20
 jobs:
   checks:
     runs-on: ubuntu-latest
+    # Ceiling on the whole job (env prep + all gates). Generous enough for a
+    # cold cache (image build + full downloads), tight enough to catch a hang.
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v7
