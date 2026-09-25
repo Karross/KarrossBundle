@@ -55,11 +55,17 @@ jobs:
       - name: Install Playwright browsers
         run: make e2e-browsers
 
-      # Mirrors `make all-check` (css-check -> cs-fix-check -> rector ->
-      # phpstan -> qa -> test). css-check runs first: it is the cheapest gate
-      # by far (a single CSS file), so a failure stops the pipeline before the
+      # Mirrors `make all-check` (workflow-check -> css-check -> cs-fix-check ->
+      # rector -> phpstan -> qa -> test). The two linters run first: they are by
+      # far the cheapest gates, so a failure stops the pipeline before the
       # heavier analyses and the test suite run. `make test` runs both the
       # integration and e2e PHPUnit suites.
+
+      # GitHub Actions linter (actionlint) — same target as local
+      # `make workflow-check`; catches an invalid workflow before it is pushed.
+      - name: Workflow lint (actionlint)
+        run: make workflow-check
+
       # Browser CSS compatibility gate (stylelint + Baseline "widely" policy) —
       # same target as local `make css-check`; any warning is an error.
       - name: Browser CSS compatibility gate (stylelint baseline)

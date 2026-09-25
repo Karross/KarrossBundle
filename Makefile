@@ -1,4 +1,4 @@
-.PHONY: build install update npm-install test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check qa css-check rector rector-fix all-fix all-check check-commit-message install-hooks seed serve cache-clear
+.PHONY: build install update npm-install test test-integration e2e-browsers test-e2e bash phpstan cs-fix cs-fix-check qa workflow-check css-check rector rector-fix all-fix all-check check-commit-message install-hooks seed serve cache-clear
 
 # (Re)build the Docker image (when Dockerfile or composer.json change)
 build:
@@ -46,6 +46,12 @@ phpstan:
 qa:
 	docker compose run --rm php ast-metrics lint
 
+# GitHub Actions workflow gate (actionlint) over .github/: workflow schema,
+# expression syntax, and the local composite action. Catches the mistakes
+# GitHub only reports after the push (e.g. a key misplaced in a workflow).
+workflow-check:
+	docker compose run --rm php actionlint
+
 # Browser CSS compatibility gate (stylelint + Baseline policy) over the bundle's
 # own stylesheet; every warning counts as an error via --max-warnings 0.
 css-check:
@@ -79,8 +85,8 @@ rector-fix:
 # Run every auto-fixable tool (rector first, code style normalizes its output)
 all-fix: rector-fix cs-fix
 
-# Run every checker in order (style, refactoring, static analysis, complexity, CSS compat, tests)
-all-check: css-check cs-fix-check rector phpstan qa test
+# Run every checker in order (workflows, style, refactoring, static analysis, complexity, CSS compat, tests)
+all-check: workflow-check css-check cs-fix-check rector phpstan qa test
 
 # Clear the Symfony kernel caches (var/cache) inside the container
 # (prod-like kernels never check freshness — a stale compiled container

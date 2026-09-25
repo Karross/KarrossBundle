@@ -53,6 +53,18 @@ RUN     curl -fsSL -o /usr/local/bin/ast-metrics \
     && printf '%s  %s\n' "${AST_METRICS_SHA256}" /usr/local/bin/ast-metrics | sha256sum -c - \
     && chmod +x /usr/local/bin/ast-metrics
 
+# Actionlint (GitHub Actions linter, `make workflow-check` + CI): single static
+# binary from the release tarball, verified against a pinned SHA256. Run on the
+# same image locally and in CI, so a broken workflow never reaches GitHub.
+ARG ACTIONLINT_VERSION=v1.7.12
+ARG ACTIONLINT_SHA256=8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+RUN     curl -fsSL -o /tmp/actionlint.tar.gz \
+        https://github.com/rhysd/actionlint/releases/download/${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION#v}_linux_amd64.tar.gz \
+    && printf '%s  %s\n' "${ACTIONLINT_SHA256}" /tmp/actionlint.tar.gz | sha256sum -c - \
+    && tar -xzf /tmp/actionlint.tar.gz -C /usr/local/bin actionlint \
+    && rm /tmp/actionlint.tar.gz \
+    && chmod +x /usr/local/bin/actionlint
+
 # Playwright browsers are installed in a project-persistent directory
 # (persisted on the host via the mounted volume), see Makefile (e2e-browsers).
 ENV PLAYWRIGHT_BROWSERS_PATH=/app/var/ms-playwright

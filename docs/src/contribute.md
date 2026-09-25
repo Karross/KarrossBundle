@@ -16,11 +16,12 @@ PHP lacks `ext-intl`).
 
 ```bash
 make all-fix        # auto-fix everything (rector, then php-cs-fixer)
-make all-check      # full check: CSS compat → style → rector → phpstan → complexity → tests (must be green)
+make all-check      # full check: workflows → CSS compat → style → rector → phpstan → complexity → tests (must be green)
 make rector         # refactoring check only (rector dry-run)
 make rector-fix     # apply rector refactorings
 make test           # phpunit suites (incl. E2E Playwright)
 make qa             # complexity/volume gate only (ast-metrics)
+make workflow-check # GitHub Actions workflow gate only (actionlint)
 make css-check      # browser CSS compatibility gate only (stylelint + Baseline)
 make npm-install    # install the npm tooling (stylelint) — once, after a fresh clone
 make serve          # serve the demo apps (Ctrl-C to stop)
