@@ -70,8 +70,10 @@ class LoaderTest extends TestCase
         $router = $kernel->getContainer()->get('test.service_container')->get(RouterInterface::class);
         $routeCollection = $router->getRouteCollection();
 
-        // Exactly the expected routes are registered
-        $this->assertSame(
+        // Exactly the expected routes are registered. The order is not asserted:
+        // Doctrine discovers classes through an unsorted directory listing, so
+        // the discovery order follows the filesystem, not the entity names.
+        $this->assertEqualsCanonicalizing(
             $expectedRouteNames,
             array_keys($routeCollection->all())
         );
